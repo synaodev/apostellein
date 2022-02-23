@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=${APOSTELLEIN_NAME}
+Comment=${APOSTELLEIN_DESCRIPTION}
+Encoding=UTF-8
+Exec=sh -c "cd ${APOSTELLEIN_DIRECTORY}; ./ ${APOSTELLEIN_PROGRAM} ."
+Icon=/usr/share/pixmaps/${APOSTELLEIN_ICON}.png
+Terminal=false
+Type=Application
+StartupNotify=false
+Categories=Application;Game;

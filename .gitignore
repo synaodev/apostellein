@@ -1,0 +1,39 @@
+# Editors
+.vs/
+.vscode/
+*.iml
+.idea
+
+# C++
+*.d
+*.slo
+*.lo
+*.o
+*.obj
+*.gch
+*.pch
+*.so
+*.dll
+*.dylib
+*.a
+*.lib
+
+# Windows
+CMakeSettings.json
+*.exe
+*.lnk
+
+# MacOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# ImGui
+imgui.ini
+imgui_demo.cpp
+
+# PVS Studio
+*.PVS-Studio*
+
+# Todo
+.todo/

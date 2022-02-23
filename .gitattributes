@@ -1,0 +1,63 @@
+# These files are text and should be normalized (Convert crlf => lf)
+*.cmake text
+*.c text
+*.h text
+*.cpp text
+*.hpp text
+*.inl text
+*.as text
+*.cc text
+*.py text
+*.php text
+*.css text
+*.js text
+*.htm text
+*.html text
+*.xml text
+*.tmx text
+*.txt text
+*.ini text
+*.cfg text
+*.inc text
+*.json text
+*.bmfc text
+*.rc text
+*.sh text
+.htaccess text
+
+# These files are binary and should be left untouched
+# (binary is a macro for -text -diff)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.mov binary
+*.mp4 binary
+*.mp3 binary
+*.wav binary
+*.flv binary
+*.fla binary
+*.swf binary
+*.gz binary
+*.zip binary
+*.7z binary
+*.ttf binary
+*.atr binary
+*.ptcop binary
+*.pttune binary
+
+# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+
+# Documents
+*.doc  diff=astextplain
+*.DOC  diff=astextplain
+*.docx diff=astextplain
+*.DOCX diff=astextplain
+*.dot  diff=astextplain
+*.DOT  diff=astextplain
+*.pdf  diff=astextplain
+*.PDF  diff=astextplain
+*.rtf  diff=astextplain
+*.RTF  diff=astextplain
