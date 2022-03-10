@@ -21,7 +21,7 @@ struct binding_quad_buffer : public quad_buffer {
 	binding_quad_buffer(const index_buffer& indices, const vertex_format& format) : quad_buffer{ indices, format } {
 		// allocated up here for exception safety since
 		// destructors aren't called if a constuctor throws
-		staging_ = new (STAGING_ALIGNMENT) char[length_];
+		staging_.reset(new (STAGING_ALIGNMENT) char[length_]);
 
 		glCheck(glGenVertexArrays(1, &handle_));
 		glCheck(glGenBuffers(1, &buffer_));
@@ -56,9 +56,6 @@ struct binding_quad_buffer : public quad_buffer {
 		glCheck(glBindBuffer(GL_ARRAY_BUFFER, 0));
 	}
 	virtual ~binding_quad_buffer() {
-		if (staging_) {
-			delete[] staging_;
-		}
 		if (buffer_ != 0) {
 			glCheck(glDeleteBuffers(1, &buffer_));
 		}
@@ -77,7 +74,7 @@ public:
 			glCheck(glBufferSubData(
 				GL_ARRAY_BUFFER, 0,
 				count * format_.size,
-				staging_
+				staging_.get()
 			));
 		}
 		glCheck(glBindVertexArray(handle_));
@@ -97,13 +94,13 @@ public:
 protected:
 	char* staging(udx index) noexcept override {
 		invalidated_ = true;
-		return staging_ + (index * format_.size);
+		return staging_.get() + (index * format_.size);
 	}
 private:
 	u32 handle_ {};
 	u32 buffer_ {};
 	bool invalidated_ {};
-	char* staging_ {};
+	std::unique_ptr<char[]> staging_ {};
 };
 
 struct binding_quad_stream : public quad_buffer {
@@ -210,7 +207,7 @@ struct direct_quad_buffer : public quad_buffer {
 	direct_quad_buffer(const index_buffer& indices, const vertex_format& format) : quad_buffer{ indices, format } {
 		// allocated up here for exception safety since
 		// destructors aren't called if a constuctor throws
-		staging_ = new (STAGING_ALIGNMENT) char[length_];
+		staging_.reset(new (STAGING_ALIGNMENT) char[length_]);
 
 		glCheck(glCreateBuffers(1, &buffer_));
 		glCheck(glNamedBufferStorage(
@@ -232,9 +229,6 @@ struct direct_quad_buffer : public quad_buffer {
 		format_.detail(handle_);
 	}
 	virtual ~direct_quad_buffer() {
-		if (staging_) {
-			delete[] staging_;
-		}
 		if (buffer_ != 0) {
 			glCheck(glDeleteBuffers(1, &buffer_));
 		}
@@ -252,7 +246,7 @@ public:
 			glCheck(glNamedBufferSubData(
 				buffer_, 0,
 				count * format_.size,
-				staging_
+				staging_.get()
 			));
 		}
 		glCheck(glBindVertexArray(handle_));
@@ -272,13 +266,13 @@ public:
 protected:
 	char* staging(udx index) noexcept override {
 		invalidated_ = true;
-		return staging_ + (index * format_.size);
+		return staging_.get() + (index * format_.size);
 	}
 private:
 	u32 handle_ {};
 	u32 buffer_ {};
 	bool invalidated_ {};
-	char* staging_ {};
+	std::unique_ptr<char[]> staging_ {};
 };
 
 struct direct_quad_stream : public quad_buffer {
