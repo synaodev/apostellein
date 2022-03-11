@@ -1,5 +1,5 @@
-# Apostellein
-This is the current official repository for Apostellein. I work on this game in my spare time, and there is no planned release date. It will be ready when it is ready.
+# Apostéllein
+This is the current official repository for Apostéllein. I work on this game in my spare time, and there is no planned release date. It will be ready when it is ready.
 ## Dependencies
 - [fmt](https://github.com/fmtlib/fmt) (>= 7.1.3)
 - [spdlog](https://github.com/gabime/spdlog) (>= 1.8.1)
@@ -52,7 +52,7 @@ This is the current official repository for Apostellein. I work on this game in 
 - [Daisuke Amaya](https://en.wikipedia.org/wiki/Daisuke_Amaya):
   The developer of Cave Story, Kero Blaster, and Pxtone Collage. If not for his work, I might have done something else with my life, and this project would not exist.
 - [Christopher Hebert](https://github.com/chebert):
-  The creator of an extraordinary video series called [Reconstructing Cave Story](https://youtube.com/playlist?list=PL006xsVEsbKjSKBmLu1clo85yLrwjY67X). Apostellein's tilemap collision system is heavily based on his tilemap collision system.
+  The creator of an extraordinary video series called [Reconstructing Cave Story](https://youtube.com/playlist?list=PL006xsVEsbKjSKBmLu1clo85yLrwjY67X). Apostéllein's tilemap collision system is heavily based on his tilemap collision system.
 - [SFML Team](https://github.com/sfml):
   The glCheck() and alCheck() macros all come from the [SFML library](https://github.com/sfml/sfml).
 - [Mikola Lysenko](https://github.com/mikolalysenko):

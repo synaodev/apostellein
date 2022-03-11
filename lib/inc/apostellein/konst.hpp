@@ -95,7 +95,7 @@ namespace konst {
 	constexpr udx MAXIMUM_SINKS = 10;
 
 	// strings
-	constexpr char APPLICATION[] = "Apostellein";
+	constexpr char APPLICATION[] = "Apostéllein";
 	constexpr char GRAPHICS[] = "OpenGL";
 	constexpr char ORGANIZATION[] = "studio-synao";
 	constexpr char IDENTIFIER[] = "a59323db-3294-41e4-a375-9d05595db2e9";
