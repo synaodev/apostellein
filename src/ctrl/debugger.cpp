@@ -17,6 +17,7 @@
 #include "../hw/vfs.hpp"
 #include "../util/buttons.hpp"
 #include "../util/config-file.hpp"
+#include "../video/opengl.hpp"
 #include "../x2d/pipeline-source.hpp"
 #include "../x2d/renderer.hpp"
 
@@ -138,6 +139,13 @@ void debugger::ui_(runtime& state) {
 			const std::string text = fmt::format(
 				"Lua Memory: {} KB",
 				state.knl_.kilobytes()
+			);
+			ImGui::TextUnformatted(text.c_str());
+		}
+		{
+			const std::string text = fmt::format(
+				"Video Memory: {} KB",
+				ogl::memory_usage()
 			);
 			ImGui::TextUnformatted(text.c_str());
 		}
