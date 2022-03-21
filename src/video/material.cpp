@@ -12,8 +12,8 @@
 #include "./opengl.hpp"
 
 namespace {
-	constexpr u32 DEFAULT_FORMAT = GL_RGBA4;
-	constexpr i32 DEFAULT_LAYERS = 4;
+	constexpr u32 DEFAULT_FORMAT = GL_RGBA2;
+	constexpr i32 DEFAULT_LAYERS = 3;
 	constexpr i32 DEFAULT_MIPMAP = 1;
 	constexpr i32 TOTAL_SEGMENTS =
 		(image_file::MAXIMUM_LENGTH / image_file::MINIMUM_LENGTH) *
@@ -23,7 +23,6 @@ namespace {
 struct virtual_texture_layer : public not_moveable {
 	virtual_texture_layer() {
 		nodes.resize(as<udx>(TOTAL_SEGMENTS));
-		this->reset();
 	}
 	void reset() {
 		std::fill(
@@ -39,15 +38,6 @@ struct virtual_texture_layer : public not_moveable {
 			TOTAL_SEGMENTS
 		);
 		stbrp_setup_allow_out_of_mem(&context, 1);
-		if (!spaces.empty()) {
-			if (!stbrp_pack_rects(
-				&context,
-				spaces.data(),
-				as<i32>(spaces.size())
-			)) {
-				spdlog::critical("Failed to rollback virtual texture layer!");
-			}
-		}
 	}
 
 	stbrp_context context {};
@@ -119,6 +109,7 @@ public:
 		id = virtual_texture::generate_id();
 		// Find viable space
 		for (auto&& layer : layers_) {
+			layer.reset();
 			layer.spaces.push_back({
 				id, // id
 				as<stbrp_coord>(dimensions.x), // w
@@ -145,6 +136,13 @@ public:
 				layer.spaces.end()
 			);
 			layer.reset();
+			if (!stbrp_pack_rects(
+				&layer.context,
+				layer.spaces.data(),
+				as<i32>(layer.spaces.size())
+			)) {
+				spdlog::critical("Failed to rollback virtual texture layer!");
+			}
 		}
 		return false;
 	}
