@@ -22,7 +22,15 @@ namespace {
 
 struct virtual_texture_layer : public not_moveable {
 	virtual_texture_layer() {
-		nodes.assign(TOTAL_SEGMENTS, stbrp_node{});
+		nodes.resize(as<udx>(TOTAL_SEGMENTS));
+		this->reset();
+	}
+	void reset() {
+		std::fill(
+			nodes.begin(),
+			nodes.end(),
+			stbrp_node{}
+		);
 		stbrp_init_target(
 			&context,
 			image_file::MAXIMUM_LENGTH,
@@ -30,6 +38,16 @@ struct virtual_texture_layer : public not_moveable {
 			nodes.data(),
 			TOTAL_SEGMENTS
 		);
+		stbrp_setup_allow_out_of_mem(&context, 1);
+		if (!spaces.empty()) {
+			if (!stbrp_pack_rects(
+				&context,
+				spaces.data(),
+				as<i32>(spaces.size())
+			)) {
+				spdlog::critical("Failed to rollback virtual texture layer!");
+			}
+		}
 	}
 
 	stbrp_context context {};
@@ -97,15 +115,10 @@ public:
 		return ++id_;
 	}
 	bool append(const glm::ivec2& dimensions, i32& id, i32& atlas) {
+		invalidated = true;
 		id = virtual_texture::generate_id();
 		// Find viable space
 		for (auto&& layer : layers_) {
-			// create snapshot of layer.spaces
-			snapshot_.clear();
-			std::copy(
-				layer.spaces.begin(), layer.spaces.end(),
-				std::back_inserter(snapshot_)
-			);
 			layer.spaces.push_back({
 				id, // id
 				as<stbrp_coord>(dimensions.x), // w
@@ -113,19 +126,25 @@ public:
 				0, 0, // x, y
 				0 // was_packed
 			});
-			const auto size = as<i32>(layer.spaces.size());
-			if (stbrp_pack_rects(&layer.context, layer.spaces.data(), size)) {
+			if (stbrp_pack_rects(
+				&layer.context,
+				layer.spaces.data(),
+				as<i32>(layer.spaces.size())
+			)) {
 				const auto diff = std::distance(layers_.data(), &layer);
 				atlas = as<i32>(diff);
-				invalidated = true;
 				return true;
 			}
-			// if rect-packing failed, rollback to snapshot
-			layer.spaces.pop_back();
-			std::copy(
-				snapshot_.begin(), snapshot_.end(),
-				layer.spaces.begin()
+			// if rect-packing failed, rollback
+			layer.spaces.erase(
+				std::remove_if(
+					layer.spaces.begin(),
+					layer.spaces.end(),
+					[&id](const stbrp_rect& space) { return space.id == id; }
+				),
+				layer.spaces.end()
 			);
+			layer.reset();
 		}
 		return false;
 	}
@@ -173,7 +192,6 @@ public:
 	bool invalidated {};
 	std::set<material*> cache {};
 private:
-	std::vector<stbrp_rect> snapshot_ {};
 	std::array<virtual_texture_layer, DEFAULT_LAYERS> layers_ {};
 	u32 handle_ {};
 };
