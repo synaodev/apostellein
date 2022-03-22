@@ -15,6 +15,7 @@ namespace {
 	constexpr u32 DEFAULT_FORMAT = GL_RGBA2;
 	constexpr i32 DEFAULT_LAYERS = 3;
 	constexpr i32 DEFAULT_MIPMAP = 1;
+	constexpr i32 FURTHER_HEIGHT = 1 << 30;
 	constexpr i32 TOTAL_SEGMENTS =
 		(image_file::MAXIMUM_LENGTH / image_file::MINIMUM_LENGTH) *
 		(image_file::MAXIMUM_LENGTH / image_file::MINIMUM_LENGTH);
@@ -22,22 +23,29 @@ namespace {
 
 struct virtual_texture_layer : public not_moveable {
 	virtual_texture_layer() {
+		context.width = image_file::MAXIMUM_LENGTH;
+		context.height = image_file::MAXIMUM_LENGTH;
+		context.init_mode = STBRP__INIT_skyline;
+		context.heuristic = STBRP_HEURISTIC_Skyline_default;
+		context.num_nodes = TOTAL_SEGMENTS;
+		context.align = (context.width + context.num_nodes - 1) / context.num_nodes;
 		nodes.resize(as<udx>(TOTAL_SEGMENTS));
 	}
 	void reset() {
-		std::fill(
-			nodes.begin(),
-			nodes.end(),
-			stbrp_node{}
-		);
-		stbrp_init_target(
-			&context,
-			image_file::MAXIMUM_LENGTH,
-			image_file::MAXIMUM_LENGTH,
-			nodes.data(),
-			TOTAL_SEGMENTS
-		);
-		stbrp_setup_allow_out_of_mem(&context, 1);
+		context.active_head = &context.extra[0];
+		context.free_head = nodes.data();
+		context.extra[0].x = 0;
+		context.extra[0].y = 0;
+		context.extra[0].next = &context.extra[1];
+		context.extra[1].x = image_file::MAXIMUM_LENGTH;
+		context.extra[1].y = FURTHER_HEIGHT;
+		context.extra[1].next = nullptr;
+		for (udx it = 0; it < as<udx>(TOTAL_SEGMENTS - 1); ++it) {
+			nodes[it].x = 0;
+			nodes[it].y = 0;
+			nodes[it].next = &nodes[it + 1];
+		}
+		nodes.back() = stbrp_node{};
 	}
 
 	stbrp_context context {};
