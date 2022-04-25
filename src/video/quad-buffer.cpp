@@ -8,7 +8,6 @@
 #include "./opengl.hpp"
 
 namespace {
-	constexpr auto STAGING_ALIGNMENT = std::align_val_t{ 16 };
 	constexpr udx MAXIMUM_SECTORS = 3;
 }
 
@@ -21,7 +20,7 @@ struct binding_quad_buffer : public quad_buffer {
 	binding_quad_buffer(const index_buffer& indices, const vertex_format& format) : quad_buffer{ indices, format } {
 		// allocated up here for exception safety since
 		// destructors aren't called if a constuctor throws
-		staging_.reset(new (STAGING_ALIGNMENT) char[length_]);
+		staging_ = std::make_unique<char[]>(length_);
 
 		glCheck(glGenVertexArrays(1, &handle_));
 		glCheck(glGenBuffers(1, &buffer_));
@@ -207,7 +206,7 @@ struct direct_quad_buffer : public quad_buffer {
 	direct_quad_buffer(const index_buffer& indices, const vertex_format& format) : quad_buffer{ indices, format } {
 		// allocated up here for exception safety since
 		// destructors aren't called if a constuctor throws
-		staging_.reset(new (STAGING_ALIGNMENT) char[length_]);
+		staging_ = std::make_unique<char[]>(length_);
 
 		glCheck(glCreateBuffers(1, &buffer_));
 		glCheck(glNamedBufferStorage(

@@ -1,3 +1,4 @@
+#include <array>
 #include <spdlog/spdlog.h>
 #include <apostellein/cast.hpp>
 
