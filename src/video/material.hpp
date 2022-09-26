@@ -17,8 +17,7 @@ struct material : public not_copyable {
 			that.dimensions_ = {};
 			offset_ = that.offset_;
 			that.offset_ = {};
-			buffer_ = that.buffer_;
-			that.buffer_ = 0;
+			image_ = std::move(that.image_);
 		}
 		return *this;
 	}
@@ -61,7 +60,8 @@ public:
 		}
 		return {};
 	}
-	u32 buffer() const { return buffer_; }
+	byte* pixels() { return image_.pixels(); }
+	const byte* pixels() const { return image_.pixels(); }
 	static i32 binding();
 	static bool recalibrate();
 private:
@@ -69,5 +69,5 @@ private:
 	i32 atlas_ {};
 	glm::ivec2 dimensions_ {};
 	glm::ivec2 offset_ {};
-	u32 buffer_ {};
+	image_file image_ {};
 };

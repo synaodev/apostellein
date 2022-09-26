@@ -176,23 +176,18 @@ public:
 		for (auto&& iter : cache) {
 			i32 atlas = 0;
 			if (const auto space = this->remember(iter->id(), atlas); space) {
-				glCheck(glBindBuffer(
-					GL_PIXEL_UNPACK_BUFFER,
-					iter->buffer()
-				));
 				glCheck(glReceiveTexture(
 					target, 0,
 					space->x, space->y, atlas,
 					space->w, space->h, 1,
 					GL_RGBA, GL_UNSIGNED_BYTE,
-					nullptr
+					iter->pixels()
 				));
 				iter->offset(atlas, space->x, space->y);
 			} else {
 				throw std::runtime_error("Virtual texture layer cannot remember atlases or offsets!");
 			}
 		}
-		glCheck(glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0));
 		invalidated = false;
 	}
 	bool invalidated {};
@@ -222,32 +217,7 @@ void material::load(image_file image) {
 		this->destroy();
 		return;
 	}
-	if (ogl::direct_state_available()) {
-		glCheck(glCreateBuffers(1, &buffer_));
-		glCheck(glNamedBufferStorage(
-			buffer_,
-			image.length(),
-			image.pixels(), 0
-		));
-	} else {
-		glCheck(glGenBuffers(1, &buffer_));
-		glCheck(glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer_));
-		if (ogl::buffer_storage_available()) {
-			glCheck(glBufferStorage(
-				GL_PIXEL_UNPACK_BUFFER,
-				image.length(),
-				image.pixels(), 0
-			));
-		} else {
-			glCheck(glBufferData(
-				GL_PIXEL_UNPACK_BUFFER,
-				image.length(),
-				image.pixels(),
-				GL_STATIC_DRAW
-			));
-		}
-		glCheck(glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0));
-	}
+	image_ = std::move(image);
 	vtp_->cache.insert(this);
 }
 
@@ -262,9 +232,8 @@ void material::destroy() {
 	atlas_ = 0;
 	dimensions_ = {};
 	offset_ = {};
-	if (buffer_ != 0) {
-		glCheck(glDeleteBuffers(1, &buffer_));
-		buffer_ = 0;
+	if (image_.valid()) {
+		image_.clear();
 	}
 }
 
