@@ -22,7 +22,7 @@ namespace input {
 	struct driver {
 	public:
 		config_file* config {};
-		SDL_Joystick* joystick {};
+		SDL_GameController* device {};
 		bool(*callback)(const void*) {};
 		std::optional<i32> stored_code {};
 		std::optional<SDL_Scancode> debugger_code {};
@@ -52,7 +52,7 @@ namespace input {
 		drv_->joystick_bindings.clear();
 		for (auto it = button_name::FIRST_BUTTON; it != button_name::INVALID_BUTTON; ++it) {
 			const auto code = cfg.joystick_binding(it);
-			if (code >= 0 and code < MAXIMUM_JOYSTICK_CODES) {
+			if (code >= 0 and code < SDL_CONTROLLER_BUTTON_MAX) {
 				drv_->joystick_bindings[code] = it;
 			}
 		}
@@ -73,7 +73,7 @@ namespace input {
 
 		// Create joystick handle
 		if (SDL_NumJoysticks() != 0) {
-			if (drv_->joystick = SDL_JoystickOpen(0); !drv_->joystick) {
+			if (drv_->device = SDL_GameControllerOpen(0); !drv_->device) {
 				spdlog::warn("Joystick couldn't open at startup! SDL Error: {}", SDL_GetError());
 			}
 		}
@@ -83,9 +83,9 @@ namespace input {
 
 	void drop_() {
 		if (drv_) {
-			if (drv_->joystick) {
-				SDL_JoystickClose(drv_->joystick);
-				drv_->joystick = nullptr;
+			if (drv_->device) {
+				SDL_GameControllerClose(drv_->device);
+				drv_->device = nullptr;
 			}
 			drv_.reset();
 		}
@@ -174,17 +174,15 @@ bool input::poll(activity_type& aty, buttons& bts) {
 				}
 				break;
 			}
-			case SDL_JOYAXISMOTION: {
-				if (event.jaxis.which == 0) {
-					const auto index = event.jaxis.axis;
-					const auto value = event.jaxis.value;
-					if (index == 0) {
-						if (value > AXIS_DEAD_ZONE) {
+			case SDL_CONTROLLERAXISMOTION: {
+				if (event.caxis.which == 0) {
+					if (event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTX) {
+						if (event.caxis.value > AXIS_DEAD_ZONE) {
 							bool holding = bts.holding.right;
 							bts.pressed.right = !holding;
 							bts.holding.right = true;
 							bts.holding.left = false;
-						} else if (value < -AXIS_DEAD_ZONE) {
+						} else if (event.caxis.value < -AXIS_DEAD_ZONE) {
 							bool holding = bts.holding.left;
 							bts.pressed.left = !holding;
 							bts.holding.left = true;
@@ -193,13 +191,13 @@ bool input::poll(activity_type& aty, buttons& bts) {
 							bts.holding.right = false;
 							bts.holding.left = false;
 						}
-					} else if (index == 1) {
-						if (value > AXIS_DEAD_ZONE) {
+					} else if (event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY) {
+						if (event.caxis.value > AXIS_DEAD_ZONE) {
 							bool holding = bts.holding.down;
 							bts.pressed.down = !holding;
 							bts.holding.down = true;
 							bts.holding.up = false;
-						} else if (value < -AXIS_DEAD_ZONE) {
+						} else if (event.caxis.value < -AXIS_DEAD_ZONE) {
 							bool holding = bts.holding.up;
 							bts.pressed.up = !holding;
 							bts.holding.up = true;
@@ -212,57 +210,81 @@ bool input::poll(activity_type& aty, buttons& bts) {
 				}
 				break;
 			}
-			case SDL_JOYHATMOTION: {
-				if (event.jhat.which == 0) {
-					auto value = event.jhat.value;
-					if (value & SDL_HAT_UP) {
-						bool holding = bts.holding.up;
-						bts.pressed.up = !holding;
-						bts.holding.up = true;
-						bts.holding.down = false;
-					} else if (value & SDL_HAT_DOWN) {
-						bool holding = bts.holding.down;
-						bts.pressed.down = !holding;
-						bts.holding.down = true;
-						bts.holding.up = false;
-					} else if (value & SDL_HAT_RIGHT) {
-						bool holding = bts.holding.right;
-						bts.pressed.right = !holding;
-						bts.holding.right = true;
-						bts.holding.left = false;
-					} else if (value & SDL_HAT_LEFT) {
-						bool holding = bts.holding.left;
-						bts.pressed.left = !holding;
-						bts.holding.left = true;
-						bts.holding.right = false;
+			case SDL_CONTROLLERBUTTONDOWN: {
+				if (event.cdevice.which == 0) {
+					const auto code = as<i32>(event.cbutton.button);
+					if (code >= SDL_CONTROLLER_BUTTON_DPAD_UP and code <= SDL_CONTROLLER_BUTTON_DPAD_RIGHT) {
+						switch (code) {
+							case SDL_CONTROLLER_BUTTON_DPAD_UP: {
+								bool holding = bts.holding.up;
+								bts.pressed.up = !holding;
+								bts.holding.up = true;
+								bts.holding.down = false;
+								break;
+							}
+							case SDL_CONTROLLER_BUTTON_DPAD_DOWN: {
+								bool holding = bts.holding.down;
+								bts.pressed.down = !holding;
+								bts.holding.down = true;
+								bts.holding.up = false;
+								break;
+							}
+							case SDL_CONTROLLER_BUTTON_DPAD_LEFT: {
+								bool holding = bts.holding.left;
+								bts.pressed.left = !holding;
+								bts.holding.left = true;
+								bts.holding.right = false;
+								break;
+							}
+							default: {
+								bool holding = bts.holding.right;
+								bts.pressed.right = !holding;
+								bts.holding.right = true;
+								bts.holding.left = false;
+								break;
+							}
+						}
 					} else {
-						bts.holding.right = false;
-						bts.holding.left = false;
-						bts.holding.up = false;
-						bts.holding.down = false;
+						if (auto iter = drv_->joystick_bindings.find(code); iter != drv_->joystick_bindings.end()) {
+							const auto name = iter->second;
+							bool holding = bts.holding._raw.get(name);
+							bts.pressed._raw.set(name, !holding);
+							bts.holding._raw.set(name, true);
+						}
+						if (drv_->listening_for_joystick) {
+							drv_->stored_code = code;
+						}
 					}
 				}
 				break;
 			}
-			case SDL_JOYBUTTONDOWN: {
-				if (event.jbutton.which == 0) {
-					const auto code = as<i32>(event.jbutton.button);
-					if (auto iter = drv_->joystick_bindings.find(code); iter != drv_->joystick_bindings.end()) {
-						const auto name = iter->second;
-						bool holding = bts.holding._raw.get(name);
-						bts.pressed._raw.set(name, !holding);
-						bts.holding._raw.set(name, true);
-					}
-					if (drv_->listening_for_joystick) {
-						drv_->stored_code = code;
-					}
-				}
-				break;
-			}
-			case SDL_JOYBUTTONUP: {
-				if (event.jbutton.which == 0) {
-					const auto code = as<i32>(event.jbutton.button);
-					if (auto iter = drv_->joystick_bindings.find(code); iter != drv_->joystick_bindings.end()) {
+			case SDL_CONTROLLERBUTTONUP: {
+				if (event.cbutton.which == 0) {
+					const auto code = as<i32>(event.cbutton.button);
+					if (code >= SDL_CONTROLLER_BUTTON_DPAD_UP and code <= SDL_CONTROLLER_BUTTON_DPAD_RIGHT) {
+						switch (code) {
+							case SDL_CONTROLLER_BUTTON_DPAD_UP: {
+								bts.holding.up = false;
+								bts.released.down = true;
+								break;
+							}
+							case SDL_CONTROLLER_BUTTON_DPAD_DOWN: {
+								bts.holding.down = false;
+								bts.released.up = true;
+								break;
+							}
+							case SDL_CONTROLLER_BUTTON_DPAD_LEFT: {
+								bts.holding.left = false;
+								bts.released.right = true;
+								break;
+							}
+							default: {
+								bts.holding.right = false;
+								bts.released.left = true;
+								break;
+							}
+						}
+					} else if (auto iter = drv_->joystick_bindings.find(code); iter != drv_->joystick_bindings.end()) {
 						const auto name = iter->second;
 						bts.holding._raw.set(name, false);
 						bts.released._raw.set(name, true);
@@ -270,31 +292,32 @@ bool input::poll(activity_type& aty, buttons& bts) {
 				}
 				break;
 			}
-			case SDL_JOYDEVICEADDED: {
+			case SDL_CONTROLLERDEVICEADDED: {
 				if (drv_->listening_for_keyboard) {
 					drv_->listening_for_keyboard = false;
 					drv_->listening_for_joystick = true;
 				}
-				if (event.jdevice.which == 0 and !drv_->joystick) {
-					if (drv_->joystick = SDL_JoystickOpen(0); !drv_->joystick) {
+				if (event.cdevice.which == 0 and !drv_->device) {
+					if (drv_->device = SDL_GameControllerOpen(0); !drv_->device) {
 						spdlog::warn("Couldn't open joystick device! SDL Error: {}", SDL_GetError());
 					}
 				}
 				break;
 			}
-			case SDL_JOYDEVICEREMOVED: {
+			case SDL_CONTROLLERDEVICEREMOVED: {
 				if (drv_->listening_for_joystick) {
 					drv_->listening_for_keyboard = true;
 					drv_->listening_for_joystick = false;
 				}
-				if (event.jdevice.which == 0 and drv_->joystick) {
-					SDL_JoystickClose(drv_->joystick);
-					drv_->joystick = nullptr;
+				if (event.cdevice.which == 0 and drv_->device) {
+					SDL_GameControllerClose(drv_->device);
+					drv_->device = nullptr;
 				}
 				break;
 			}
-			default:
+			default: {
 				break;
+			}
 		}
 	}
 	return aty != activity_type::quitting;
@@ -304,7 +327,7 @@ bool input::joystick_attached() {
 	if (!drv_) {
 		return false;
 	}
-	return drv_->joystick;
+	return drv_->device;
 }
 
 bool input::valid_stored_code() {
@@ -442,7 +465,9 @@ std::string input::joystick_string(u32 name) {
 	}
 	for (auto&& [code, btn] : drv_->joystick_bindings) {
 		if (btn == name) {
-			return std::to_string(code);
+			if (auto str = SDL_GameControllerGetStringForButton(static_cast<SDL_GameControllerButton>(code)); str) {
+				return str;
+			}
 		}
 	}
 	return {};

@@ -126,7 +126,7 @@ int main_loop(config_file& cfg) {
 struct sdl2_guard : public not_moveable {
 public:
 	sdl2_guard() {
-		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_JOYSTICK) < 0) {
+		if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
 			const std::string message = fmt::format(
 				"SDL Initialization failed! SDL Error: {}",
 				SDL_GetError()
