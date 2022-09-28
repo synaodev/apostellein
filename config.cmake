@@ -148,11 +148,6 @@ else ()
 		message (FATAL_ERROR "Could not find Lua version 5.4 or above!")
 	endif ()
 
-	include ("${PROJECT_SOURCE_DIR}/cmake/FindTmxlite.cmake")
-	if (TMXLITE_NOTFOUND)
-		message (FATAL_ERROR "Could not find Tmxlite!")
-	endif ()
-
 	find_path (STB_INCLUDE_DIR "stb_image.h")
 
 	target_link_libraries (apostellein PRIVATE
@@ -163,11 +158,9 @@ else ()
 		EnTT::EnTT
 		sol2::sol2
 		"${LUA_LIBRARIES}"
-		"${TMXLITE_LIBRARY}"
 	)
 	target_include_directories (apostellein PRIVATE
 		"${LUA_INCLUDE_DIR}"
-		"${TMXLITE_INCLUDE_DIR}"
 		"${STB_INCLUDE_DIR}"
 	)
 

@@ -10,8 +10,8 @@ This is the current official repository for Apostéllein. I work on this game in
 - [EnTT](https://github.com/skypjack/entt) (>= 3.8.0)
 - [SDL2](https://www.libsdl.org/download-2.0.php) (>= 2.0.14)
 - [Nlohmann JSON](https://github.com/nlohmann/json) (>= 3.9.1)
-- [Tmxlite](https://github.com/fallahn/tmxlite) (>= 1.3.0)
 - [stb](https://github.com/nothings/stb) (any)
+- [Tmxlite](https://github.com/fallahn/tmxlite) (included)
 - [Glad](https://glad.dav1d.de) (included)
 - [ImGui](https://github.com/ocornut/imgui) (included)
 - [Pxtone](https://pxtone.org/developer) (included)
@@ -31,7 +31,7 @@ This is the current official repository for Apostéllein. I work on this game in
     - Apt: `apt-get install libgl1-mesa-dev mesa-utils libfmt-dev libspdlog-dev libopenal-dev liblua5.4-dev libglm-dev libsdl2-dev nlohmann-json3-dev`
     - Pacman: `pacman -S mesa fmt spdlog openal lua glm sdl2 nlohmann-json`
     - Yum: `yum install epel-release && yum install mesa-libGL-devel fmt-devel spdlog-devel openal-soft-devel lua-devel glm-devel SDL2-devel json-devel`
-  - For sol2, EnTT, and Tmxlite: build and install from source (using cmake, ideally).
+  - For sol2 and EnTT: build and install from source (using cmake, ideally).
   - For stb: clone the repo. Then, move `stb_image.h` and `stb_rect_pack.h` to `/usr/local/include/` so cmake can find them.
   - Move into the `build` directory.
   - Run `cmake ..` and `cmake --build .`.
@@ -41,7 +41,7 @@ This is the current official repository for Apostéllein. I work on this game in
   - On MacOS you will need to add the argument `--build=missing`.
   - Run `cmake ..` and `cmake --build .`.
 - Vcpkg:
-  - Install these dependencies: `fmt spdlog openal-soft sol2 lua glm entt sdl2 nlohmann-json tmxlite stb`.
+  - Install these dependencies: `fmt spdlog openal-soft sol2 lua glm entt sdl2 nlohmann-json stb`.
   - Occasionally the `x64-mingw-dynamic` triplet fails to build OpenAL-Soft. I'm currently looking for a way to make this more consistent.
   - Move into the `build` directory.
   - Run `cmake ..`.
