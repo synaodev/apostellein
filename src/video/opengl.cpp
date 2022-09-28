@@ -58,7 +58,7 @@ u32 ogl::glsl_version() noexcept {
 	}
 }
 
-u32 ogl::memory_usage() noexcept {
+u32 ogl::memory_available() noexcept {
 	i32 value = 0;
 	glCheck(glGetIntegerv(GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &value));
 	return static_cast<u32>(value);

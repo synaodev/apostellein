@@ -144,8 +144,8 @@ void debugger::ui_(runtime& state) {
 		}
 		{
 			const std::string text = fmt::format(
-				"Video Memory: {} KB",
-				ogl::memory_usage()
+				"Available Video Memory: {} KB",
+				ogl::memory_available()
 			);
 			ImGui::TextUnformatted(text.c_str());
 		}
