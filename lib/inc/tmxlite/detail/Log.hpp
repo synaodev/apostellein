@@ -39,9 +39,11 @@ source distribution.
 #include <ctime>
 
 #ifdef _MSC_VER
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif // NOMINMAX
 #include <windows.h>
-#endif //_MSC_VER
+#endif // _MSC_VER
 
 
 #ifdef __ANDROID__

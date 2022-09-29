@@ -42,7 +42,7 @@ bool shader_object::create(const std::string& source, shader_stage stage) {
 		message.resize(as<udx>(length));
 		glCheck(glGetShaderInfoLog(
 			handle_,
-			message.size(),
+			as<i32>(message.size()),
 			nullptr,
 			message.data()
 		));
@@ -92,7 +92,7 @@ bool shader_program::create(const shader_object& obj) {
 		message.resize(as<udx>(length));
 		glCheck(glGetProgramInfoLog(
 			handle_,
-			message.size(),
+			as<i32>(message.size()),
 			nullptr,
 			message.data()
 		));
@@ -165,7 +165,7 @@ bool shader_program::create(const shader_object& vtx, const shader_object& pix) 
 		glCheck(glGetActiveAttrib(
 			handle_,
 			as<u32>(idx),
-			buffer.size(),
+			as<i32>(buffer.size()),
 			&length,
 			&size,
 			&type,

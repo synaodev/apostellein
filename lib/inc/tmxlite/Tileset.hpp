@@ -109,7 +109,7 @@ namespace tmx
         struct Terrain final
         {
             std::string name;
-            std::uint32_t tileID = -1;
+            std::uint32_t tileID = static_cast<std::uint32_t>(-1);
             std::vector<Property> properties;
         };
 

@@ -165,49 +165,49 @@ void Tileset::parse(pugi::xml_node node, Map* map)
     }
 
     const auto& children = node.children();
-    for (const auto& node : children)
+    for (const auto& child : children)
     {
-        std::string name = node.name();
+        std::string name = child.name();
         if (name == "image")
         {
             //TODO this currently doesn't cover embedded images
             //mostly because I can't figure out how to export them
             //from the Tiled editor... but also resource handling
             //should be handled by the renderer, not the parser.
-            attribString = node.attribute("source").as_string();
+            attribString = child.attribute("source").as_string();
             if (attribString.empty())
             {
                 Logger::log("Tileset image node has missing source property, tile set not loaded", Logger::Type::Error);
                 return reset();
             }
             m_imagePath = resolveFilePath(attribString, m_workingDir);
-            if (node.attribute("trans"))
+            if (child.attribute("trans"))
             {
-                attribString = node.attribute("trans").as_string();
+                attribString = child.attribute("trans").as_string();
                 m_transparencyColour = colourFromString(attribString);
                 m_hasTransparency = true;
             }
-            if (node.attribute("width") && node.attribute("height"))
+            if (child.attribute("width") && child.attribute("height"))
             {
-                m_imageSize.x = node.attribute("width").as_int();
-                m_imageSize.y = node.attribute("height").as_int();
+                m_imageSize.x = child.attribute("width").as_int();
+                m_imageSize.y = child.attribute("height").as_int();
             }
         }
         else if (name == "tileoffset")
         {
-            parseOffsetNode(node);
+            parseOffsetNode(child);
         }
         else if (name == "properties")
         {
-            parsePropertyNode(node);
+            parsePropertyNode(child);
         }
         else if (name == "terraintypes")
         {
-            parseTerrainNode(node);
+            parseTerrainNode(child);
         }
         else if (name == "tile")
         {
-            parseTileNode(node, map);
+            parseTileNode(child, map);
         }
     }
 

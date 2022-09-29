@@ -83,7 +83,7 @@ void ecs::sprite::update(i64 delta, environment& env) {
 
 void ecs::sprite::render(r32 ratio, const rect& view, renderer& rdr, const environment& env) {
 	env.slice<ecs::sprite>().each(
-	[&ratio, &view, &rdr, &env](entt::entity e, const ecs::sprite& spt) {
+	[&ratio, &view, &rdr, &env](entt::entity, const ecs::sprite& spt) {
 		if (spt.file_ and spt.color.a > 0x00U) {
 			const glm::vec2 position = konst::INTERPOLATE(
 				spt.previous_,
@@ -124,7 +124,7 @@ void ecs::sprite::render(r32 ratio, const rect& view, renderer& rdr, const envir
 udx ecs::sprite::visible(r32 ratio, const rect& view, const environment& env) {
 	udx count = 0;
 	env.slice<ecs::sprite>().each(
-	[&ratio, &count, &view, &env](entt::entity e, const ecs::sprite& spt) {
+	[&ratio, &count, &view, &env](entt::entity, const ecs::sprite& spt) {
 		if (spt.file_ and spt.color.a > 0x00U) {
 			const glm::vec2 position = konst::INTERPOLATE(
 				spt.previous_,

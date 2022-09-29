@@ -35,10 +35,10 @@ static entt::entity find_closest_apostle(entt::entity s, const environment& env)
 	return entt::null;
 }
 
-static void hand_tick(entt::entity s, kernel&, camera&, player& plr, environment& env) {
-	auto& loc = env.get<ecs::location>(s);
-	auto& chr = env.get<ecs::chroniker>(s);
-	auto& kin = env.get<ecs::kinematics>(s);
+static void hand_tick(entt::entity, kernel&, camera&, player&, environment&) {
+	// auto& loc = env.get<ecs::location>(s);
+	// auto& chr = env.get<ecs::chroniker>(s);
+	// auto& kin = env.get<ecs::kinematics>(s);
 }
 
 static void hand_ctor(entt::entity s, environment& env) {
