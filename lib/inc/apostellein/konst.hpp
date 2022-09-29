@@ -95,7 +95,11 @@ namespace konst {
 	constexpr udx MAXIMUM_SINKS = 10;
 
 	// strings
+#if !defined(APOSTELLEIN_PLATFORM_WINDOWS)
 	constexpr char APPLICATION[] = "Apostéllein";
+#else
+	constexpr char APPLICATION[] = "Apostellein";
+#endif
 	constexpr char GRAPHICS[] = "OpenGL";
 	constexpr char ORGANIZATION[] = "studio-synao";
 	constexpr char IDENTIFIER[] = "a59323db-3294-41e4-a375-9d05595db2e9";

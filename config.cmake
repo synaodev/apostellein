@@ -151,12 +151,12 @@ else ()
 	find_path (STB_INCLUDE_DIR "stb_image.h")
 
 	target_link_libraries (apostellein PRIVATE
-		fmt::fmt
-		spdlog::spdlog
+		fmt::fmt-header-only
+		spdlog::spdlog_header_only
 		nlohmann_json::nlohmann_json
 		glm::glm
 		EnTT::EnTT
-		sol2::sol2
+		sol2
 		"${LUA_LIBRARIES}"
 	)
 	target_include_directories (apostellein PRIVATE

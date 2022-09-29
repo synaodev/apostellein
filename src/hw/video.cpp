@@ -298,7 +298,7 @@ namespace video {
 		const byte* vendor = nullptr;
 		glCheck(vendor = glGetString(GL_VENDOR));
 		if (vendor) {
-			spdlog::info("GPU vendor is {}!", vendor);
+			spdlog::info("GPU vendor is {}!", reinterpret_cast<const char*>(vendor));
 		}
 
 		// Properly scale/position window
