@@ -4,6 +4,7 @@
 #include <optional>
 #include <spdlog/spdlog.h>
 #include <SDL2/SDL_events.h>
+#include <SDL2/SDL_gamecontroller.h>
 #include <apostellein/konst.hpp>
 #include <apostellein/cast.hpp>
 
@@ -38,12 +39,9 @@ namespace input {
 	std::string find_correct_joystick_name_(i32 code) {
 		if (drv_->device) {
 			switch (SDL_GameControllerGetType(drv_->device)) {
-				case SDL_CONTROLLER_TYPE_VIRTUAL:
-				case SDL_CONTROLLER_TYPE_AMAZON_LUNA:
-				case SDL_CONTROLLER_TYPE_GOOGLE_STADIA:
-				case SDL_CONTROLLER_TYPE_NVIDIA_SHIELD:
 				case SDL_CONTROLLER_TYPE_XBOX360:
-				case SDL_CONTROLLER_TYPE_XBOXONE: {
+				case SDL_CONTROLLER_TYPE_XBOXONE:
+				case SDL_CONTROLLER_TYPE_VIRTUAL: {
 					switch (code) {
 						case SDL_CONTROLLER_BUTTON_A: return "A";
 						case SDL_CONTROLLER_BUTTON_B: return "B";
@@ -82,9 +80,6 @@ namespace input {
 					}
 					break;
 				}
-				case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_LEFT:
-				case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT:
-				case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_PAIR:
 				case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_PRO: {
 					switch (code) {
 						case SDL_CONTROLLER_BUTTON_A: return "B";
