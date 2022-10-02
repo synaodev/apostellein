@@ -13,6 +13,8 @@
 
 namespace {
 	constexpr i32 MAXIMUM_JOYSTICK_CODES = 32;
+	constexpr i32 JOYSTICK_CODE_TRIGGER_LEFT = as<i32>(button_name::TRIGGER_LEFT);
+	constexpr i32 JOYSTICK_CODE_TRIGGER_RIGHT = as<i32>(button_name::TRIGGER_RIGHT);
 	constexpr i16 AXIS_DEAD_ZONE = std::numeric_limits<i16>::max() / 2;
 }
 
@@ -33,6 +35,81 @@ namespace input {
 	};
 	std::unique_ptr<driver> drv_ {};
 	// functions
+	std::string find_correct_joystick_name_(i32 code) {
+		if (drv_->device) {
+			switch (SDL_GameControllerGetType(drv_->device)) {
+				case SDL_CONTROLLER_TYPE_VIRTUAL:
+				case SDL_CONTROLLER_TYPE_AMAZON_LUNA:
+				case SDL_CONTROLLER_TYPE_GOOGLE_STADIA:
+				case SDL_CONTROLLER_TYPE_NVIDIA_SHIELD:
+				case SDL_CONTROLLER_TYPE_XBOX360:
+				case SDL_CONTROLLER_TYPE_XBOXONE: {
+					switch (code) {
+						case SDL_CONTROLLER_BUTTON_A: return "A";
+						case SDL_CONTROLLER_BUTTON_B: return "B";
+						case SDL_CONTROLLER_BUTTON_X: return "X";
+						case SDL_CONTROLLER_BUTTON_Y: return "Y";
+						case SDL_CONTROLLER_BUTTON_BACK: return "Back";
+						case SDL_CONTROLLER_BUTTON_START: return "Start";
+						case SDL_CONTROLLER_BUTTON_LEFTSTICK: return "Left Stick";
+						case SDL_CONTROLLER_BUTTON_RIGHTSTICK: return "Right Stick";
+						case SDL_CONTROLLER_BUTTON_LEFTSHOULDER: return "Left Shoulder";
+						case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER: return "Right Shoulder";
+						case JOYSTICK_CODE_TRIGGER_LEFT: return "Left Trigger";
+						case JOYSTICK_CODE_TRIGGER_RIGHT: return "Right Trigger";
+						default: break;
+					}
+					break;
+				}
+				case SDL_CONTROLLER_TYPE_PS3:
+				case SDL_CONTROLLER_TYPE_PS4:
+				case SDL_CONTROLLER_TYPE_PS5: {
+					switch (code) {
+						case SDL_CONTROLLER_BUTTON_A: return "Cross";
+						case SDL_CONTROLLER_BUTTON_B: return "Circle";
+						case SDL_CONTROLLER_BUTTON_X: return "Square";
+						case SDL_CONTROLLER_BUTTON_Y: return "Triangle";
+						case SDL_CONTROLLER_BUTTON_BACK: return "Share";
+						case SDL_CONTROLLER_BUTTON_START: return "Option";
+						case SDL_CONTROLLER_BUTTON_LEFTSTICK: return "L3";
+						case SDL_CONTROLLER_BUTTON_RIGHTSTICK: return "R3";
+						case SDL_CONTROLLER_BUTTON_LEFTSHOULDER: return "L1";
+						case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER: return "R1";
+						case SDL_CONTROLLER_BUTTON_TOUCHPAD: return "Touchpad";
+						case JOYSTICK_CODE_TRIGGER_LEFT: return "L2";
+						case JOYSTICK_CODE_TRIGGER_RIGHT: return "R2";
+						default: break;
+					}
+					break;
+				}
+				case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_LEFT:
+				case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_RIGHT:
+				case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_JOYCON_PAIR:
+				case SDL_CONTROLLER_TYPE_NINTENDO_SWITCH_PRO: {
+					switch (code) {
+						case SDL_CONTROLLER_BUTTON_A: return "B";
+						case SDL_CONTROLLER_BUTTON_B: return "A";
+						case SDL_CONTROLLER_BUTTON_X: return "Y";
+						case SDL_CONTROLLER_BUTTON_Y: return "X";
+						case SDL_CONTROLLER_BUTTON_BACK: return "-";
+						case SDL_CONTROLLER_BUTTON_START: return "+";
+						case SDL_CONTROLLER_BUTTON_LEFTSTICK: return "Left Stick";
+						case SDL_CONTROLLER_BUTTON_RIGHTSTICK: return "Right Stick";
+						case SDL_CONTROLLER_BUTTON_LEFTSHOULDER: return "L";
+						case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER: return "R";
+						case JOYSTICK_CODE_TRIGGER_LEFT: return "ZL";
+						case JOYSTICK_CODE_TRIGGER_RIGHT: return "ZR";
+						default: break;
+					}
+					break;
+				}
+				default: {
+					break;
+				}
+			}
+		}
+		return "?";
+	}
 	void init_keyboard_bindings_(const config_file& cfg) {
 		drv_->keyboard_bindings.clear();
 		if (auto code = cfg.debugger_binding(); code != SDL_SCANCODE_UNKNOWN) {
@@ -205,6 +282,30 @@ bool input::poll(activity_type& aty, buttons& bts) {
 						} else {
 							bts.holding.up = false;
 							bts.holding.down = false;
+						}
+					} else if (event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT) {
+						if (event.caxis.value > AXIS_DEAD_ZONE) {
+							bool holding = bts.holding._trigger_left;
+							bts.pressed._trigger_left = !holding;
+							bts.holding._trigger_left = true;
+							if (drv_->listening_for_joystick) {
+								drv_->stored_code = JOYSTICK_CODE_TRIGGER_LEFT;
+							}
+						} else {
+							bts.holding._trigger_left = false;
+							bts.released._trigger_left = true;
+						}
+					} else if (event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT) {
+						if (event.caxis.value > AXIS_DEAD_ZONE) {
+							bool holding = bts.holding._trigger_right;
+							bts.pressed._trigger_right = !holding;
+							bts.holding._trigger_right = true;
+							if (drv_->listening_for_joystick) {
+								drv_->stored_code = JOYSTICK_CODE_TRIGGER_RIGHT;
+							}
+						} else {
+							bts.holding._trigger_right = false;
+							bts.released._trigger_right = true;
 						}
 					}
 				}

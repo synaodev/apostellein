@@ -18,6 +18,8 @@ namespace button_name {
 	constexpr u32 LEFT = 9;
 	constexpr u32 RIGHT = 10;
 	constexpr u32 DEBUGGER = 11;
+	constexpr u32 TRIGGER_LEFT = 30;
+	constexpr u32 TRIGGER_RIGHT = 31;
 
 	constexpr u32 FIRST_BUTTON = JUMP;
 	constexpr u32 LAST_BUTTON = OPTIONS;
@@ -45,6 +47,8 @@ struct buttons {
 		bitfield_index<u32, button_name::LEFT> left;
 		bitfield_index<u32, button_name::RIGHT> right;
 		bitfield_index<u32, button_name::DEBUGGER> debugger;
+		bitfield_index<u32, button_name::TRIGGER_LEFT> _trigger_left;
+		bitfield_index<u32, button_name::TRIGGER_RIGHT> _trigger_right;
 	};
 	internals pressed {};
 	internals holding {};
