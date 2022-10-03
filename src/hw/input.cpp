@@ -388,10 +388,6 @@ bool input::poll(activity_type& aty, buttons& bts) {
 				break;
 			}
 			case SDL_CONTROLLERDEVICEADDED: {
-				if (drv_->listening_for_keyboard) {
-					drv_->listening_for_keyboard = false;
-					drv_->listening_for_joystick = true;
-				}
 				if (event.cdevice.which == 0 and !drv_->device) {
 					if (drv_->device = SDL_GameControllerOpen(0); !drv_->device) {
 						spdlog::warn("Couldn't open joystick device! SDL Error: {}", SDL_GetError());
@@ -560,9 +556,7 @@ std::string input::joystick_string(u32 name) {
 	}
 	for (auto&& [code, btn] : drv_->joystick_bindings) {
 		if (btn == name) {
-			if (auto str = SDL_GameControllerGetStringForButton(static_cast<SDL_GameControllerButton>(code)); str) {
-				return str;
-			}
+			return input::find_correct_joystick_name_(code);
 		}
 	}
 	return {};

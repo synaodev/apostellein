@@ -175,6 +175,7 @@ void input_widget::handle(buttons& bts, controller&, overlay&, headsup&) {
 			waiting_ = false;
 			flash_ = false;
 			audio::play(sfx::TitleBeg, 0);
+			input::zero(bts);
 		} else if (!input::joystick_attached() and !left_side_) {
 			waiting_ = false;
 			flash_ = false;
