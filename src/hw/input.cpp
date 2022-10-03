@@ -14,8 +14,8 @@
 
 namespace {
 	constexpr i32 MAXIMUM_JOYSTICK_CODES = 32;
-	constexpr i32 JOYSTICK_CODE_TRIGGER_LEFT = as<i32>(button_name::TRIGGER_LEFT);
-	constexpr i32 JOYSTICK_CODE_TRIGGER_RIGHT = as<i32>(button_name::TRIGGER_RIGHT);
+	constexpr i32 JOYSTICK_CODE_TRIGGER_LEFT = 29;
+	constexpr i32 JOYSTICK_CODE_TRIGGER_RIGHT = 30;
 	constexpr i16 AXIS_DEAD_ZONE = std::numeric_limits<i16>::max() / 2;
 }
 
@@ -282,31 +282,24 @@ bool input::poll(activity_type& aty, buttons& bts) {
 							bts.holding.up = false;
 							bts.holding.down = false;
 						}
-					} else if (event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT) {
-						if (event.caxis.value > AXIS_DEAD_ZONE) {
-							if (!bts.holding._trigger_left) {
-								bts.pressed._trigger_left = true;
+					} else if (event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT or event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT) {
+						const auto code = event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT ?
+							JOYSTICK_CODE_TRIGGER_LEFT :
+							JOYSTICK_CODE_TRIGGER_RIGHT;
+						if (auto iter = drv_->joystick_bindings.find(code); iter != drv_->joystick_bindings.end()) {
+							const auto name = iter->second;
+							if (event.caxis.value > AXIS_DEAD_ZONE) {
+								if (!bts.holding._raw.get(name)) {
+									bts.pressed._raw.set(name, true);
+								}
+								bts.holding._raw.set(name, true);
+							} else {
+								bts.holding._raw.set(name, false);
+								bts.released._raw.set(name, true);
 							}
-							bts.holding._trigger_left = true;
-							if (drv_->listening_for_joystick) {
-								drv_->stored_code = JOYSTICK_CODE_TRIGGER_LEFT;
-							}
-						} else {
-							bts.holding._trigger_left = false;
-							bts.released._trigger_left = true;
 						}
-					} else if (event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT) {
-						if (event.caxis.value > AXIS_DEAD_ZONE) {
-							if (!bts.holding._trigger_right) {
-								bts.pressed._trigger_right = true;
-							}
-							bts.holding._trigger_right = true;
-							if (drv_->listening_for_joystick) {
-								drv_->stored_code = JOYSTICK_CODE_TRIGGER_RIGHT;
-							}
-						} else {
-							bts.holding._trigger_right = false;
-							bts.released._trigger_right = true;
+						if (drv_->listening_for_joystick and event.caxis.value > AXIS_DEAD_ZONE) {
+							drv_->stored_code = code;
 						}
 					}
 				}
