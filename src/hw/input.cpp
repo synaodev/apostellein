@@ -250,13 +250,15 @@ bool input::poll(activity_type& aty, buttons& bts) {
 				if (event.caxis.which == 0) {
 					if (event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTX) {
 						if (event.caxis.value > AXIS_DEAD_ZONE) {
-							bool holding = bts.holding.right;
-							bts.pressed.right = !holding;
+							if (!bts.holding.right) {
+								bts.pressed.right = true;
+							}
 							bts.holding.right = true;
 							bts.holding.left = false;
 						} else if (event.caxis.value < -AXIS_DEAD_ZONE) {
-							bool holding = bts.holding.left;
-							bts.pressed.left = !holding;
+							if (!bts.holding.left) {
+								bts.pressed.left = true;
+							}
 							bts.holding.left = true;
 							bts.holding.right = false;
 						} else {
@@ -265,13 +267,15 @@ bool input::poll(activity_type& aty, buttons& bts) {
 						}
 					} else if (event.caxis.axis == SDL_CONTROLLER_AXIS_LEFTY) {
 						if (event.caxis.value > AXIS_DEAD_ZONE) {
-							bool holding = bts.holding.down;
-							bts.pressed.down = !holding;
+							if (!bts.holding.down) {
+								bts.pressed.down = true;
+							}
 							bts.holding.down = true;
 							bts.holding.up = false;
 						} else if (event.caxis.value < -AXIS_DEAD_ZONE) {
-							bool holding = bts.holding.up;
-							bts.pressed.up = !holding;
+							if (!bts.holding.up) {
+								bts.pressed.up = true;
+							}
 							bts.holding.up = true;
 							bts.holding.down = false;
 						} else {
@@ -280,8 +284,9 @@ bool input::poll(activity_type& aty, buttons& bts) {
 						}
 					} else if (event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERLEFT) {
 						if (event.caxis.value > AXIS_DEAD_ZONE) {
-							bool holding = bts.holding._trigger_left;
-							bts.pressed._trigger_left = !holding;
+							if (!bts.holding._trigger_left) {
+								bts.pressed._trigger_left = true;
+							}
 							bts.holding._trigger_left = true;
 							if (drv_->listening_for_joystick) {
 								drv_->stored_code = JOYSTICK_CODE_TRIGGER_LEFT;
@@ -292,8 +297,9 @@ bool input::poll(activity_type& aty, buttons& bts) {
 						}
 					} else if (event.caxis.axis == SDL_CONTROLLER_AXIS_TRIGGERRIGHT) {
 						if (event.caxis.value > AXIS_DEAD_ZONE) {
-							bool holding = bts.holding._trigger_right;
-							bts.pressed._trigger_right = !holding;
+							if (!bts.holding._trigger_right) {
+								bts.pressed._trigger_right = true;
+							}
 							bts.holding._trigger_right = true;
 							if (drv_->listening_for_joystick) {
 								drv_->stored_code = JOYSTICK_CODE_TRIGGER_RIGHT;

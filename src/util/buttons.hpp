@@ -18,8 +18,8 @@ namespace button_name {
 	constexpr u32 LEFT = 9;
 	constexpr u32 RIGHT = 10;
 	constexpr u32 DEBUGGER = 11;
-	constexpr u32 TRIGGER_LEFT = 30;
-	constexpr u32 TRIGGER_RIGHT = 31;
+	constexpr u32 TRIGGER_LEFT = 29;
+	constexpr u32 TRIGGER_RIGHT = 30;
 
 	constexpr u32 FIRST_BUTTON = JUMP;
 	constexpr u32 LAST_BUTTON = OPTIONS;
