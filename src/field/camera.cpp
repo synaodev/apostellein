@@ -72,11 +72,11 @@ void camera::handle(const player& plr, const environment& env) {
 		} else {
 			cycling_ = true;
 			offsets_ = {
-				rng::next(-power_, power_),
-				rng::next(-power_, power_)
+				rng::effective::between(-power_, power_),
+				rng::effective::between(-power_, power_)
 			};
 			tilt_ = glm::radians(
-				rng::next(-power_, power_)
+				rng::effective::between(-power_, power_)
 			);
 		}
 		if (!indefinite_) {

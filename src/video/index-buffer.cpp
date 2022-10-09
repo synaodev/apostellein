@@ -1,11 +1,14 @@
 #include <vector>
 #include <limits>
 #include <spdlog/spdlog.h>
+#include <apostellein/cast.hpp>
 
 #include "./index-buffer.hpp"
 #include "./opengl.hpp"
 
 namespace {
+	constexpr udx MAXIMUM_LENGTH = as<udx>(std::numeric_limits<u16>::max());
+
 	std::vector<u16> generate_quad_indices_(udx length) {
 		std::vector<u16> result {};
 		auto iter = std::back_inserter(result);
@@ -31,10 +34,10 @@ bool index_buffer::quads(udx count) {
 		spdlog::error("Cannot generate indices for quads! Reason: Count must be greater than zero");
 		return false;
 	}
-	if (count > std::numeric_limits<u16>::max()) {
+	if (count > MAXIMUM_LENGTH) {
 		spdlog::error(
 			"Cannot generate indices for quads! Reason: Count must be less than or equal to {}",
-			std::numeric_limits<u16>::max()
+			MAXIMUM_LENGTH
 		);
 		return false;
 	}

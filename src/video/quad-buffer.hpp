@@ -26,6 +26,11 @@ public:
 	static constexpr T VERTICES_TO_INDICES(udx count) noexcept {
 		return static_cast<T>((count * 6) / 4);
 	}
+	template<typename T = udx>
+	static constexpr T QUADS_TO_INDICES(udx count) noexcept {
+		const auto vertices = count * 4;
+		return VERTICES_TO_INDICES<T>(vertices);
+	}
 	template<typename V>
 	V* at(udx index) {
 		static_assert(std::is_base_of<vtx_type, V>::value);
@@ -52,12 +57,7 @@ public:
 		);
 #endif
 	}
-	udx length() const {
-		if (format_.size > 0) {
-			return length_ / format_.size;
-		}
-		return 0;
-	}
+	udx length() const { return length_; }
 	virtual bool draw(const shader_program& program, udx count) noexcept = 0;
 	virtual bool valid() const noexcept = 0;
 protected:

@@ -12,7 +12,7 @@
 #include "../video/swap-chain.hpp"
 
 namespace {
-	constexpr udx MAXIMUM_INDICES = as<udx>(std::numeric_limits<u16>::max());
+	constexpr udx MAXIMUM_QUADS = quad_buffer::QUADS_TO_INDICES(1024);
 	constexpr udx MAXIMUM_PRIORITIES = as<udx>(priority_type::deferred) + 1;
 	constexpr udx MAXIMUM_BLENDINGS = as<udx>(blending_type::multiply) + 1;
 	// constexpr udx MAXIMUM_PIPELINES = as<udx>(pipeline_type::light) + 1;
@@ -21,7 +21,7 @@ namespace {
 }
 
 bool renderer::build() {
-	if (!indices_.quads(MAXIMUM_INDICES)) {
+	if (!indices_.quads(MAXIMUM_QUADS)) {
 		spdlog::critical("Couldn't setup global index buffer!");
 		return false;
 	}

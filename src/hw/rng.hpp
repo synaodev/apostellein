@@ -3,10 +3,13 @@
 #include <apostellein/struct.hpp>
 
 namespace rng {
-	u32 seed();
-	void seed(u32 value);
-	i32 next(i32 low, i32 high);
-	r32 next(r32 low, r32 high);
+	namespace effective {
+		r32 between(r32 low, r32 high);
+		i32 between(i32 low, i32 high);
+	}
+	namespace logical {
+		bool chance(u32 divisor);
+	}
 	// Init-Guard
 	struct guard : public not_moveable {
 		guard();

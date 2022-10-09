@@ -59,7 +59,7 @@ void ecs::sprite::handle(environment& env) {
 					}
 				} else if (s == blk.blink_state) {
 					if (--blk.ticks; blk.ticks <= 0) {
-						blk.ticks = rng::next(MINIMUM_BLINKING, MAXIMUM_BLINKING);
+						blk.ticks = rng::effective::between(MINIMUM_BLINKING, MAXIMUM_BLINKING);
 						spt.state(blk.return_state);
 					}
 				}

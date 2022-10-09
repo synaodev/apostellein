@@ -84,12 +84,12 @@ void config_file::create() {
 	data_[INPUT_ENTRY][this->keyboard_binding_label(button_name::RIGHT)] =
 		static_cast<i32>(SDL_SCANCODE_RIGHT);
 
-	data_[INPUT_ENTRY][this->joystick_binding_label(button_name::JUMP)] = 0;
-	data_[INPUT_ENTRY][this->joystick_binding_label(button_name::ARMS)] = 1;
+	data_[INPUT_ENTRY][this->joystick_binding_label(button_name::JUMP)] = 1;
+	data_[INPUT_ENTRY][this->joystick_binding_label(button_name::ARMS)] = 0;
 	data_[INPUT_ENTRY][this->joystick_binding_label(button_name::ITEM)] = 2;
 	data_[INPUT_ENTRY][this->joystick_binding_label(button_name::STRAFE)] = 3;
 	data_[INPUT_ENTRY][this->joystick_binding_label(button_name::APOSTLE)] = 4;
-	data_[INPUT_ENTRY][this->joystick_binding_label(button_name::INVENTORY)] = 5;
+	data_[INPUT_ENTRY][this->joystick_binding_label(button_name::INVENTORY)] = 20;
 	data_[INPUT_ENTRY][this->joystick_binding_label(button_name::OPTIONS)] = 6;
 
 	data_[MUSIC_ENTRY][BUFFERING_TIME_ENTRY] = DEFAULT_BUFFERING_TIME;
