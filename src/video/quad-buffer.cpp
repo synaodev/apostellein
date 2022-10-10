@@ -250,7 +250,6 @@ public:
 				count * format_.size,
 				staging_.get()
 			));
-			spdlog::info("invalidated");
 		}
 		glCheck(glBindVertexArray(handle_));
 		program.bind();
