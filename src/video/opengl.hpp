@@ -22,7 +22,6 @@ namespace ogl {
 	u32 major_version() noexcept;
 	u32 minor_version() noexcept;
 	u32 glsl_version() noexcept;
-	u32 memory_available() noexcept;
 	bool modern_shaders_available() noexcept;
 	bool binding_points_available() noexcept;
 	bool debug_callback_available() noexcept;
