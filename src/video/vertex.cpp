@@ -7,6 +7,8 @@
 #include "./opengl.hpp"
 
 namespace {
+	constexpr u32 INVALID_VERTEX_FORMAT_ID = 0xFFFFFFFF;
+
 	template<typename A, typename B>
 	struct address_offset_calculator {
 		static constexpr B detail {};
@@ -18,10 +20,6 @@ namespace {
 	};
 	template<typename A, typename B>
 	constexpr B address_offset_calculator<A, B>::detail;
-	template<typename A, typename B>
-	constexpr u32 INTEGRAL_OFFSET(A B::*member) noexcept {
-		return as<u32>(address_offset_calculator<A, B>::value(member));
-	}
 	template<typename A, typename B>
 	constexpr const void* ADDRESS_OFFSET(A B::*member) noexcept {
 		return reinterpret_cast<const void*>(address_offset_calculator<A, B>::value(member));
@@ -42,18 +40,12 @@ namespace {
 	};
 }
 
-vertex_format vertex_format::from(const std::vector<u32>& types) {
-	auto compare = [](const auto& lhv, const auto& rhv) {
-		return std::equal(lhv.begin(), lhv.end(), rhv.begin(), rhv.end());
-	};
-	if (compare(types, LIGHT_TYPES)) {
-		return vertex_format::from(vtx_light::id());
-	} else if (compare(types, BLANK_TYPES)) {
-		return vertex_format::from(vtx_blank::id());
-	} else if (compare(types, SPRITE_TYPES)) {
-		return vertex_format::from(vtx_sprite::id());
-	}
-	return {};
+vertex_format vertex_format::none() {
+	vertex_format result {};
+	result.id = INVALID_VERTEX_FORMAT_ID;
+	result.size = 0;
+	result.detail = []{};
+	return result;
 }
 
 vertex_format vertex_format::from(u32 id) {
@@ -126,4 +118,20 @@ vertex_format vertex_format::from(u32 id) {
 		spdlog::critical("Vertex declaration was generated incorrectly!");
 	}
 	return result;
+}
+
+vertex_format vertex_format::from(const std::vector<u32>& types) {
+	auto compare = [](const auto& lhv, const auto& rhv) {
+		return std::equal(lhv.begin(), lhv.end(), rhv.begin(), rhv.end());
+	};
+	if (compare(types, LIGHT_TYPES)) {
+		return vertex_format::from(vtx_light::id());
+	}
+	else if (compare(types, BLANK_TYPES)) {
+		return vertex_format::from(vtx_blank::id());
+	}
+	else if (compare(types, SPRITE_TYPES)) {
+		return vertex_format::from(vtx_sprite::id());
+	}
+	return {};
 }

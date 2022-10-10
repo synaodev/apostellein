@@ -13,6 +13,7 @@ public:
 	static constexpr u32 MAXIMUM_CHOICES = 4;
 	void build();
 	void clear() { this->close_textbox(); }
+	void invalidate() const { invalidated_ = true; }
 	void fix();
 	void handle(const buttons& bts, headsup& hud, const inventory& ivt);
 	void update(i64 delta);

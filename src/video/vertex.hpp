@@ -43,8 +43,9 @@ public:
 	constexpr bool operator!=(const vertex_format& that) const {
 		return !(*this == that);
 	}
-	static vertex_format from(const std::vector<u32>& types);
+	static vertex_format none();
 	static vertex_format from(u32 id);
+	static vertex_format from(const std::vector<u32>& types);
 };
 
 struct vtx_light : public vertex_template<vtx_light> {

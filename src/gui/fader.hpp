@@ -14,6 +14,7 @@ namespace gui {
 	};
 	struct fader {
 		void clear();
+		void invalidate() const { invalidated_ = true; }
 		void prepare() {
 			if (this->visible()) {
 				previous_ = current_;
@@ -27,6 +28,7 @@ namespace gui {
 		bool moving() const { return type_ == fade_type::moving_in or type_ == fade_type::moving_out; }
 		bool visible() const { return type_ != fade_type::done_in; }
 	private:
+		mutable bool invalidated_ { false };
 		fade_type type_ { fade_type::done_out };
 		glm::vec2 previous_ {};
 		glm::vec2 current_ {};
