@@ -49,7 +49,7 @@ struct binding_quad_buffer : public quad_buffer {
 				GL_DYNAMIC_DRAW
 			));
 		}
-		format_.detail(handle_);
+		format_.detail();
 		glCheck(glBindVertexArray(0));
 		glCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 		glCheck(glBindBuffer(GL_ARRAY_BUFFER, 0));
@@ -132,7 +132,7 @@ struct binding_quad_stream : public quad_buffer {
 			GL_MAP_COHERENT_BIT |
 			GL_MAP_UNSYNCHRONIZED_BIT
 		));
-		format_.detail(handle_);
+		format_.detail();
 		glCheck(glBindVertexArray(0));
 		glCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
 		glCheck(glBindBuffer(GL_ARRAY_BUFFER, 0));
@@ -215,17 +215,20 @@ struct direct_quad_buffer : public quad_buffer {
 			nullptr,
 			GL_DYNAMIC_STORAGE_BIT
 		));
-		glCheck(glCreateVertexArrays(1, &handle_));
-		glCheck(glVertexArrayElementBuffer(
-			handle_,
+		glCheck(glGenVertexArrays(1, &handle_));
+		glCheck(glBindVertexArray(handle_));
+		glCheck(glBindBuffer(
+			GL_ELEMENT_ARRAY_BUFFER,
 			indices.name()
 		));
-		glCheck(glVertexArrayVertexBuffer(
-			handle_, 0,
-			buffer_, 0,
-			as<i32>(format_.size)
+		glCheck(glBindBuffer(
+			GL_ARRAY_BUFFER,
+			buffer_
 		));
-		format_.detail(handle_);
+		format_.detail();
+		glCheck(glBindVertexArray(0));
+		glCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+		glCheck(glBindBuffer(GL_ARRAY_BUFFER, 0));
 	}
 	virtual ~direct_quad_buffer() {
 		if (buffer_ != 0) {
@@ -247,6 +250,7 @@ public:
 				count * format_.size,
 				staging_.get()
 			));
+			spdlog::info("invalidated");
 		}
 		glCheck(glBindVertexArray(handle_));
 		program.bind();
@@ -293,17 +297,20 @@ struct direct_quad_stream : public quad_buffer {
 			GL_MAP_COHERENT_BIT |
 			GL_MAP_UNSYNCHRONIZED_BIT
 		));
-		glCheck(glCreateVertexArrays(1, &handle_));
-		glCheck(glVertexArrayElementBuffer(
-			handle_,
+		glCheck(glGenVertexArrays(1, &handle_));
+		glCheck(glBindVertexArray(handle_));
+		glCheck(glBindBuffer(
+			GL_ELEMENT_ARRAY_BUFFER,
 			indices.name()
 		));
-		glCheck(glVertexArrayVertexBuffer(
-			handle_, 0,
-			buffer_, 0,
-			as<i32>(format_.size)
+		glCheck(glBindBuffer(
+			GL_ARRAY_BUFFER,
+			buffer_
 		));
-		format_.detail(handle_);
+		format_.detail();
+		glCheck(glBindVertexArray(0));
+		glCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
+		glCheck(glBindBuffer(GL_ARRAY_BUFFER, 0));
 	}
 	virtual ~direct_quad_stream() {
 		for (auto&& fence : fences_) {

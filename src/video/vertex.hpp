@@ -28,7 +28,7 @@ struct vertex_format {
 
 	u32 id {};
 	udx size {};
-	void(*detail)(u32 handle) {};
+	void(*detail)() {};
 public:
 	constexpr operator bool() const {
 		return (
