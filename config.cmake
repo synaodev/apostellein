@@ -27,6 +27,11 @@ if (MSVC)
 		"/GR-"
 		"/Zc:__cplusplus"
 	)
+	if (NOT "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+		target_link_options (apostellein PRIVATE
+			"/subsystem:windows" "/entry:mainCRTStartup"
+		)
+	endif ()
 elseif ()
 	target_compile_options (apostellein PRIVATE
 		"-Wall"

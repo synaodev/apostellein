@@ -62,6 +62,8 @@ namespace konst {
 	template<typename T>
 	constexpr T BILLION() noexcept { return static_cast<T>(1'000'000'000); }
 	template<typename T>
+	constexpr T MILLION() noexcept { return static_cast<T>(1'000'000); }
+	template<typename T>
 	constexpr T TICK() noexcept { return static_cast<T>(60); }
 	template<typename T>
 	constexpr T INVERSE_TICK() noexcept { return ONE<T>() / TICK<T>(); }
@@ -70,10 +72,20 @@ namespace konst {
 		static_assert(std::is_floating_point<T>::value);
 		return static_cast<i64>(seconds * BILLION<T>());
 	}
+	template<typename T = i64>
+	constexpr i64 MILLISECONDS_TO_NANOSECONDS(T milliseconds) noexcept {
+		static_assert(std::is_integral<T>::value);
+		return static_cast<i64>(milliseconds) * MILLION<T>();
+	}
 	template<typename T = r64>
 	constexpr T NANOSECONDS_TO_SECONDS(i64 nanoseconds) noexcept {
 		static_assert(std::is_floating_point<T>::value);
 		return static_cast<T>(nanoseconds) / BILLION<T>();
+	}
+	template<typename T = i64>
+	constexpr T NANOSECONDS_TO_MILLISECONDS(i64 nanoseconds) noexcept {
+		static_assert(std::is_integral<T>::value);
+		return static_cast<T>(nanoseconds / MILLION<i64>());
 	}
 	template<typename T = r64>
 	constexpr i64 NANOSECONDS_PER_TICK() noexcept {

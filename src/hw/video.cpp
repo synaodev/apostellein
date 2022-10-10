@@ -8,7 +8,7 @@
 #include <apostellein/cast.hpp>
 
 #if defined(APOSTELLEIN_PLATFORM_WINDOWS)
-#include <Windows.h>
+#include <mmsystem.h>
 #elif defined(APOSTELLEIN_POSIX_COMPLIANT)
 #include <time.h>
 #endif
@@ -133,20 +133,14 @@ namespace video {
 			return;
 		}
 #if defined(APOSTELLEIN_PLATFORM_WINDOWS)
-		HANDLE timer = CreateWaitableTimer(NULL, TRUE, NULL);
-		if (!timer) {
-			spdlog::error("Couldn't create a waitable timer for high resolution sleep!");
-			return;
-		}
-		LARGE_INTEGER def {};
-		def.QuadPart = -nanoseconds;
-		if (!SetWaitableTimer(timer, &def, 0, NULL, NULL, FALSE)) {
-			spdlog::error("Couldn't set waitable timer for high resolution sleep!");
-			CloseHandle(timer);
-			return;
-		}
-		WaitForSingleObject(timer, INFINITE);
-		CloseHandle(timer);
+		static const u32 period = [] {
+			TIMECAPS caps;
+			timeGetDevCaps(&caps, sizeof(TIMECAPS));
+			return caps.wPeriodMin;
+		}();
+		timeBeginPeriod(period);
+		::Sleep(konst::NANOSECONDS_TO_MILLISECONDS<u32>(nanoseconds));
+		timeEndPeriod(period);
 #elif defined(APOSTELLEIN_POSIX_COMPLIANT)
 		timespec spec {};
 		spec.tv_nsec = nanoseconds;
