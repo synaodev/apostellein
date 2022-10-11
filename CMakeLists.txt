@@ -49,10 +49,6 @@ elseif (APOSTELLEIN_SANITIZER)
 	message ("Only able to enable sanitizer on clang. Sorry!")
 endif ()
 
-# PVS Studio static analysis
-set (APOSTELLEIN_PVS_STUDIO OFF CACHE BOOL "Generate static analysis?")
-set (APOSTELLEIN_DIAGNOSTIC_MODE "GA:1,2" CACHE STRING "What kind of diagnostics?")
-
 # Debug/release options
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug" OR "${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
 	if (NOT DEFINED APOSTELLEIN_OPENGL_LOGGING)

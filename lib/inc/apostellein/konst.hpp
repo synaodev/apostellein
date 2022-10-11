@@ -162,7 +162,7 @@ namespace konst {
 #endif
 	;
 	constexpr char BUILD_TYPE[] =
-#if !defined(NDEBUG)
+#if defined(APOSTELLEIN_BUILD_DEBUG)
 	"Debug"
 #else
 	"Release"
@@ -171,7 +171,7 @@ namespace konst {
 
 	// conditions
 	constexpr bool DEBUG =
-#if !defined(NDEBUG)
+#if defined(APOSTELLEIN_BUILD_DEBUG)
 	true
 #else
 	false

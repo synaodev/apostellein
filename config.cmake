@@ -27,9 +27,10 @@ if (MSVC)
 		"/GR-"
 		"/Zc:__cplusplus"
 	)
-	if (NOT "${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
+	if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release" OR "${CMAKE_BUILD_TYPE}" STREQUAL "MinSizeRel")
 		target_link_options (apostellein PRIVATE
-			"/subsystem:windows" "/entry:mainCRTStartup"
+			"/subsystem:windows"
+			"/entry:mainCRTStartup"
 		)
 	endif ()
 elseif ()
@@ -77,28 +78,6 @@ if (APOSTELLEIN_SANITIZER)
 	target_compile_options (apostellein PRIVATE "-fsanitize=undefined")
 endif ()
 
-if (APOSTELLEIN_PVS_STUDIO)
-	include ("${PROJECT_SOURCE_DIR}/cmake/StaticAnalysis.cmake")
-	if (MSVC)
-		pvs_studio_add_target (
-			TARGET "apostellein.analysis" ALL
-			OUTPUT FORMAT errorfile
-			ANALYZE apostellein
-			MODE "${APOSTELLEIN_DIAGNOSTIC_MODE}"
-			LOG "apostellein.errorfile"
-		)
-	else ()
-		pvs_studio_add_target (
-			TARGET "apostellein.analysis" ALL
-			OUTPUT FORMAT errorfile
-			ANALYZE apostellein
-			MODE "${APOSTELLEIN_DIAGNOSTIC_MODE}"
-			LOG "apostellein.errorfile"
-			COMPILE_COMMANDS "${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json"
-		)
-	endif ()
-endif ()
-
 if (APOSTELLEIN_IMGUI_DEBUGGER)
 	target_compile_definitions (apostellein PRIVATE "-DAPOSTELLEIN_IMGUI_DEBUGGER")
 endif ()
@@ -127,6 +106,10 @@ if (CMAKE_SIZEOF_VOID_P EQUAL 8)
 	target_compile_definitions (apostellein PRIVATE "-DAPOSTELLEIN_MACHINE_64BIT")
 elseif (NOT CMAKE_SIZEOF_VOID_P EQUAL 4)
 	message (FATAL_ERROR "Cannot determine size of void pointer!")
+endif ()
+
+if ("${CMAKE_BUILD_TYPE}" STREQUAL "Debug" OR "${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")
+	target_compile_definitions (apostellein PRIVATE "-DAPOSTELLEIN_BUILD_DEBUG")
 endif ()
 
 # Packages
