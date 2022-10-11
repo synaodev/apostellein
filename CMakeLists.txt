@@ -211,7 +211,7 @@ target_sources (apostellein PRIVATE
 	"lib/src/tmxlite/FreeFuncs.cpp"
 	"lib/src/tmxlite/ImageLayer.cpp"
 	"lib/src/tmxlite/Map.cpp"
-	"lib/src/tmxlite/miniz.c"
+	"lib/src/tmxlite/miniz.cpp"
 	"lib/src/tmxlite/Object.cpp"
 	"lib/src/tmxlite/ObjectGroup.cpp"
 	"lib/src/tmxlite/Property.cpp"
