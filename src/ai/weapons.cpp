@@ -14,26 +14,26 @@ namespace {
 	constexpr i32 ARM_SPRITE_LAYER = 2;
 }
 
-static entt::entity find_closest_apostle(entt::entity s, const environment& env) {
-	const glm::vec2 center = env.get<ecs::location>(s).center();
+// static entt::entity find_closest_apostle(entt::entity s, const environment& env) {
+// 	const glm::vec2 center = env.get<ecs::location>(s).center();
 
-	std::vector<std::pair<entt::entity, r32> > points {};
+// 	std::vector<std::pair<entt::entity, r32> > points {};
 
-	env.slice<ecs::aktor, ecs::location, ecs::health>().each(
-	[&points, &center](entt::entity o, const ecs::aktor&, const ecs::location& loc, const ecs::health& hel) {
-		if (hel.flags.apostolic) {
-			const auto distance = glm::distance(center, loc.center());
-			points.emplace_back(o, distance);
-		}
-	});
-	if (!points.empty()) {
-		std::sort(points.begin(), points.end(), [](const auto& a, const auto& b) {
-			return std::get<r32>(a) < std::get<r32>(b);
-		});
-		return std::get<entt::entity>(points.front());
-	}
-	return entt::null;
-}
+// 	env.slice<ecs::aktor, ecs::location, ecs::health>().each(
+// 	[&points, &center](entt::entity o, const ecs::aktor&, const ecs::location& loc, const ecs::health& hel) {
+// 		if (hel.flags.apostolic) {
+// 			const auto distance = glm::distance(center, loc.center());
+// 			points.emplace_back(o, distance);
+// 		}
+// 	});
+// 	if (!points.empty()) {
+// 		std::sort(points.begin(), points.end(), [](const auto& a, const auto& b) {
+// 			return std::get<r32>(a) < std::get<r32>(b);
+// 		});
+// 		return std::get<entt::entity>(points.front());
+// 	}
+// 	return entt::null;
+// }
 
 static void hand_tick(entt::entity, kernel&, camera&, player&, environment&) {
 	// auto& loc = env.get<ecs::location>(s);
