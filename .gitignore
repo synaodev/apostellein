@@ -37,3 +37,6 @@ imgui_demo.cpp
 
 # Todo
 .todo/
+
+# Data
+data/
