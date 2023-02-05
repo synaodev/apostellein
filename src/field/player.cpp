@@ -640,6 +640,7 @@ i32 player::indicator_state(const headsup_params& params, udx original) const {
 void player::do_begin_(ecs::kinematics& kin) {
 	flags_.interacting = false;
 	flags_.healed = false;
+	flags_.skidding = false;
 	if (kin.flags.bottom) {
 		if (flags_.airbourne) {
 			flags_.airbourne = false;
@@ -822,6 +823,14 @@ void player::do_move_(const buttons& bts, ecs::kinematics& kin, bool locked) {
 				dir_.h = right ?
 					player_direction::hori::right :
 					player_direction::hori::left;
+
+				if (kin.flags.bottom) {
+					if (kin.velocity.x > 0.0f and left) {
+						flags_.skidding = true;
+					} else if (kin.velocity.x < 0.0f and right) {
+						flags_.skidding = true;
+					}
+				}
 			}
 		}
 	}
@@ -1129,7 +1138,7 @@ void player::do_animate_(ecs::sprite& spt, const ecs::health& hel) {
 			state = player_anim::DAMAGED;
 		} else if (flags_.will_wall_jump) {
 			state = player_anim::WALL_JUMPING;
-		} else if (flags_.charging) {
+		} else if (flags_.charging or flags_.skidding) {
 			state = player_anim::CHARGING;
 		} else if (flags_.wall_dashing) {
 			state = player_anim::DASHING_WALLS;

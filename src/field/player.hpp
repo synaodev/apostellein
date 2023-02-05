@@ -31,6 +31,7 @@ union player_flags {
 	bitfield_index<u32, 3> attacking;
 	bitfield_index<u32, 4> strafing;
 	bitfield_index<u32, 5> interacting;
+	bitfield_index<u32, 6> skidding;
 	bitfield_index<u32, 6> charging;
 	bitfield_index<u32, 7> dashing;
 	bitfield_index<u32, 8> wall_jumping;
