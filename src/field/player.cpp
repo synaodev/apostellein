@@ -66,7 +66,6 @@ namespace {
 	constexpr i32 BARRIER_BROKEN_TIMER = 360;
 	constexpr i32 INVINCIBILITY_TIMER = 60;
 	constexpr i32 POISON_TIMER = 180;
-	constexpr i32 CHARGING_TIMER = 180;
 	constexpr i32 WALL_JUMP_TIMER = 10;
 	constexpr i32 FREE_FALL_TIMER = 60;
 	constexpr i32 FLASH_TIMER = 60;
@@ -90,15 +89,16 @@ namespace player_anim {
 	constexpr udx DAMAGED = 8;
 	constexpr udx WALL_JUMPING = 9;
 	constexpr udx ATTACKING = 10;
-	constexpr udx CHARGING = 11;
-	constexpr udx DASHING_FLOOR = 12;
-	constexpr udx DASHING_WALLS = 13;
-	constexpr udx DASHING_CEILING = 14;
+	constexpr udx SKIDDING = 11;
+	// constexpr udx DASHING_FLOOR = 12;
+	// constexpr udx DASHING_WALLS = 13;
+	// constexpr udx DASHING_CEILING = 14;
 	constexpr udx KILLED = 15;
 	// constexpr udx SLEEPING = 16;
 	// constexpr udx AWAKENING = 17;
 	// constexpr udx STANDING_UP = 18;
 	constexpr udx BLINKING = 19;
+	constexpr udx SOMERSAULTING = 20;
 }
 
 namespace player_weapon {
@@ -494,7 +494,6 @@ void player::handle(
 			this->do_jump_(bts, kin, false);
 			this->do_step_(spt);
 			this->do_interact_(bts, knl, env, loc, kin);
-			this->do_dash_(bts, env, loc, kin, spt);
 			this->do_wall_jump_(bts, map, loc, kin);
 		}
 	} else {
@@ -646,6 +645,7 @@ void player::do_begin_(ecs::kinematics& kin) {
 			flags_.airbourne = false;
 			audio::play(sfx::Landing, 0);
 		}
+		flags_.somersaulting = false;
 	} else {
 		flags_.airbourne = true;
 	}
@@ -800,12 +800,7 @@ void player::do_attack_(const buttons& bts, environment& env, const ecs::locatio
 }
 
 void player::do_move_(const buttons& bts, ecs::kinematics& kin, bool locked) {
-	if (
-		!flags_.wall_jumping and
-		!flags_.will_wall_jump and
-		!flags_.charging and
-		!flags_.dashing
-	) {
+	if (!flags_.wall_jumping and !flags_.will_wall_jump) {
 		bool right = locked ? false : bts.holding.right.value();
 		bool left = locked ? false : bts.holding.left.value();
 		if ((right and left) or !(right or left)) {
@@ -837,18 +832,16 @@ void player::do_move_(const buttons& bts, ecs::kinematics& kin, bool locked) {
 }
 
 void player::do_look_(const buttons& bts, const ecs::kinematics& kin) {
-	if (!flags_.dashing) {
-		bool up = bts.holding.up;
-		bool down = bts.holding.down;
-		if ((up and down) or !(up or down)) {
-			dir_.v = player_direction::vert::none;
-		} else if (up) {
-			dir_.v = player_direction::vert::up;
-		} else if (down) {
-			dir_.v = kin.flags.bottom ?
-				player_direction::vert::none :
-				player_direction::vert::down;
-		}
+	bool up = bts.holding.up;
+	bool down = bts.holding.down;
+	if ((up and down) or !(up or down)) {
+		dir_.v = player_direction::vert::none;
+	} else if (up) {
+		dir_.v = player_direction::vert::up;
+	} else if (down) {
+		dir_.v = kin.flags.bottom ?
+			player_direction::vert::none :
+			player_direction::vert::down;
 	}
 }
 
@@ -885,6 +878,13 @@ void player::do_jump_(const buttons& bts, ecs::kinematics& kin, bool locked) {
 	} else if (!locked and bts.pressed.jump) {
 		if (kin.flags.fall_through and bts.holding.down) {
 			kin.flags.fall_through = false;
+		} else if (flags_.skidding) {
+			flags_.skidding = false;
+			flags_.somersaulting = true;
+			kin.velocity.y = -physics_.jump_power * 1.2f;
+			kin.velocity += riding_;
+			riding_ = {};
+			audio::play(sfx::Jump, 0);
 		} else {
 			kin.velocity.y = -physics_.jump_power;
 			kin.velocity += riding_;
@@ -895,153 +895,16 @@ void player::do_jump_(const buttons& bts, ecs::kinematics& kin, bool locked) {
 }
 
 void player::do_interact_(const buttons& bts, kernel& knl, environment& env, const ecs::location& loc, ecs::kinematics& kin) {
-	if (kin.flags.bottom and bts.pressed.down) {
-		if (
-			!flags_.moving and
-			!flags_.dashing and
-			!flags_.charging and
-			!flags_.attacking and
-			!flags_.firing
-		) {
-			flags_.interacting = true;
-			kin.velocity.x = 0.0f;
-			const rect hitbox = loc.bounds();
-			env.slice<ecs::location, ecs::trigger>().each(
-			[&knl, &hitbox](entt::entity, const ecs::location& that_loc, const ecs::trigger& trg) {
-				if (trg.flags.interaction and that_loc.overlaps(hitbox)) {
-					knl.run_event(trg.id);
-				}
-			});
-		}
-	}
-}
-
-void player::do_dash_(const buttons& bts, environment& env, const ecs::location& loc, ecs::kinematics& kin, ecs::sprite& spt) {
-	if (equips_.dash) {
-		if (flags_.dashing) {
-			if (--timers_.flash; timers_.flash <= 0) {
-				timers_.flash = FLASH_TIMER;
-				env.spawn(ai::dash_flash, loc.center());
+	if (bts.pressed.down and kin.flags.bottom and !flags_.moving and !flags_.attacking and !flags_.firing) {
+		flags_.interacting = true;
+		kin.velocity.x = 0.0f;
+		const rect hitbox = loc.bounds();
+		env.slice<ecs::location, ecs::trigger>().each(
+		[&knl, &hitbox](entt::entity, const ecs::location& that_loc, const ecs::trigger& trg) {
+			if (trg.flags.interaction and that_loc.overlaps(hitbox)) {
+				knl.run_event(trg.id);
 			}
-			if (flags_.ceiling_dashing) {
-				const auto speed = dir_.h == player_direction::hori::right ?
-					physics_.dash_speed :
-					-physics_.dash_speed;
-				if (kin.flags.right or kin.flags.left) {
-					dir_.h = dir_.h == player_direction::hori::right ?
-						player_direction::hori::left :
-						player_direction::hori::right;
-					dir_.v = player_direction::vert::up;
-					flags_.wall_dashing = true;
-					flags_.ceiling_dashing = false;
-					flags_.zero_gravity = true;
-					if (dir_.h == player_direction::hori::left) {
-						spt.mirror.horizontally = false;
-						spt.mirror.vertically = true;
-					} else {
-						spt.mirror.horizontally = true;
-						spt.mirror.vertically = true;
-					}
-					if (kin.flags.right) {
-						spt.variation = 0;
-					} else if (kin.flags.left) {
-						spt.variation = 1;
-					}
-					kin.flags.right = false;
-					kin.flags.left = false;
-					kin.flags.top = false;
-					kin.flags.bottom = false;
-					kin.velocity = {};
-				} else {
-					kin.velocity.x = speed;
-				}
-			} else if (flags_.wall_dashing) {
-				const auto speed = dir_.v == player_direction::vert::up ?
-					physics_.dash_speed :
-					-physics_.dash_speed;
-				if (kin.flags.top or kin.flags.bottom) {
-					if (kin.flags.top) {
-						dir_.h = dir_.h == player_direction::hori::right ?
-							player_direction::hori::left :
-							player_direction::hori::right;
-					}
-					dir_.v = player_direction::vert::none;
-					flags_.ceiling_dashing = kin.flags.top;
-					flags_.wall_dashing = false;
-					flags_.zero_gravity = false;
-					if (dir_.h == player_direction::hori::left) {
-						spt.mirror.horizontally = true;
-						spt.mirror.vertically = false;
-					} else {
-						spt.mirror.horizontally = true;
-						spt.mirror.vertically = true;
-					}
-					spt.variation = 0;
-					kin.flags.right = false;
-					kin.flags.left = false;
-					kin.flags.top = false;
-					kin.flags.bottom = false;
-					kin.velocity = {};
-				} else {
-					kin.velocity = { 0.0f, speed };
-				}
-			} else {
-				const auto speed = dir_.h == player_direction::hori::right ?
-					physics_.dash_speed :
-					-physics_.dash_speed;
-				if (kin.flags.right or kin.flags.left) {
-					flags_.wall_dashing = true;
-					flags_.zero_gravity = true;
-					dir_.h = kin.flags.right ?
-						player_direction::hori::right :
-						player_direction::hori::left;
-					dir_.v = player_direction::vert::none;
-					if (dir_.h == player_direction::hori::left) {
-						spt.mirror.horizontally = true;
-						spt.mirror.vertically = false;
-						spt.variation = 1;
-					} else {
-						spt.mirror.horizontally = false;
-						spt.mirror.vertically = false;
-						spt.variation = 0;
-					}
-					kin.flags.right = false;
-					kin.flags.left = false;
-					kin.flags.top = false;
-					kin.flags.bottom = false;
-					kin.velocity = {};
-				} else {
-					kin.velocity.x = speed;
-				}
-			}
-			if (bts.pressed.apostle) {
-				flags_.dashing = false;
-				flags_.wall_dashing = false;
-				flags_.ceiling_dashing = false;
-				flags_.zero_gravity = false;
-				timers_.flash = 0;
-				spt.variation = 0;
-			}
-		} else if (!flags_.charging) {
-			if (kin.flags.bottom) {
-				if (bts.holding.apostle and bts.pressed.strafe) {
-					flags_.charging = true;
-					timers_.charging = CHARGING_TIMER;
-					kin.velocity.x = 0.0f;
-				}
-			}
-		} else if (timers_.charging > 0) {
-			if (--timers_.charging; timers_.charging == 0) {
-				timers_.flash = FLASH_TIMER;
-				flags_.charging = false;
-				flags_.dashing = true;
-				kin.flags.right = false;
-				kin.flags.left = false;
-				kin.flags.top = false;
-				kin.flags.bottom = false;
-				kin.velocity.x = 0.0f;
-			}
-		}
+		});
 	}
 }
 
@@ -1109,12 +972,7 @@ void player::do_camera_(const ecs::kinematics& kin) {
 
 void player::do_physics_(ecs::kinematics& kin) {
 	if (!flags_.zero_gravity) {
-		kin.accel_y(
-			flags_.ceiling_dashing ?
-				-physics_.gravity :
-				physics_.gravity,
-			physics_.max_speed.y
-		);
+		kin.accel_y(physics_.gravity, physics_.max_speed.y);
 	}
 }
 
@@ -1138,19 +996,15 @@ void player::do_animate_(ecs::sprite& spt, const ecs::health& hel) {
 			state = player_anim::DAMAGED;
 		} else if (flags_.will_wall_jump) {
 			state = player_anim::WALL_JUMPING;
-		} else if (flags_.charging or flags_.skidding) {
-			state = player_anim::CHARGING;
-		} else if (flags_.wall_dashing) {
-			state = player_anim::DASHING_WALLS;
-		} else if (flags_.ceiling_dashing) {
-			state = player_anim::DASHING_CEILING;
-		} else if (flags_.dashing) {
-			state = player_anim::DASHING_FLOOR;
+		} else if (flags_.skidding) {
+			state = player_anim::SKIDDING;
 		} else if (flags_.attacking) {
 			state = player_anim::ATTACKING;
 		} else if (flags_.airbourne) {
 			if (flags_.strafing or flags_.firing) {
 				state = player_anim::JUMPING_FIRING;
+			} else if (flags_.somersaulting) {
+				state = player_anim::SOMERSAULTING;
 			} else {
 				state = player_anim::JUMPING;
 			}
@@ -1171,7 +1025,7 @@ void player::do_animate_(ecs::sprite& spt, const ecs::health& hel) {
 			state = player_anim::IDLE;
 		}
 		spt.state(state);
-		if (dir_ != previous_dir_ and !flags_.dashing) {
+		if (dir_ != previous_dir_) {
 			previous_dir_ = dir_;
 			spt.mirror.horizontally = dir_.h == player_direction::hori::left;
 			switch (dir_.v) {

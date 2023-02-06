@@ -32,23 +32,20 @@ union player_flags {
 	bitfield_index<u32, 4> strafing;
 	bitfield_index<u32, 5> interacting;
 	bitfield_index<u32, 6> skidding;
-	bitfield_index<u32, 6> charging;
-	bitfield_index<u32, 7> dashing;
+	bitfield_index<u32, 7> somersaulting;
 	bitfield_index<u32, 8> wall_jumping;
-	bitfield_index<u32, 9> wall_dashing;
-	bitfield_index<u32, 10> ceiling_dashing;
-	bitfield_index<u32, 11> airbourne;
-	bitfield_index<u32, 12> zero_gravity;
-	bitfield_index<u32, 13> will_attack;
-	bitfield_index<u32, 14> will_wall_jump;
-	bitfield_index<u32, 15> invincible;
-	bitfield_index<u32, 16> healed;
-	bitfield_index<u32, 17> damaged;
-	bitfield_index<u32, 18> broken;
-	bitfield_index<u32, 19> killed;
-	bitfield_index<u32, 20> decimated;
-	bitfield_index<u32, 21> event_animation;
-	bitfield_index<u32, 22> death_animation;
+	bitfield_index<u32, 9> airbourne;
+	bitfield_index<u32, 10> zero_gravity;
+	bitfield_index<u32, 11> will_attack;
+	bitfield_index<u32, 12> will_wall_jump;
+	bitfield_index<u32, 13> invincible;
+	bitfield_index<u32, 14> healed;
+	bitfield_index<u32, 15> damaged;
+	bitfield_index<u32, 16> broken;
+	bitfield_index<u32, 17> killed;
+	bitfield_index<u32, 18> decimated;
+	bitfield_index<u32, 19> event_animation;
+	bitfield_index<u32, 20> death_animation;
 };
 
 union player_equips {
@@ -56,12 +53,11 @@ union player_equips {
 	bitfield_index<u32, 0> weak_arms;
 	bitfield_index<u32, 1> wall_jump;
 	bitfield_index<u32, 2> grapple;
-	bitfield_index<u32, 3> dash;
-	bitfield_index<u32, 4> oxygen;
-	bitfield_index<u32, 5> once_more;
-	bitfield_index<u32, 6> strong_arms;
-	bitfield_index<u32, 7> carry_shoshi;
-	bitfield_index<u32, 8> accompany_shoshi;
+	bitfield_index<u32, 3> oxygen;
+	bitfield_index<u32, 4> once_more;
+	bitfield_index<u32, 5> strong_arms;
+	bitfield_index<u32, 6> carry_shoshi;
+	bitfield_index<u32, 7> accompany_shoshi;
 };
 
 struct player_timers {
@@ -73,7 +69,6 @@ struct player_timers {
 	i32 invincible {};
 	i32 barrier {};
 	i32 wall_jump {};
-	i32 charging {};
 	i32 free_fall {};
 public:
 	void clear() {
@@ -85,7 +80,6 @@ public:
 		invincible = 0;
 		barrier = 0;
 		wall_jump = 0;
-		charging = 0;
 		free_fall = 0;
 	}
 };
@@ -99,29 +93,26 @@ struct player_physics {
 	r32 hover {};
 	r32 max_hover {};
 	r32 gravity {};
-	r32 dash_speed {};
 public:
 	void clear() {
 		max_speed = { 2.0f, 6.0f };
-		accel = 0.1f;
+		accel = 0.08f;
 		decel = 0.24f;
 		jump_power = 3.7f;
 		jump_hold = 0.16f;
 		hover = 0.01f;
 		max_hover = 0.3f;
 		gravity = 0.28f;
-		dash_speed = 5.0f;
 	}
 	void water() {
 		max_speed = { 1.0f, 3.0f };
-		accel = 0.05f;
+		accel = 0.04f;
 		decel = 0.12f;
 		jump_power = 1.85f;
 		jump_hold = 0.08f;
 		hover = 0.01f;
 		max_hover = 0.3f;
 		gravity = 0.14f;
-		dash_speed = 2.5f;
 	}
 };
 
@@ -198,7 +189,6 @@ private:
 	void do_step_(const ecs::sprite& spt);
 	void do_jump_(const buttons& bts, ecs::kinematics& kin, bool locked);
 	void do_interact_(const buttons& bts, kernel& knl, environment& env, const ecs::location& loc, ecs::kinematics& kin);
-	void do_dash_(const buttons& bts, environment& env, const ecs::location& loc, ecs::kinematics& kin, ecs::sprite& spt);
 	void do_wall_jump_(const buttons& bts, const tile_map& map, const ecs::location& loc, ecs::kinematics& kin);
 	void do_camera_(const ecs::kinematics& kin);
 	void do_physics_(ecs::kinematics& kin);
