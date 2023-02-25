@@ -218,7 +218,7 @@ int  pxtnDescriptor::v_w_asfile( int val, int *p_add )
 	return true;
 }
 
-// 可変長読み込み（int32_t  までを保証）
+// []
 bool pxtnDescriptor::v_r  ( int32_t *p  )
 {
 	if( !_p_desc ) return false;

@@ -52,7 +52,7 @@ double pxtnPulse_Oscillator::GetOneSample_Coodinate( int32_t index )
 	// find target 2 ponits
 	c = 0; while( c < _point_num ){ if( _p_point[ c ].x > i ) break; c++; }
 
-	//末端
+	//[]
 	if( c == _point_num )
 	{
 		x1 = _p_point[ c - 1 ].x;

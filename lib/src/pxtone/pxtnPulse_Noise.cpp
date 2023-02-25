@@ -172,7 +172,7 @@ bool pxtnPulse_Noise::write( pxtnDescriptor *p_doc, int32_t *p_add ) const
 		pU = &_units[ u ];
 		if( pU->bEnable )
 		{
-			// フラグ
+			// []
 			flags = _MakeFlags( pU );
 			if( !p_doc->v_w_asfile( flags, &seek ) ) goto End;
 			if( flags & NOISEEDITFLAG_ENVELOPE )

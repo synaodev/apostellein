@@ -157,7 +157,7 @@ int32_t pxtnMaster::io_r_v5_EventNum( pxtnDescriptor *p_doc )
 // master info(8byte) ================
 typedef struct
 {
-	uint16_t data_num ;        // data-num is 3 ( clock / status / volume ）
+	uint16_t data_num ;        // data-num is 3 ( clock / status / volume )
 	uint16_t rrr      ;
 	uint32_t event_num;
 }

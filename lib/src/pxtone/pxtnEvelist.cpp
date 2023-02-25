@@ -241,7 +241,7 @@ bool pxtnEvelist::Record_Add_i( int32_t clock, uint8_t unit_no, uint8_t kind, in
 	EVERECORD* p_prev = NULL;
 	EVERECORD* p_next = NULL;
 
-	// 空き検索
+	// []
 	for( int32_t r = 0; r < _eve_allocated_num; r++ )
 	{
 		if( _eves[ r ].kind == EVENTKIND_NULL ){ p_new = &_eves[ r ]; break; }
@@ -262,19 +262,19 @@ bool pxtnEvelist::Record_Add_i( int32_t clock, uint8_t unit_no, uint8_t kind, in
 
 		for( EVERECORD* p = _start; p; p = p->next )
 		{
-			if( p->clock == clock ) // 同時
+			if( p->clock == clock ) // []
 			{
 				for( ; true; p = p->next )
 				{
 					if( p->clock != clock                        ){ p_prev = p->prev; p_next = p; break; }
-					if( unit_no == p->unit_no && kind == p->kind ){ p_prev = p->prev; p_next = p->next; p->kind = EVENTKIND_NULL; break; } // 置き換え
-					if( _ComparePriority( kind, p->kind ) < 0    ){ p_prev = p->prev; p_next = p; break; }// プライオリティを検査
-					if( !p->next                                 ){ p_prev = p; break; }// 末端
+					if( unit_no == p->unit_no && kind == p->kind ){ p_prev = p->prev; p_next = p->next; p->kind = EVENTKIND_NULL; break; } // []
+					if( _ComparePriority( kind, p->kind ) < 0    ){ p_prev = p->prev; p_next = p; break; }// []
+					if( !p->next                                 ){ p_prev = p; break; }// []
 				}
 				break;
 			}
-			else if( p->clock > clock ){ p_prev = p->prev; p_next = p      ; break; } // 追い越した
-			else if( !p->next         ){ p_prev = p; break; }// 末端
+			else if( p->clock > clock ){ p_prev = p->prev; p_next = p      ; break; } // []
+			else if( !p->next         ){ p_prev = p; break; }// []
 		}
 	}
 
@@ -695,19 +695,19 @@ void pxtnEvelist::x4x_Read_Add( int32_t clock, uint8_t unit_no, uint8_t kind, in
 
 		for( ; p; p = p->next )
 		{
-			if( p->clock == clock ) // 同時
+			if( p->clock == clock ) // []
 			{
 				for( ; true; p = p->next )
 				{
 					if( p->clock != clock                        ){ p_prev = p->prev; p_next = p; break; }
-					if( unit_no == p->unit_no && kind == p->kind ){ p_prev = p->prev; p_next = p->next; p->kind = EVENTKIND_NULL; break; } // 置き換え
-					if( _ComparePriority( kind, p->kind ) < 0    ){ p_prev = p->prev; p_next = p; break; }// プライオリティを検査
-					if( !p->next                                 ){ p_prev = p; break; }// 末端
+					if( unit_no == p->unit_no && kind == p->kind ){ p_prev = p->prev; p_next = p->next; p->kind = EVENTKIND_NULL; break; } // []
+					if( _ComparePriority( kind, p->kind ) < 0    ){ p_prev = p->prev; p_next = p; break; }// []
+					if( !p->next                                 ){ p_prev = p; break; }// []
 				}
 				break;
 			}
-			else if( p->clock > clock ){ p_prev = p->prev; p_next = p; break; } // 追い越した
-			else if( !p->next         ){ p_prev = p; break; }// 末端
+			else if( p->clock > clock ){ p_prev = p->prev; p_next = p; break; } // []
+			else if (!p->next) { p_prev = p; break; }// []
 		}
 	}
 	_rec_set( p_new, p_prev, p_next, clock, unit_no, kind, value );
@@ -827,7 +827,7 @@ typedef struct
 {
 	uint16_t unit_index;
 	uint16_t event_kind;
-	uint16_t data_num;        // １イベントのデータ数。現在は 2 ( clock / volume ）
+	uint16_t data_num;        // []
 	uint16_t rrr;
 	uint32_t  event_num;
 }
