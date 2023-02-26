@@ -803,29 +803,60 @@ void player::do_move_(const buttons& bts, ecs::kinematics& kin, bool locked) {
 	if (!flags_.wall_jumping and !flags_.will_wall_jump) {
 		bool right = locked ? false : bts.holding.right.value();
 		bool left = locked ? false : bts.holding.left.value();
-		if ((right and left) or !(right or left)) {
+
+		// TODO: Rewrite this so it isn't completely unreadable.
+		// This code is complicated because we need to accommodate holding left & right simultaneously,
+		// in addition to skidding behavior and strafing
+		if (right or left) {
+			flags_.moving = true;
+			if (kin.velocity.x == 0.0f) {
+				if (right and dir_.h == player_direction::hori::right) {
+					kin.accel_x(physics_.accel, physics_.max_speed.x);
+				} else if (left and dir_.h == player_direction::hori::left) {
+					kin.accel_x(-physics_.accel, physics_.max_speed.x);
+				} else if (right and left) {
+					flags_.moving = false;
+				} else {
+					if (!flags_.strafing) {
+						dir_.h = right ? player_direction::hori::right : player_direction::hori::left;
+					}
+					kin.accel_x(right ? physics_.accel : -physics_.accel, physics_.max_speed.x);
+				}
+			} else {
+				if (right and kin.velocity.x > 0.0f) {
+					kin.accel_x(physics_.accel, physics_.max_speed.x);
+					if (!flags_.strafing) {
+						dir_.h = player_direction::hori::right;
+					}
+				} else if (left and kin.velocity.x < 0.0f) {
+					kin.accel_x(-physics_.accel, physics_.max_speed.x);
+					if (!flags_.strafing) {
+						dir_.h = player_direction::hori::left;
+					}
+				} else if (right and kin.velocity.x < 0.0f) {
+					if (!flags_.strafing) {
+						dir_.h = player_direction::hori::right;
+						if (kin.flags.bottom) {
+							flags_.skidding = true;
+						}
+					}
+					kin.accel_x(physics_.accel, physics_.max_speed.x);
+				} else if (left and kin.velocity.x > 0.0f) {
+					if (!flags_.strafing) {
+						dir_.h = player_direction::hori::left;
+						if (kin.flags.bottom) {
+							flags_.skidding = true;
+						}
+					}
+					kin.accel_x(-physics_.accel, physics_.max_speed.x);
+				} else {
+					spdlog::error("This player movement case should never hit!");
+				}
+			}
+		} else {
 			flags_.moving = false;
 			if (kin.flags.bottom) {
 				kin.decel_x(physics_.decel);
-			}
-		} else {
-			flags_.moving = true;
-			kin.accel_x(
-				right ? physics_.accel : -physics_.accel,
-				physics_.max_speed.x
-			);
-			if (!flags_.strafing) {
-				dir_.h = right ?
-					player_direction::hori::right :
-					player_direction::hori::left;
-
-				if (kin.flags.bottom) {
-					if (kin.velocity.x > 0.0f and left) {
-						flags_.skidding = true;
-					} else if (kin.velocity.x < 0.0f and right) {
-						flags_.skidding = true;
-					}
-				}
 			}
 		}
 	}
