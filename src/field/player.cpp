@@ -1,5 +1,6 @@
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
+#include <glm/gtc/constants.hpp>
 #include <apostellein/konst.hpp>
 #include <apostellein/cast.hpp>
 
@@ -158,6 +159,7 @@ void player::clear(environment& env) {
 	kin.flags.bottom = true;
 	spt.clear();
 	spt.layer = DEFAULT_SPRITE_LAYER;
+	spt.pivot = glm::vec2(8.0f, 10.0f); // TODO: don't hard-code this
 	hel.clear();
 	hel.current = ABSOLUTE_STARTING_BARRIER;
 	hel.maximum = ABSOLUTE_STARTING_BARRIER;
@@ -541,6 +543,9 @@ void player::animate(environment& env, udx state, u32 facing) {
 	if (!(facing & FACING_NEUTRAL)) {
 		spt.mirror.horizontally = facing & FACING_LEFT;
 	}
+
+	// rotation
+	spt.angle = 0.0f;
 }
 
 void player::teleport(environment& env, const glm::vec2& position) {
@@ -912,7 +917,7 @@ void player::do_jump_(const buttons& bts, ecs::kinematics& kin, bool locked) {
 		} else if (flags_.skidding) {
 			flags_.skidding = false;
 			flags_.somersaulting = true;
-			kin.velocity.y = -physics_.jump_power * 1.2f;
+			kin.velocity.y = -physics_.somersault;
 			kin.velocity += riding_;
 			riding_ = {};
 			audio::play(sfx::Jump, 0);
@@ -1020,6 +1025,8 @@ void player::do_water_(const environment& env, ecs::submersible& sub) {
 
 void player::do_animate_(ecs::sprite& spt, const ecs::health& hel) {
 	if (!flags_.event_animation) {
+
+		// animation
 		auto state = spt.state();
 		if (flags_.death_animation) {
 			state = player_anim::KILLED;
@@ -1056,6 +1063,8 @@ void player::do_animate_(ecs::sprite& spt, const ecs::health& hel) {
 			state = player_anim::IDLE;
 		}
 		spt.state(state);
+
+		// direction
 		if (dir_ != previous_dir_) {
 			previous_dir_ = dir_;
 			spt.mirror.horizontally = dir_.h == player_direction::hori::left;
@@ -1070,6 +1079,19 @@ void player::do_animate_(ecs::sprite& spt, const ecs::health& hel) {
 				spt.variation = 0;
 				break;
 			}
+		}
+
+		// rotation
+		if (state == player_anim::SOMERSAULTING) {
+			constexpr r32 eighth_pi = glm::quarter_pi<r32>() / 2.0f;
+			if (dir_.h == player_direction::hori::left) {
+				spt.angle += eighth_pi;
+			} else {
+				spt.angle -= eighth_pi;
+			}
+			spt.angle = glm::mod(spt.angle, glm::two_pi<r32>());
+		} else {
+			spt.angle = 0.0f;
 		}
 	}
 }

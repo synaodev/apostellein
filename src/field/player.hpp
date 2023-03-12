@@ -90,6 +90,7 @@ struct player_physics {
 	r32 decel {};
 	r32 jump_power {};
 	r32 jump_hold {};
+	r32 somersault{};
 	r32 hover {};
 	r32 max_hover {};
 	r32 gravity {};
@@ -100,6 +101,7 @@ public:
 		decel = 0.24f;
 		jump_power = 3.7f;
 		jump_hold = 0.16f;
+		somersault = 4.7f;
 		hover = 0.01f;
 		max_hover = 0.3f;
 		gravity = 0.28f;
@@ -110,6 +112,7 @@ public:
 		decel = 0.12f;
 		jump_power = 1.85f;
 		jump_hold = 0.08f;
+		somersault = 2.35f;
 		hover = 0.01f;
 		max_hover = 0.3f;
 		gravity = 0.14f;
