@@ -70,6 +70,7 @@ namespace {
 	constexpr i32 WALL_JUMP_TIMER = 10;
 	constexpr i32 FREE_FALL_TIMER = 60;
 	constexpr i32 FLASH_TIMER = 60;
+	constexpr i32 ATTACK_TIMER = 8;
 	constexpr i32 POISON_LEVEL_ONE = 350;
 	constexpr i32 POISON_LEVEL_TWO = 650;
 	constexpr char BARRIER_ENTRY[] = "Barrier";
@@ -795,6 +796,7 @@ void player::do_attack_(const buttons& bts, environment& env, const ecs::locatio
 			flags_.attacking = true;
 			flags_.will_attack = false;
 			flags_.firing = false;
+			timers_.attack = ATTACK_TIMER;
 			auto& type = equips_.strong_arms ?
 				ai::strong_hammer :
 				ai::weak_hammer;
@@ -1079,19 +1081,6 @@ void player::do_animate_(ecs::sprite& spt, const ecs::health& hel) {
 				spt.variation = 0;
 				break;
 			}
-		}
-
-		// rotation
-		if (state == player_anim::SOMERSAULTING) {
-			constexpr r32 eighth_pi = glm::quarter_pi<r32>() / 2.0f;
-			if (dir_.h == player_direction::hori::left) {
-				spt.angle += eighth_pi;
-			} else {
-				spt.angle -= eighth_pi;
-			}
-			spt.angle = glm::mod(spt.angle, glm::two_pi<r32>());
-		} else {
-			spt.angle = 0.0f;
 		}
 	}
 }
