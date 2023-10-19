@@ -1,7 +1,7 @@
 [build_requires]
 sol2/[>=3.2.3]
 glm/0.9.9.8
-entt/[>=3.8.0]
+entt/[>=3.12.0]
 nlohmann_json/[>=3.9.1]
 stb/cci.20210713
 

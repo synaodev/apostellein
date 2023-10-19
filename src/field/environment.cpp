@@ -154,6 +154,14 @@ void environment::load(const tmx::ObjectGroup& data, const controller& ctl, kern
 	}
 }
 
+udx environment::length() const {
+	return registry_.view<ecs::aktor>().size();
+}
+
+udx environment::alive() const {
+	return registry_.storage<entt::entity>()->in_use();
+}
+
 udx environment::visible(r32 ratio, const rect& view) const {
 	return ecs::sprite::visible(ratio, view, *this);
 }

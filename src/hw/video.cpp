@@ -7,12 +7,6 @@
 #include <apostellein/konst.hpp>
 #include <apostellein/cast.hpp>
 
-#if defined(APOSTELLEIN_PLATFORM_WINDOWS)
-#include <mmsystem.h>
-#elif defined(APOSTELLEIN_POSIX_COMPLIANT)
-#include <time.h>
-#endif
-
 #include "./video.hpp"
 #include "./vfs.hpp"
 #include "../util/config-file.hpp"
@@ -132,17 +126,8 @@ namespace video {
 		if (nanoseconds <= 0) {
 			return;
 		}
-#if defined(APOSTELLEIN_PLATFORM_WINDOWS)
-		static const u32 period = [] {
-			TIMECAPS caps;
-			timeGetDevCaps(&caps, sizeof(TIMECAPS));
-			return caps.wPeriodMin;
-		}();
-		timeBeginPeriod(period);
-		::Sleep(konst::NANOSECONDS_TO_MILLISECONDS<u32>(nanoseconds));
-		timeEndPeriod(period);
-#elif defined(APOSTELLEIN_POSIX_COMPLIANT)
-		timespec spec {};
+#if defined(APOSTELLEIN_POSIX_COMPLIANT)
+		timespec spec{};
 		spec.tv_nsec = nanoseconds;
 		spec.tv_sec = 0;
 		while ((nanosleep(&spec, &spec) == -1) and (errno == EINTR)) {}

@@ -62,8 +62,8 @@ public:
 	entt::entity allocate() { return registry_.create(); }
 	void load(const tmx::ObjectGroup& data, const controller& ctl, kernel& knl);
 	bool valid(entt::entity e) const { return registry_.valid(e); }
-	udx length() const { return registry_.size(); }
-	udx alive() const { return registry_.alive(); }
+	udx length() const;
+	udx alive() const;
 	udx visible(r32 ratio, const rect& view) const;
 	template<typename... T> auto slice() { return registry_.view<T...>(); }
 	template<typename... T> auto slice() const { return registry_.view<T...>(); }
