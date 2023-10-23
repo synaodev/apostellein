@@ -93,29 +93,32 @@ struct player_physics {
 	r32 somersault{};
 	r32 hover {};
 	r32 max_hover {};
-	r32 gravity {};
+	r32 climbing_gravity {};
+	r32 falling_gravity {};
 public:
 	void clear() {
 		max_speed = { 2.0f, 6.0f };
 		accel = 0.08f;
 		decel = 0.24f;
 		jump_power = 3.7f;
-		jump_hold = 0.16f;
+		jump_hold = 0.1f;
 		somersault = 4.7f;
 		hover = 0.01f;
 		max_hover = 0.3f;
-		gravity = 0.28f;
+		climbing_gravity = 0.2f;
+		falling_gravity = 0.28f;
 	}
 	void water() {
 		max_speed = { 1.0f, 3.0f };
 		accel = 0.04f;
 		decel = 0.12f;
 		jump_power = 1.85f;
-		jump_hold = 0.08f;
+		jump_hold = 0.05f;
 		somersault = 2.35f;
 		hover = 0.01f;
 		max_hover = 0.3f;
-		gravity = 0.14f;
+		climbing_gravity = 0.1f;
+		falling_gravity = 0.14f;
 	}
 };
 
@@ -169,6 +172,7 @@ public:
 	entt::entity entity() const { return entt::entity{ 0 }; }
 	bool visible(const environment& env) const;
 	bool interacting() const { return flags_.interacting; }
+	bool facing_left() const { return dir_.h == player_direction::hori::left; }
 	glm::vec2 viewpoint(const environment& env) const;
 	u32 death_type(
 		const ecs::kinematics& kin,

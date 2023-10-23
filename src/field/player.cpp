@@ -58,7 +58,7 @@ namespace {
 	constexpr r32 INCR_OFFSET_Y2 = 6.0f;
 	constexpr r32 GROUND_OFFSET_Y = -8.0f;
 	constexpr r32 AIR_OFFSET_Y = 80.0f;
-	constexpr i32 DEFAULT_SPRITE_LAYER = 1;
+	constexpr i32 DEFAULT_SPRITE_LAYER = 2;
 	constexpr i32 ABSOLUTE_STARTING_BARRIER = 2;
 	constexpr i32 ABSOLUTE_MAXIMUM_BARRIER = 16;
 	constexpr i32 ABSOLUTE_MAXIMUM_POISON = 999;
@@ -1010,7 +1010,10 @@ void player::do_camera_(const ecs::kinematics& kin) {
 
 void player::do_physics_(ecs::kinematics& kin) {
 	if (!flags_.zero_gravity) {
-		kin.accel_y(physics_.gravity, physics_.max_speed.y);
+		const auto gravity = kin.velocity.y > 0.0f ?
+			physics_.falling_gravity :
+			physics_.climbing_gravity;
+		kin.accel_y(gravity, physics_.max_speed.y);
 	}
 }
 

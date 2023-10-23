@@ -61,7 +61,7 @@ public:
 	entt::entity search(i32 id) const;
 	entt::entity allocate() { return registry_.create(); }
 	void load(const tmx::ObjectGroup& data, const controller& ctl, kernel& knl);
-	bool valid(entt::entity e) const { return registry_.valid(e); }
+	bool valid(entt::entity e) const { return e != entt::null and registry_.valid(e); }
 	udx length() const;
 	udx alive() const;
 	udx visible(r32 ratio, const rect& view) const;

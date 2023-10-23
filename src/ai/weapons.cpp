@@ -11,34 +11,19 @@
 #include "../util/id-table.hpp"
 
 namespace {
-	constexpr i32 ARM_SPRITE_LAYER = 2;
+	constexpr i32 ARM_SPRITE_LAYER = 3;
 }
 
-// static entt::entity find_closest_apostle(entt::entity s, const environment& env) {
-// 	const glm::vec2 center = env.get<ecs::location>(s).center();
+static void hand_tick(entt::entity s, kernel&, camera&, player&, environment& env) {
+	auto& loc = env.get<ecs::location>(s);
+	auto& chr = env.get<ecs::chroniker>(s);
+	auto& kin = env.get<ecs::kinematics>(s);
 
-// 	std::vector<std::pair<entt::entity, r32> > points {};
+	if (--chr[0]; chr[0] > 0) {
 
-// 	env.slice<ecs::aktor, ecs::location, ecs::health>().each(
-// 	[&points, &center](entt::entity o, const ecs::aktor&, const ecs::location& loc, const ecs::health& hel) {
-// 		if (hel.flags.apostolic) {
-// 			const auto distance = glm::distance(center, loc.center());
-// 			points.emplace_back(o, distance);
-// 		}
-// 	});
-// 	if (!points.empty()) {
-// 		std::sort(points.begin(), points.end(), [](const auto& a, const auto& b) {
-// 			return std::get<r32>(a) < std::get<r32>(b);
-// 		});
-// 		return std::get<entt::entity>(points.front());
-// 	}
-// 	return entt::null;
-// }
-
-static void hand_tick(entt::entity, kernel&, camera&, player&, environment&) {
-	// auto& loc = env.get<ecs::location>(s);
-	// auto& chr = env.get<ecs::chroniker>(s);
-	// auto& kin = env.get<ecs::kinematics>(s);
+	} else {
+		env.dispose(s);
+	}
 }
 
 static void hand_ctor(entt::entity s, environment& env) {
