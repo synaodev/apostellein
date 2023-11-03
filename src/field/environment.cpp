@@ -143,7 +143,7 @@ void environment::load(const tmx::ObjectGroup& data, const controller& ctl, kern
 			if (!this->create_(name, position, flags, id)) {
 				continue;
 			}
-			if (id > 0) {
+			if (!event.empty()) {
 				knl.push(id, event);
 			}
 		} else if (type == WATER_TYPE) {

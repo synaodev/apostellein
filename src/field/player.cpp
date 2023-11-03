@@ -797,10 +797,12 @@ void player::do_attack_(const buttons& bts, environment& env, const ecs::locatio
 			flags_.will_attack = false;
 			flags_.firing = false;
 			timers_.attack = ATTACK_TIMER;
-			auto& type = equips_.strong_arms ?
-				ai::strong_hammer :
-				ai::weak_hammer;
-			env.spawn(type, loc.center(), kin.velocity);
+			// auto& type = equips_.strong_arms ?
+			// 	ai::strong_hammer :
+			// 	ai::weak_hammer;
+			// env.spawn(type, loc.center(), kin.velocity);
+			env.spawn(ai::hand, loc.center());
+			env.spawn(ai::arm, loc.center());
 			audio::play(sfx::Blade, 4);
 		}
 	}

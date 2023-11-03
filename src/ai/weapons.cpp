@@ -12,17 +12,30 @@
 
 namespace {
 	constexpr i32 ARM_SPRITE_LAYER = 3;
+	constexpr i32 HAND_TIMER = 40;
+	constexpr r32 HAND_SPEED = 3.0f;
 }
 
-static void hand_tick(entt::entity s, kernel&, camera&, player&, environment& env) {
+static void hand_tick(entt::entity s, kernel&, camera&, player& plr, environment& env) {
 	auto& loc = env.get<ecs::location>(s);
+	auto& plr_loc = env.get<ecs::location>(plr.entity());
 	auto& chr = env.get<ecs::chroniker>(s);
 	auto& kin = env.get<ecs::kinematics>(s);
 
 	if (--chr[0]; chr[0] > 0) {
+		kin.velocity.x = HAND_SPEED;
+	} else if (chr[0] <= 0) {
+		const glm::vec2 plr_center = plr_loc.center();
+		const glm::vec2 hand_center = loc.center();
+		const auto angle = glm::atan(
+			plr_center.y - hand_center.y,
+			plr_center.x - hand_center.x
+		);
+		kin.move_at(angle, HAND_SPEED);
 
-	} else {
-		env.dispose(s);
+		if (loc.overlaps(plr_loc)) {
+			env.dispose(s);
+		}
 	}
 }
 
@@ -31,13 +44,14 @@ static void hand_ctor(entt::entity s, environment& env) {
 	loc.hitbox = { 0.0f, 0.0f, 1.0f, 1.0f };
 
 	auto& chr = env.emplace<ecs::chroniker>(s);
-	chr[0] = 10;
+	chr[0] = HAND_TIMER;
 
 	auto& kin = env.emplace<ecs::kinematics>(s);
 	kin.flags.no_clip = true;
 
 	auto& spt = env.emplace<ecs::sprite>(s, anim::ArmHand);
 	spt.layer = ARM_SPRITE_LAYER;
+	spt.state(1);
 
 	env.emplace<ecs::thinker>(s, hand_tick);
 }
@@ -53,8 +67,8 @@ static void arm_tick(entt::entity s, kernel&, camera&, player& plr, environment&
 			plr_center.x - hand_center.x
 		);
 		const auto distance = glm::distance(plr_center, hand_center);
-		loc.position = plr_center;
-		spt.angle = angle;
+		loc.position = hand_center;
+		spt.angle = -angle;
 		spt.scale = { distance, 1.0f };
 	} else {
 		env.dispose(s);

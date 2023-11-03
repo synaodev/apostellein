@@ -117,6 +117,7 @@ target_sources (apostellein PRIVATE
 	"src/init.cpp"
 	"src/ai/common.cpp"
 	"src/ai/friends.cpp"
+	"src/ai/ghost.cpp"
 	"src/ai/particles.cpp"
 	"src/ai/weapons.cpp"
 	"src/audio/noise-buffer.cpp"
