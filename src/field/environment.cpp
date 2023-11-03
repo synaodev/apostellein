@@ -166,7 +166,15 @@ udx environment::visible(r32 ratio, const rect& view) const {
 	return ecs::sprite::visible(ratio, view, *this);
 }
 
+void environment::dispose(entt::entity e) {
+	if (e != entt::null) {
+		redraw_ = true;
+		registry_.destroy(e);
+	}
+}
+
 void environment::kill(i32 id) {
+	redraw_ = true;
 	const auto view = this->slice<ecs::trigger>();
 	auto pred = [&view, id](entt::entity e) {
 		return view.get<ecs::trigger>(e).id == id;
@@ -245,6 +253,18 @@ bool environment::still(i32 id) const {
 		return true;
 	}
 	return false;
+}
+
+void environment::shoot(const entt::hashed_string& type, const glm::vec2& position, ecs::direction dir) {
+	if (const auto iter = ctors_.find(type.value()); iter != ctors_.end()) {
+		auto e = this->allocate();
+		registry_.emplace<ecs::aktor>(e, type);
+		registry_.emplace<ecs::location>(e, position);
+		registry_.emplace<ecs::direction>(e, dir);
+		iter->second(e, *this);
+	} else {
+		spdlog::error("Couldn't shoot aktor: \"{}\"!", type.data());
+	}
 }
 
 bool environment::create_(const spawn_info& info) {

@@ -17,6 +17,13 @@ namespace ecs {
 		entt::hashed_string type {};
 	};
 
+	enum class direction {
+		right,
+		left,
+		up,
+		down
+	};
+
 	struct location {
 		static constexpr rect DEFAULT_HITBOX { 0.0f, 0.0f, 16.0f, 16.0f };
 		location() noexcept = default;
@@ -25,6 +32,7 @@ namespace ecs {
 
 		glm::vec2 position {};
 		rect hitbox { DEFAULT_HITBOX };
+		direction dir { direction::right };
 	public:
 		void clear() {
 			position = {};

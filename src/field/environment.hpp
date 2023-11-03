@@ -12,6 +12,10 @@ struct controller;
 struct kernel;
 struct tile_map;
 
+namespace ecs {
+	enum class direction;
+}
+
 struct spawn_info {
 	spawn_info() noexcept = default;
 	spawn_info(
@@ -75,11 +79,7 @@ public:
 	decltype(auto) emplace(entt::entity e, Args&& ...args) {
 		return registry_.get_or_emplace<T>(e, std::forward<Args>(args)...);
 	}
-	void dispose(entt::entity e) {
-		if (e != entt::null) {
-			registry_.destroy(e);
-		}
-	}
+	void dispose(entt::entity e);
 	void kill(i32 id);
 	void smoke(const glm::vec2& position, udx count);
 	void shrapnel(const glm::vec2& position, udx count);
@@ -107,6 +107,7 @@ public:
 		}
 		return false;
 	}
+	void shoot(const entt::hashed_string& type, const glm::vec2& position, ecs::direction dir);
 private:
 	bool create_(const spawn_info& info);
 	bool create_(const std::string& name, const glm::vec2& position, u32 flags, i32 id);

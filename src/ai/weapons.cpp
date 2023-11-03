@@ -1,5 +1,6 @@
 #include <glm/geometric.hpp>
 #include <glm/trigonometric.hpp>
+#include <glm/gtc/constants.hpp>
 
 #include "./weapons.hpp"
 #include "../field/environment.hpp"
@@ -11,7 +12,8 @@
 #include "../util/id-table.hpp"
 
 namespace {
-	constexpr i32 ARM_SPRITE_LAYER = 3;
+	constexpr i32 ARM_SPRITE_LAYER = 2;
+	constexpr i32 HAND_SPRITE_LAYER = 3;
 	constexpr i32 HAND_TIMER = 40;
 	constexpr r32 HAND_SPEED = 3.0f;
 }
@@ -21,18 +23,18 @@ static void hand_tick(entt::entity s, kernel&, camera&, player& plr, environment
 	auto& plr_loc = env.get<ecs::location>(plr.entity());
 	auto& chr = env.get<ecs::chroniker>(s);
 	auto& kin = env.get<ecs::kinematics>(s);
+	auto& spr = env.get<ecs::sprite>(s);
 
-	if (--chr[0]; chr[0] > 0) {
-		kin.velocity.x = HAND_SPEED;
-	} else if (chr[0] <= 0) {
-		const glm::vec2 plr_center = plr_loc.center();
-		const glm::vec2 hand_center = loc.center();
-		const auto angle = glm::atan(
-			plr_center.y - hand_center.y,
-			plr_center.x - hand_center.x
-		);
+	const glm::vec2 plr_center = plr_loc.center();
+	const glm::vec2 hand_center = loc.center();
+	const auto angle = glm::atan(
+		plr_center.y - hand_center.y,
+		plr_center.x - hand_center.x
+	);
+	spr.angle = -angle + glm::pi<r32>();
+
+	if (--chr[0]; chr[0] <= 0) {
 		kin.move_at(angle, HAND_SPEED);
-
 		if (loc.overlaps(plr_loc)) {
 			env.dispose(s);
 		}
@@ -41,17 +43,32 @@ static void hand_tick(entt::entity s, kernel&, camera&, player& plr, environment
 
 static void hand_ctor(entt::entity s, environment& env) {
 	auto& loc = env.get<ecs::location>(s);
-	loc.hitbox = { 0.0f, 0.0f, 1.0f, 1.0f };
-
+	auto& dir = env.get<ecs::direction>(s);
 	auto& chr = env.emplace<ecs::chroniker>(s);
-	chr[0] = HAND_TIMER;
-
 	auto& kin = env.emplace<ecs::kinematics>(s);
+	auto& spt = env.emplace<ecs::sprite>(s, anim::ArmHand);
+
+	chr[0] = HAND_TIMER;
 	kin.flags.no_clip = true;
 
-	auto& spt = env.emplace<ecs::sprite>(s, anim::ArmHand);
-	spt.layer = ARM_SPRITE_LAYER;
+	switch (dir) {
+	case ecs::direction::right:
+		kin.velocity.x = HAND_SPEED;
+		break;
+	case ecs::direction::left:
+		kin.velocity.x = -HAND_SPEED;
+		break;
+	case ecs::direction::up:
+		kin.velocity.y = -HAND_SPEED;
+		break;
+	default:
+		kin.velocity.y = HAND_SPEED;
+		break;
+	}
+
 	spt.state(1);
+	spt.layer = HAND_SPRITE_LAYER;
+	spt.pivot = { 8.0f, 8.0f };
 
 	env.emplace<ecs::thinker>(s, hand_tick);
 }
@@ -84,7 +101,6 @@ static void arm_ctor(entt::entity s, environment& env) {
 
 	auto& spt = env.emplace<ecs::sprite>(s, anim::ArmHand);
 	spt.layer = ARM_SPRITE_LAYER;
-	spt.pivot = { 0.0f, 1.0f };
 
 	env.emplace<ecs::thinker>(s, arm_tick);
 }

@@ -130,6 +130,7 @@ namespace ecs {
 			}();
 			return flags._raw.value() & SIDE_MASK;
 		}
+		r32 derive_angle() const;
 		void move_at(r32 angle, r32 speed);
 		void accel_x(r32 speed, r32 limit, r32 detract);
 		void accel_x(r32 speed, r32 limit) {

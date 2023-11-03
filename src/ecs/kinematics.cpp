@@ -17,6 +17,19 @@ namespace {
 	constexpr chroma WHITE_TINT { 0xFFU, 0xFFU, 0xFFU, 0x7FU };
 }
 
+r32 ecs::kinematics::derive_angle() const {
+	const glm::vec2 normalized = glm::normalize(velocity);
+	const auto angle = glm::atan(
+		normalized.y,
+		normalized.x
+	);
+	if (glm::isnan(angle)) {
+		spdlog::warn("Kinematics NaN encountered!");
+		return 0.0f;
+	}
+	return angle;
+}
+
 void ecs::kinematics::move_at(r32 angle, r32 speed) {
 	velocity = {
 		glm::cos(angle) * speed,

@@ -116,6 +116,17 @@ namespace player_weapon {
 	constexpr i32 AUSTERE_RELOAD = 30;
 }
 
+static ecs::direction convert_direction(const player_direction& dir) {
+	if (dir.v == player_direction::vert::down) {
+		return ecs::direction::down;
+	} else if (dir.v == player_direction::vert::up) {
+		return ecs::direction::up;
+	} else if (dir.h == player_direction::hori::left) {
+		return ecs::direction::left;
+	}
+	return ecs::direction::right;
+}
+
 bool player::build(environment& env) {
 	auto s = env.allocate();
 	if (s != this->entity()) {
@@ -797,11 +808,7 @@ void player::do_attack_(const buttons& bts, environment& env, const ecs::locatio
 			flags_.will_attack = false;
 			flags_.firing = false;
 			timers_.attack = ATTACK_TIMER;
-			// auto& type = equips_.strong_arms ?
-			// 	ai::strong_hammer :
-			// 	ai::weak_hammer;
-			// env.spawn(type, loc.center(), kin.velocity);
-			env.spawn(ai::hand, loc.center());
+			env.shoot(ai::hand, loc.center(), convert_direction(dir_));
 			env.spawn(ai::arm, loc.center());
 			audio::play(sfx::Blade, 4);
 		}
