@@ -9,7 +9,7 @@
 
 namespace {
 	constexpr udx TITLE_FONT = 2;
-	constexpr glm::vec2 TITLE_POSITION { 240.0f, 36.0f };
+	constexpr glm::vec2 TITLE_POSITION { 320.0f, 80.0f };
 	constexpr chroma TITLE_BACK_COLOR { 0x3FU, 0x3FU, 0xFFU, 0xFFU };
 	constexpr glm::vec2 INDICATOR_POSITION { 2.0f, 2.0f };
 	constexpr glm::vec2 POISON_POSITION { 10.0f, 5.0f };

@@ -8,9 +8,9 @@
 namespace konst {
 	// dimensions
 	template<typename T>
-	constexpr T WINDOW_WIDTH() noexcept { return static_cast<T>(480); }
+	constexpr T WINDOW_WIDTH() noexcept { return static_cast<T>(640); }
 	template<typename T>
-	constexpr T WINDOW_HEIGHT() noexcept { return static_cast<T>(270); }
+	constexpr T WINDOW_HEIGHT() noexcept { return static_cast<T>(360); }
 	template<typename T>
 	constexpr glm::vec<2, T, glm::packed_highp> WINDOW_DIMENSIONS() noexcept {
 		return { WINDOW_WIDTH<T>(), WINDOW_HEIGHT<T>() };

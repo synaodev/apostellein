@@ -1,4 +1,5 @@
 #include <apostellein/konst.hpp>
+#include <spdlog/spdlog.h>
 
 #include "./fader.hpp"
 #include "../x2d/renderer.hpp"
@@ -8,9 +9,9 @@ namespace {
 }
 
 void gui::fader::clear() {
-	invalidated_ = true;
 	type_ = fade_type::done_out;
 	current_ = konst::WINDOW_DIMENSIONS<r32>();
+	previous_ = konst::WINDOW_DIMENSIONS<r32>();
 }
 
 void gui::fader::handle() {
@@ -20,7 +21,6 @@ void gui::fader::handle() {
 			break;
 		}
 		case fade_type::moving_in: {
-			invalidated_ = true;
 			current_.y -= INCREMENTATION;
 			if (current_.y < 0.0f) {
 				type_ = fade_type::done_in;
@@ -29,7 +29,6 @@ void gui::fader::handle() {
 			break;
 		}
 		case fade_type::moving_out: {
-			invalidated_ = true;
 			current_.y += INCREMENTATION;
 			if (current_.y > konst::WINDOW_HEIGHT<r32>()) {
 				type_ = fade_type::done_out;
@@ -47,29 +46,21 @@ void gui::fader::render(r32 ratio, renderer& rdr) const {
 			blending_type::alpha,
 			pipeline_type::blank
 		);
-		if (invalidated_) {
-			invalidated_ = false;
-			const glm::vec2 dimensions = konst::INTERPOLATE(
-				previous_,
-				current_,
-				ratio
-			);
-			list.batch_blank(dimensions, chroma::BASE());
-		} else {
-			list.skip(display_list::QUAD);
-		}
-		
+		const glm::vec2 dimensions = konst::INTERPOLATE(
+			previous_,
+			current_,
+			ratio
+		);
+		list.batch_blank(dimensions, chroma::BASE());
 	}
 }
 
 void gui::fader::fade_in() {
-	invalidated_ = true;
 	type_ = fade_type::moving_in;
 	current_.y = konst::WINDOW_HEIGHT<r32>();
 }
 
 void gui::fader::fade_out() {
-	invalidated_ = true;
 	type_ = fade_type::moving_out;
 	current_.y = 0.0f;
 }

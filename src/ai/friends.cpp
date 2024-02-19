@@ -1,3 +1,5 @@
+#include <apostellein/konst.hpp>
+
 #include "./friends.hpp"
 #include "./particles.hpp"
 
@@ -77,7 +79,10 @@ static void shoshi_ctor(entt::entity s, environment& env) {
 	auto& sprite = env.emplace<ecs::sprite>(s, anim::Shoshi);
 	sprite.layer = SHOSHI_SPRITE_LAYER;
 
-	env.emplace<ecs::blinker>(s, 0, 4);
+	auto& blinker = env.emplace<ecs::blinker>(s);
+	blinker.return_state = 0;
+	blinker.blink_state = 4;
+
 	env.emplace<ecs::thinker>(s, shoshi_tick);
 }
 
@@ -99,7 +104,10 @@ static void carried_shoshi_ctor(entt::entity s, environment& env) {
 	sprite.state(3);
 	sprite.layer = SHOSHI_SPRITE_LAYER;
 
-	env.emplace<ecs::blinker>(s, 3, 5);
+	auto& blinker = env.emplace<ecs::blinker>(s);
+	blinker.return_state = 3;
+	blinker.blink_state = 5;
+
 	env.emplace<ecs::thinker>(s, carried_shoshi_tick);
 }
 
@@ -201,7 +209,10 @@ static void accompanied_shoshi_ctor(entt::entity s, environment& env) {
 	auto& kinematics = env.emplace<ecs::kinematics>(s);
 	kinematics.hitbox = COMPOSITE_COLLISION_RECT;
 
-	env.emplace<ecs::blinker>(s, 0, 4);
+	auto& blinker = env.emplace<ecs::blinker>(s);
+	blinker.return_state = 0;
+	blinker.blink_state = 4;
+
 	env.emplace<ecs::thinker>(s, accompanied_shoshi_tick);
 	env.emplace<ecs::submersible>(s, ai::splash, sfx::Splash);
 }

@@ -100,7 +100,7 @@ namespace player_anim {
 	// constexpr udx AWAKENING = 17;
 	// constexpr udx STANDING_UP = 18;
 	constexpr udx BLINKING = 19;
-	constexpr udx SOMERSAULTING = 20;
+	// constexpr udx SOMERSAULTING = 20;
 }
 
 namespace player_weapon {
@@ -662,7 +662,6 @@ void player::do_begin_(ecs::kinematics& kin) {
 			flags_.airbourne = false;
 			audio::play(sfx::Landing, 0);
 		}
-		flags_.somersaulting = false;
 	} else {
 		flags_.airbourne = true;
 	}
@@ -925,13 +924,6 @@ void player::do_jump_(const buttons& bts, ecs::kinematics& kin, bool locked) {
 	} else if (!locked and bts.pressed.jump) {
 		if (kin.flags.fall_through and bts.holding.down) {
 			kin.flags.fall_through = false;
-		} else if (flags_.skidding) {
-			flags_.skidding = false;
-			flags_.somersaulting = true;
-			kin.velocity.y = -physics_.somersault;
-			kin.velocity += riding_;
-			riding_ = {};
-			audio::play(sfx::Jump, 0);
 		} else {
 			kin.velocity.y = -physics_.jump_power;
 			kin.velocity += riding_;
@@ -1055,8 +1047,6 @@ void player::do_animate_(ecs::sprite& spt, const ecs::health& hel) {
 		} else if (flags_.airbourne) {
 			if (flags_.strafing or flags_.firing) {
 				state = player_anim::JUMPING_FIRING;
-			} else if (flags_.somersaulting) {
-				state = player_anim::SOMERSAULTING;
 			} else {
 				state = player_anim::JUMPING;
 			}

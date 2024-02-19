@@ -2,6 +2,7 @@
 #include <glm/geometric.hpp>
 #include <glm/trigonometric.hpp>
 #include <glm/gtc/constants.hpp>
+#include <spdlog/spdlog.h>
 #include <apostellein/konst.hpp>
 
 #include "./kinematics.hpp"

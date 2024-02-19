@@ -8,7 +8,7 @@
 #include "../hw/rng.hpp"
 
 namespace  {
-	constexpr glm::vec2 TOP_LEFT_CORNER { 8.0f, 1.0f };
+	constexpr glm::vec2 TOP_LEFT_CORNER { 8.0f, 4.0f };
 	constexpr glm::vec2 DEFAULT_POSITION { (konst::WINDOW_DIMENSIONS<r32>() / 2.0f) + TOP_LEFT_CORNER };
 	constexpr glm::vec2 DEFAULT_WEIGHT { 1.0f / 16.0f, 1.0f / 8.0f };
 	constexpr glm::vec3 DEFAULT_AXIS { 0.0f, 0.0f, 1.0f };

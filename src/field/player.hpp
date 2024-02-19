@@ -32,20 +32,19 @@ union player_flags {
 	bitfield_index<u32, 4> strafing;
 	bitfield_index<u32, 5> interacting;
 	bitfield_index<u32, 6> skidding;
-	bitfield_index<u32, 7> somersaulting;
-	bitfield_index<u32, 8> wall_jumping;
-	bitfield_index<u32, 9> airbourne;
-	bitfield_index<u32, 10> zero_gravity;
-	bitfield_index<u32, 11> will_attack;
-	bitfield_index<u32, 12> will_wall_jump;
-	bitfield_index<u32, 13> invincible;
-	bitfield_index<u32, 14> healed;
-	bitfield_index<u32, 15> damaged;
-	bitfield_index<u32, 16> broken;
-	bitfield_index<u32, 17> killed;
-	bitfield_index<u32, 18> decimated;
-	bitfield_index<u32, 19> event_animation;
-	bitfield_index<u32, 20> death_animation;
+	bitfield_index<u32, 7> wall_jumping;
+	bitfield_index<u32, 8> airbourne;
+	bitfield_index<u32, 9> zero_gravity;
+	bitfield_index<u32, 10> will_attack;
+	bitfield_index<u32, 11> will_wall_jump;
+	bitfield_index<u32, 12> invincible;
+	bitfield_index<u32, 13> healed;
+	bitfield_index<u32, 14> damaged;
+	bitfield_index<u32, 15> broken;
+	bitfield_index<u32, 16> killed;
+	bitfield_index<u32, 17> decimated;
+	bitfield_index<u32, 18> event_animation;
+	bitfield_index<u32, 19> death_animation;
 };
 
 union player_equips {
@@ -90,7 +89,6 @@ struct player_physics {
 	r32 decel {};
 	r32 jump_power {};
 	r32 jump_hold {};
-	r32 somersault{};
 	r32 hover {};
 	r32 max_hover {};
 	r32 climbing_gravity {};
@@ -102,7 +100,6 @@ public:
 		decel = 0.24f;
 		jump_power = 3.7f;
 		jump_hold = 0.1f;
-		somersault = 4.7f;
 		hover = 0.01f;
 		max_hover = 0.3f;
 		climbing_gravity = 0.2f;
@@ -114,7 +111,6 @@ public:
 		decel = 0.12f;
 		jump_power = 1.85f;
 		jump_hold = 0.05f;
-		somersault = 2.35f;
 		hover = 0.01f;
 		max_hover = 0.3f;
 		climbing_gravity = 0.1f;

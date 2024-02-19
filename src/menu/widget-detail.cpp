@@ -625,7 +625,7 @@ void profile_widget::setup_text_() {
 	const std::string figure = vfs::i18n_at(PROFILE_ENTRY, 2);
 	auto iter = std::back_inserter(out);
 	for (udx idx = 0; idx < controller::MAXIMUM_PROFILES; ++idx) {
-		fmt::format_to(iter, figure, idx + 1);
+		fmt::format_to(iter, "{}{}\n", figure, idx + 1);
 	}
 	text_.replace(fmt::to_string(out));
 }

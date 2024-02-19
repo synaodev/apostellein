@@ -35,10 +35,7 @@ public:
 		graphic_.clear();
 		fader_.clear();
 	}
-	void invalidate() const {
-		title_.invalidate();
-		fader_.invalidate();
-	}
+	void invalidate() const { title_.invalidate(); }
 	void fix();
 	void prepare() { fader_.prepare(); }
 	void handle(const controller& ctl);
