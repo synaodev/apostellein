@@ -159,7 +159,7 @@ udx environment::length() const {
 }
 
 udx environment::alive() const {
-	return registry_.storage<entt::entity>()->in_use();
+	return registry_.storage<entt::entity>()->size();
 }
 
 udx environment::visible(r32 ratio, const rect& view) const {
