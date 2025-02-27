@@ -50,7 +50,7 @@ static bool test_shoshi_sprite_mirroring(mirror_type mirroring, bool facing_left
 	);
 }
 
-static void shoshi_tick(entt::entity s, kernel&, camera&, player& plr, environment& env) {
+static void shoshi_tick(entt::entity s, kernel&, camera&, player&, environment& env) {
 	auto& shoshi = env.get<shoshi_state>(s);
 	auto& kinematics = env.get<ecs::kinematics>(s);
 	auto& sprite = env.get<ecs::sprite>(s);

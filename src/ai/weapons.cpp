@@ -42,7 +42,7 @@ static void hand_tick(entt::entity s, kernel&, camera&, player& plr, environment
 }
 
 static void hand_ctor(entt::entity s, environment& env) {
-	auto& loc = env.get<ecs::location>(s);
+	// auto& loc = env.get<ecs::location>(s);
 	auto& dir = env.get<ecs::direction>(s);
 	auto& chr = env.emplace<ecs::chroniker>(s);
 	auto& kin = env.emplace<ecs::kinematics>(s);

@@ -95,10 +95,10 @@ bool pxtnMaster::io_w_v5( pxtnDescriptor *p_doc, int32_t rough ) const
 {
 
 	uint32_t   size   =          15;
-	int16_t   bclock = _beat_clock / rough;
+	int16_t   bclock = (int16_t)(_beat_clock / rough);
 	int32_t   clock_repeat = bclock * _beat_num * get_repeat_meas();
 	int32_t   clock_last   = bclock * _beat_num * get_last_meas  ();
-	int8_t    bnum   = _beat_num  ;
+	int8_t    bnum   = (int8_t)_beat_num  ;
 	float btempo = _beat_tempo;
 	if( !p_doc->w_asfile( &size        , sizeof(uint32_t  ), 1 ) ) return false;
 	if( !p_doc->w_asfile( &bclock      , sizeof(int16_t  ), 1 ) ) return false;

@@ -5,7 +5,7 @@
 #include "../ecs/sprite.hpp"
 #include "../util/id-table.hpp"
 
-static void ghost_tick(entt::entity s, kernel&, camera&, player&, environment& env) {
+static void ghost_tick(entt::entity, kernel&, camera&, player&, environment&) {
 
 }
 
