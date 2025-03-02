@@ -146,8 +146,8 @@ namespace video {
 
 		// Get config
 		ogl::version = cfg.sandy_bridge() ?
-			ogl::context_type::v31 :
-			ogl::context_type::v46;
+			ogl::version_type::v33 :
+			ogl::version_type::v46;
 		drv_->config = &cfg;
 		drv_->vertical_sync = cfg.vertical_sync();
 		drv_->adaptive_sync = cfg.adaptive_sync();
@@ -215,7 +215,7 @@ namespace video {
 		);
 
 		// Generate a valid OpenGL context
-		while (1) {
+		for (; !drv_->context or ogl::version != ogl::version_type::none; --ogl::version) {
 			if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, ogl::major_version()) < 0) {
 				spdlog::critical("Setting OpenGL major version failed! SDL Error: {}", SDL_GetError());
 				return false;
@@ -225,15 +225,10 @@ namespace video {
 				return false;
 			}
 			drv_->context = SDL_GL_CreateContext(drv_->window);
-			if (drv_->context or ogl::version == ogl::context_type::none) {
-				break;
-			} else {
-				--ogl::version;
-			}
 		}
 		if (!drv_->context) {
 			const std::string message = fmt::format(
-				"At least OpenGL 3.1 is required! SDL Error: {}",
+				"At least OpenGL 3.3 is required! SDL Error: {}",
 				SDL_GetError()
 			);
 			message_box::error(message);
@@ -243,16 +238,17 @@ namespace video {
 
 		// Load OpenGL extensions with GLAD
 		if (gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress) != 0) {
-			glm::ivec2 version {};
-			if (SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &version[0]) < 0) {
+			i32 major = 0;
+			i32 minor = 0;
+			if (SDL_GL_GetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, &major) < 0) {
 				spdlog::critical("Getting OpenGL major version failed! SDL Error: {}", SDL_GetError());
 				return false;
 			}
-			if (SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &version[1]) < 0) {
+			if (SDL_GL_GetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, &minor) < 0) {
 				spdlog::critical("Getting OpenGL minor version failed! SDL Error: {}", SDL_GetError());
 				return false;
 			}
-			spdlog::info("OpenGL Version is {}.{}!", version[0], version[1]);
+			spdlog::info("OpenGL Version is {}.{}!", major, minor);
 		} else {
 			spdlog::critical("OpenGL extension loading failed!");
 			return false;

@@ -71,3 +71,5 @@ struct vtx_sprite : public vertex_template<vtx_sprite> {
 	r32 atlas {};
 	chroma color { chroma::WHITE() };
 };
+
+using vtx_glyph = vtx_sprite;

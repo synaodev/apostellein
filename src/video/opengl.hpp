@@ -4,25 +4,25 @@
 #include <apostellein/def.hpp>
 
 namespace ogl {
-	enum class context_type {
-		none, v31, v32,
-		v33, v40, v41,
-		v42, v43, v44,
+	enum class version_type {
+		none,
+		v33, v40,
+		v41, v42,
+		v43, v44,
 		v45, v46
 	};
-	inline context_type& operator--(context_type& ctx) {
-		if (ctx > context_type::none) {
-			ctx = static_cast<context_type>(
-				static_cast<std::underlying_type_t<context_type> >(ctx) - 1
+	inline version_type& operator--(version_type& v) {
+		if (v > version_type::none) {
+			v = static_cast<version_type>(
+				static_cast<std::underlying_type_t<version_type> >(v) - 1
 			);
 		}
-		return ctx;
+		return v;
 	}
-	extern context_type version;
+	extern version_type version;
 	u32 major_version() noexcept;
 	u32 minor_version() noexcept;
 	u32 glsl_version() noexcept;
-	bool modern_shaders_available() noexcept;
 	bool binding_points_available() noexcept;
 	bool debug_callback_available() noexcept;
 	bool buffer_storage_available() noexcept;

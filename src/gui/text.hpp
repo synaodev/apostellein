@@ -110,6 +110,6 @@ namespace gui {
 		udx letter_ {};
 		std::u32string buffer_ {};
 		const bitmap_font* font_ {};
-		std::vector<vtx_sprite> vertices_ {};
+		std::vector<vtx_glyph> vertices_ {};
 	};
 }
