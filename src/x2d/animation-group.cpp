@@ -8,7 +8,7 @@
 #include "./renderer.hpp"
 #include "./mirror-type.hpp"
 #include "../hw/vfs.hpp"
-#include "../video/material.hpp"
+#include "../video/texture-2d.hpp"
 
 namespace {
 	constexpr char MATERIAL_ENTRY[] = "Material";
@@ -277,7 +277,7 @@ void animation_group::render(
 	udx frame,
 	udx variation,
 	const mirror_type& mirror,
-	const chroma& color,
+	const color_type& color,
 	const glm::vec2& scale,
 	r32 angle,
 	const glm::vec2& pivot,
@@ -340,7 +340,7 @@ void animation_group::render(
 	udx frame,
 	udx variation,
 	const mirror_type& mirror,
-	const chroma& color,
+	const color_type& color,
 	const glm::vec2& scale,
 	const glm::vec2& position,
 	const rect& view,
@@ -432,7 +432,7 @@ void animation_group::load(const std::string& path) {
 
 	glm::vec2 dimensions {};
 	if (file.contains(MATERIAL_ENTRY) and file[MATERIAL_ENTRY].is_string()) {
-		texture_ = vfs::find_material(file[MATERIAL_ENTRY].get<std::string>());
+		texture_ = vfs::find_texture(file[MATERIAL_ENTRY].get<std::string>());
 		dimensions = texture_->dimensions();
 	}
 
@@ -542,11 +542,11 @@ void animation_group::load(const std::string& path) {
 				if (rule.is_array()) {
 					const glm::length_t total = glm::min(
 						points.length(),
-						as<glm::length_t>(rule.size())
+						cast<glm::length_t>(rule.size())
 					);
 					for (glm::length_t idx = 0; idx < total; ++idx) {
-						if (rule[as<udx>(idx)].is_number()) {
-							points[idx] = rule[as<udx>(idx)].get<r32>();
+						if (rule[cast<udx>(idx)].is_number()) {
+							points[idx] = rule[cast<udx>(idx)].get<r32>();
 						}
 					}
 				}

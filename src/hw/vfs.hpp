@@ -8,7 +8,7 @@
 #include "../util/image-file.hpp"
 
 struct noise_buffer;
-struct material;
+struct texture_2d;
 struct bitmap_font;
 struct animation_group;
 
@@ -38,8 +38,8 @@ namespace vfs {
 	nlohmann::json buffer_json(const std::string& path);
 	bool dump_json(const nlohmann::json& file, const std::string& path);
 	void clear_noises();
-	void clear_materials();
-	void clear_material(const material* handle);
+	void clear_textures();
+	void clear_texture(const texture_2d* handle);
 	void clear_fonts();
 	void clear_animations();
 	std::string i18n_from(const std::string& segment, udx first, udx last);
@@ -47,8 +47,8 @@ namespace vfs {
 	udx i18n_size(const std::string& segment);
 	const noise_buffer* find_noise(const entt::hashed_string& entry);
 	const noise_buffer* find_noise(const std::string& name);
-	const material* find_material(const std::string& name);
-	const material* find_material(const std::string& name, const std::string& route);
+	const texture_2d* find_texture(const std::string& name);
+	const texture_2d* find_texture(const std::string& name, const std::string& route);
 	const bitmap_font* find_font(const std::string& name);
 	const bitmap_font* find_font(udx index);
 	const animation_group* find_animation(const entt::hashed_string& entry);

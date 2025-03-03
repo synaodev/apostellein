@@ -4,7 +4,7 @@
 #include <apostellein/rect.hpp>
 #include <apostellein/struct.hpp>
 
-struct material;
+struct texture_2d;
 struct renderer;
 
 namespace gui {
@@ -32,6 +32,6 @@ namespace gui {
 		mutable bool invalidated_ {};
 		bool transient_ {};
 		glm::vec2 position_ {};
-		const material* picture_ {};
+		const texture_2d* picture_ {};
 	};
 }

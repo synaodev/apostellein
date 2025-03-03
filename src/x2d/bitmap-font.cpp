@@ -5,7 +5,7 @@
 #include <apostellein/cast.hpp>
 
 #include "./bitmap-font.hpp"
-#include "../video/material.hpp"
+#include "../video/texture-2d.hpp"
 #include "../hw/vfs.hpp"
 
 namespace {
@@ -41,7 +41,7 @@ void bitmap_font::load(const std::string& route, const std::string& path) {
 		if (entry.contains(key)) {
 			if (entry[key].is_string()) {
 				const auto value = entry[key].template get<std::string>();
-				const auto integer = as<u32>(std::stoul(value, nullptr, 0));
+				const auto integer = cast<u32>(std::stoul(value, nullptr, 0));
 				return static_cast<char32_t>(integer);
 			} else if (entry[key].is_number_unsigned()) {
 				return static_cast<char32_t>(entry[key].template get<u32>());
@@ -155,7 +155,7 @@ void bitmap_font::load(const std::string& route, const std::string& path) {
 		font[PAGES_ENTRY][PAGE_ENTRY][FILE_ENTRY].is_string()
 	) {
 		const std::string name = font[PAGES_ENTRY][PAGE_ENTRY][FILE_ENTRY].get<std::string>();
-		texture_ = vfs::find_material(name, route);
+		texture_ = vfs::find_texture(name, route);
 	} else {
 		spdlog::error("Couldn't find texture name in font file \"{}\"!", path);
 	}
@@ -166,7 +166,7 @@ void bitmap_font::destroy() {
 	kernings_.clear();
 	dimensions_ = {};
 	if (texture_) {
-		vfs::clear_material(texture_);
+		vfs::clear_texture(texture_);
 		texture_ = nullptr;
 	}
 }

@@ -4,7 +4,7 @@
 #include <apostellein/cast.hpp>
 
 #include "./counter.hpp"
-#include "../video/material.hpp"
+#include "../video/texture-2d.hpp"
 #include "../x2d/renderer.hpp"
 
 namespace {
@@ -23,11 +23,11 @@ namespace {
 			100000000,
 			1000000000
 		};
-		static constexpr i32 POWERS_SIZE = as<i32>(POWERS_LIST.size());
+		static constexpr i32 POWERS_SIZE = cast<i32>(POWERS_LIST.size());
 		if (exponent >= 0 and exponent < POWERS_SIZE) {
 			return POWERS_LIST[exponent];
 		}
-		return as<i32>(glm::pow(10, exponent));
+		return cast<i32>(glm::pow(10, exponent));
 	}
 }
 
@@ -37,7 +37,7 @@ void gui::counter::build(
 	const rect& raster,
 	i32 number,
 	i32 zeroes,
-	const material* texture
+	const texture_2d* texture
 ) {
 	invalidated_ = true;
 	backwards_ = backwards;
@@ -97,34 +97,34 @@ void gui::counter::generate_quads_() {
 			this, &idx, &pos, &off, &atlas
 		](const i32& digit) {
 			const glm::vec2 uvs {
-				this->raster_.x + as<r32>(digit) * this->raster_.w,
+				this->raster_.x + cast<r32>(digit) * this->raster_.w,
 				this->raster_.y
 			};
 
 			auto vtx = &this->vertices_[idx * display_list::QUAD];
 			vtx[0].position = pos;
 			vtx[0].index = 0;
-			vtx[0].uvs = (uvs + off) / material::MAXIMUM_DIMENSIONS;
+			vtx[0].uvs = (uvs + off) / texture_2d::MAXIMUM_DIMENSIONS;
 			vtx[0].atlas = atlas;
-			vtx[0].color = chroma::WHITE();
+			vtx[0].color = color_type::WHITE();
 
 			vtx[1].position = { pos.x, pos.y + this->raster_.h };
 			vtx[1].index = 0;
-			vtx[1].uvs = glm::vec2(uvs.x + off.x, uvs.y + off.y + this->raster_.h) / material::MAXIMUM_DIMENSIONS;
+			vtx[1].uvs = glm::vec2(uvs.x + off.x, uvs.y + off.y + this->raster_.h) / texture_2d::MAXIMUM_DIMENSIONS;
 			vtx[1].atlas = atlas;
-			vtx[1].color = chroma::WHITE();
+			vtx[1].color = color_type::WHITE();
 
 			vtx[2].position = { pos.x + this->raster_.w, pos.y };
 			vtx[2].index = 0;
-			vtx[2].uvs = glm::vec2(uvs.x + off.x + this->raster_.w, uvs.y + off.y) / material::MAXIMUM_DIMENSIONS;
+			vtx[2].uvs = glm::vec2(uvs.x + off.x + this->raster_.w, uvs.y + off.y) / texture_2d::MAXIMUM_DIMENSIONS;
 			vtx[2].atlas = atlas;
-			vtx[2].color = chroma::WHITE();
+			vtx[2].color = color_type::WHITE();
 
 			vtx[3].position = pos + this->raster_.dimensions();
 			vtx[3].index = 0;
-			vtx[3].uvs = (uvs + off + this->raster_.dimensions()) / material::MAXIMUM_DIMENSIONS;
+			vtx[3].uvs = (uvs + off + this->raster_.dimensions()) / texture_2d::MAXIMUM_DIMENSIONS;
 			vtx[3].atlas = atlas;
-			vtx[3].color = chroma::WHITE();
+			vtx[3].color = color_type::WHITE();
 
 			pos.x += (this->backwards_ ?
 				-this->raster_.w :

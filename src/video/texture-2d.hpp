@@ -2,12 +2,12 @@
 
 #include "../util/image-file.hpp"
 
-struct material : public not_copyable {
-	material() noexcept = default;
-	material(material&& that) noexcept {
+struct texture_2d : public not_copyable {
+	texture_2d() noexcept = default;
+	texture_2d(texture_2d&& that) noexcept {
 		*this = std::move(that);
 	}
-	material& operator=(material&& that) noexcept {
+	texture_2d& operator=(texture_2d&& that) noexcept {
 		if (this != &that) {
 			id_ = that.id_;
 			that.id_ = 0;
@@ -21,7 +21,7 @@ struct material : public not_copyable {
 		}
 		return *this;
 	}
-	~material() { this->destroy(); }
+	~texture_2d() { this->destroy(); }
 public:
 	static constexpr glm::vec2 MAXIMUM_DIMENSIONS {
 		image_file::MAXIMUM_LENGTH,

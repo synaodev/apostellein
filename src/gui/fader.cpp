@@ -51,7 +51,7 @@ void gui::fader::render(r32 ratio, renderer& rdr) const {
 			current_,
 			ratio
 		);
-		list.batch_blank(dimensions, chroma::BASE());
+		list.batch_blank(dimensions, color_type::BASE());
 	}
 }
 

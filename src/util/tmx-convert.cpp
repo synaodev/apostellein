@@ -12,7 +12,7 @@ bool tmx_convert::prop_to_bool(const tmx::Property& property) {
 
 udx tmx_convert::prop_to_udx(const tmx::Property& property) {
 	if (property.getType() == tmx::Property::Type::Int) {
-		return as<udx>(property.getIntValue());
+		return cast<udx>(property.getIntValue());
 	} else if (property.getType() == tmx::Property::Type::String) {
 		if (auto& value = property.getStringValue(); !value.empty()) {
 			if constexpr (sizeof(udx) == 8) {
@@ -27,10 +27,10 @@ udx tmx_convert::prop_to_udx(const tmx::Property& property) {
 
 u32 tmx_convert::prop_to_uint(const tmx::Property& property) {
 	if (property.getType() == tmx::Property::Type::Int) {
-		return as<u32>(property.getIntValue());
+		return cast<u32>(property.getIntValue());
 	} else if (property.getType() == tmx::Property::Type::String) {
 		if (auto& value = property.getStringValue(); !value.empty()) {
-			return as<u32>(std::stoul(value, nullptr, 0));
+			return cast<u32>(std::stoul(value, nullptr, 0));
 		}
 	}
 	return 0;

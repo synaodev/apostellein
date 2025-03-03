@@ -7,7 +7,7 @@
 #include "../x2d/renderer.hpp"
 
 namespace {
-	constexpr chroma WATER_TINT { 0x00U, 0x3FU, 0x7FU, 0x7FU };
+	constexpr color_type WATER_TINT { 0x00U, 0x3FU, 0x7FU, 0x7FU };
 }
 
 void ecs::liquid::handle(environment& env, const ecs::location& loc, ecs::submersible& sub) {

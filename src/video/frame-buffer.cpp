@@ -77,7 +77,7 @@ bool frame_buffer::create(const glm::ivec2& dimensions, i32 binding) {
 		glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
 		glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
 		glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-		glCheck(glBindTexture(GL_TEXTURE_2D, as<u32>(previous)));
+		glCheck(glBindTexture(GL_TEXTURE_2D, cast<u32>(previous)));
 
 		glCheck(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, buffer_, 0));
 		glCheck(glDrawBuffers(1, &attachment));
@@ -155,12 +155,12 @@ bool frame_buffer::blit() const {
 	return true;
 }
 
-void frame_buffer::start_(const chroma& color) {
+void frame_buffer::start_(const color_type& color) {
 	const std::array values {
-		as<r32>(color.r) / 255.0f,
-		as<r32>(color.g) / 255.0f,
-		as<r32>(color.b) / 255.0f,
-		as<r32>(color.a) / 255.0f
+		cast<r32>(color.r) / 255.0f,
+		cast<r32>(color.g) / 255.0f,
+		cast<r32>(color.b) / 255.0f,
+		cast<r32>(color.a) / 255.0f
 	};
 	glCheck(glBindFramebuffer(GL_FRAMEBUFFER, handle_));
 	if (ogl::direct_state_available()) {

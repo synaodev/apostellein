@@ -17,7 +17,7 @@ namespace gui {
 		void build(
 			const glm::vec2& position,
 			const glm::vec2& origin,
-			const chroma& color,
+			const color_type& color,
 			const bitmap_font* font,
 			const std::string& words
 		);
@@ -85,7 +85,7 @@ namespace gui {
 			const glm::vec2 o { x, y };
 			this->origin(o);
 		}
-		void color(const chroma& value) {
+		void color(const color_type& value) {
 			if (color_ != value) {
 				invalidated_ = true;
 				color_ = value;
@@ -94,7 +94,7 @@ namespace gui {
 		}
 		const glm::vec2& position() const { return position_; }
 		const glm::vec2& origin() const { return origin_; }
-		const chroma& color() const { return color_; }
+		const color_type& color() const { return color_; }
 		glm::vec2 font_dimensions() const;
 		const bitmap_font* font() const { return font_; }
 		rect bounds() const;
@@ -106,7 +106,7 @@ namespace gui {
 		mutable bool invalidated_ {};
 		glm::vec2 position_ {};
 		glm::vec2 origin_ {};
-		chroma color_ { chroma::WHITE() };
+		color_type color_ { color_type::WHITE() };
 		udx letter_ {};
 		std::u32string buffer_ {};
 		const bitmap_font* font_ {};

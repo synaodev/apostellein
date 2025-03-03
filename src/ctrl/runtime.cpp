@@ -14,7 +14,7 @@
 #include "../hw/video.hpp"
 #include "../hw/vfs.hpp"
 #include "../util/buttons.hpp"
-#include "../video/material.hpp"
+#include "../video/texture-2d.hpp"
 #include "../x2d/renderer.hpp"
 
 namespace {
@@ -95,7 +95,7 @@ void runtime::handle(udx ticks, activity_type& aty, buttons& bts) {
 		bts.clear();
 	}
 	// recalibrate virtual texture
-	if (material::recalibrate()) {
+	if (texture_2d::recalibrate()) {
 		ovl_.fix();
 		hud_.fix();
 		dlg_.fix();

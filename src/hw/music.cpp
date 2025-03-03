@@ -33,10 +33,10 @@ namespace {
 	) {
 		static_assert(std::is_integral<T>::value);
 		const auto result =
-			as<T>(channels) *
-			as<T>(sampling_rate) *
-			as<T>(pxtnBITPERSAMPLE / 8);
-		return as<T>(as<r64>(result) * buffering_time);
+			cast<T>(channels) *
+			cast<T>(sampling_rate) *
+			cast<T>(pxtnBITPERSAMPLE / 8);
+		return cast<T>(cast<r64>(result) * buffering_time);
 	}
 }
 
@@ -112,7 +112,7 @@ namespace music {
 
 		// Create buffers & source
 		drv_->buffers.fill(0);
-		const auto size = as<i32>(drv_->buffers.size());
+		const auto size = cast<i32>(drv_->buffers.size());
 		alCheck(alGenSources(1, &drv_->source));
 		alCheck(alGenBuffers(size, drv_->buffers.data()));
 
@@ -128,7 +128,7 @@ namespace music {
 				if (state == AL_PLAYING) {
 					alCheck(alSourceStop(drv_->source));
 				}
-				const auto size = as<i32>(drv_->buffers.size());
+				const auto size = cast<i32>(drv_->buffers.size());
 				alCheck(alSourcei(drv_->source, AL_BUFFER, 0));
 				alCheck(alDeleteBuffers(size, drv_->buffers.data()));
 				alCheck(alDeleteSources(1, &drv_->source));
@@ -153,7 +153,7 @@ namespace music {
 			AL_FORMAT_STEREO16 :
 			AL_FORMAT_MONO16;
 		const std::chrono::milliseconds buffering_delay {
-			as<i64>(drv_->buffering_time * DELAY_FACTOR)
+			cast<i64>(drv_->buffering_time * DELAY_FACTOR)
 		};
 
 		// Initialize stream data
@@ -161,7 +161,7 @@ namespace music {
 		r32 volume = drv_->volume;
 		i32 state = 0;
 		i32 processed = 0;
-		auto pointer = std::make_unique<char[]>(as<udx>(length));
+		auto pointer = std::make_unique<char[]>(cast<udx>(length));
 
 		// Queue tune beginning
 		for (auto&& buffer : drv_->buffers) {
@@ -267,7 +267,7 @@ bool music::load(const std::string& title) {
 		return false;
 	}
 
-	const auto size = as<i32>(file.size());
+	const auto size = cast<i32>(file.size());
 	if (size >= MAXIMUM_FILE_SIZE) {
 		spdlog::error("Pxtone file too large!");
 		return false;
@@ -307,7 +307,7 @@ bool music::play(r32 start_point, r32 fade_length) {
 		drv_->channels,
 		drv_->sampling_rate
 	);
-	if (as<udx>(std::numeric_limits<i32>::max()) < sanity_check) {
+	if (cast<udx>(std::numeric_limits<i32>::max()) < sanity_check) {
 		spdlog::error("Estimated pxtone buffer will overflow!");
 		return false;
 	}

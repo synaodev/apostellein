@@ -126,7 +126,7 @@ void audio::play(const entt::hashed_string& id) {
 	for (auto&& speak : drv_->speakers) {
 		if (!speak.playing()) {
 			const auto index = std::distance(&drv_->speakers[0], &speak);
-			const task_info task { vfs::find_noise(id), as<udx>(index) };
+			const task_info task { vfs::find_noise(id), cast<udx>(index) };
 			drv_->tasks.push_back(task);
 			break;
 		}

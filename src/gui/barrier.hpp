@@ -4,7 +4,7 @@
 
 #include "../video/vertex.hpp"
 
-struct material;
+struct texture_2d;
 struct renderer;
 
 namespace gui {
@@ -16,7 +16,7 @@ namespace gui {
 			i32 current,
 			i32 maximum,
 			i32 indent,
-			const material* texture
+			const texture_2d* texture
 		);
 		void invalidate() const { invalidated_ = true; }
 		void fix();
@@ -31,7 +31,7 @@ namespace gui {
 		i32 current_ {};
 		i32 maximum_ {};
 		i32 indent_ {};
-		const material* texture_ {};
+		const texture_2d* texture_ {};
 		std::vector<vtx_sprite> vertices_ {};
 	};
 }

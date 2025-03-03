@@ -10,7 +10,7 @@ void gui::provision::build(
 	const animation_group* item_file,
 	const glm::vec2& amount_position,
 	const rect& amount_raster,
-	const material* amount_texture
+	const texture_2d* amount_texture
 ) {
 	slot_ = {};
 	frame_.build(
@@ -46,7 +46,7 @@ void gui::provision::set(const item_slot& value) {
 	if (slot_ != value) {
 		slot_ = value;
 		if (slot_.type > 0) {
-			item_.frame(as<udx>(slot_.type) - 1);
+			item_.frame(cast<udx>(slot_.type) - 1);
 		}
 		if (slot_.count > 0) {
 			amount_.set(slot_.count);

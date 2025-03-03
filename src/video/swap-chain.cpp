@@ -8,20 +8,20 @@
 namespace swap_chain {
 	// private
 	glm::ivec2 dimensions_ {};
-	chroma color_ { chroma::WHITE() };
+	color_type color_ { color_type::WHITE() };
 	// public
 	void reset() {
 		dimensions_ = {};
-		color_ = chroma::WHITE();
+		color_ = color_type::WHITE();
 	}
-	void clear(const chroma& color) {
+	void clear(const color_type& color) {
 		if (color_ != color) {
 			color_ = color;
 			glCheck(glClearColor(
-				as<r32>(color_.r) / 255.0f,
-				as<r32>(color_.g) / 255.0f,
-				as<r32>(color_.b) / 255.0f,
-				as<r32>(color_.a) / 255.0f
+				cast<r32>(color_.r) / 255.0f,
+				cast<r32>(color_.g) / 255.0f,
+				cast<r32>(color_.b) / 255.0f,
+				cast<r32>(color_.a) / 255.0f
 			));
 		}
 		glCheck(glClear(GL_COLOR_BUFFER_BIT));

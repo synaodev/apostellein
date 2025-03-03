@@ -69,18 +69,18 @@ private:
 	T value_ {};
 };
 
-struct chroma {
-	constexpr chroma() noexcept = default;
-	constexpr chroma(byte _r, byte _g, byte _b) noexcept :
+struct color_type {
+	constexpr color_type() noexcept = default;
+	constexpr color_type(byte _r, byte _g, byte _b) noexcept :
 		r{ _r }, g{ _g }, b{ _b } {}
-	constexpr chroma(byte _r, byte _g, byte _b, byte _a) noexcept :
+	constexpr color_type(byte _r, byte _g, byte _b, byte _a) noexcept :
 		r{ _r }, g{ _g }, b{ _b }, a{ _a } {}
-	constexpr chroma(u32 value) noexcept :
+	constexpr color_type(u32 value) noexcept :
 		r{ static_cast<byte>((value & 0xFF000000U) >> 24) },
 		g{ static_cast<byte>((value & 0x00FF0000U) >> 16) },
 		b{ static_cast<byte>((value & 0x0000FF00U) >> 8) },
 		a{ static_cast<byte>((value & 0x000000FFU) >> 0) } {}
-	constexpr chroma& operator=(u32 value) noexcept {
+	constexpr color_type& operator=(u32 value) noexcept {
 		r = static_cast<byte>((value & 0xFF000000U) >> 24);
 		g = static_cast<byte>((value & 0x00FF0000U) >> 16);
 		b = static_cast<byte>((value & 0x0000FF00U) >> 8);
@@ -93,11 +93,11 @@ struct chroma {
 	byte b {};
 	byte a {};
 public:
-	static constexpr chroma TRANSLUCENT() { return { 0x00U, 0x00U, 0x00U, 0x7FU }; }
-	static constexpr chroma WHITE() { return { 0xFFU, 0xFFU, 0xFFU, 0xFFU }; }
-	static constexpr chroma BASE() { return { 0x00U, 0x00U, 0x1FU, 0xFFU }; }
+	static constexpr color_type TRANSLUCENT() { return { 0x00U, 0x00U, 0x00U, 0x7FU }; }
+	static constexpr color_type WHITE() { return { 0xFFU, 0xFFU, 0xFFU, 0xFFU }; }
+	static constexpr color_type BASE() { return { 0x00U, 0x00U, 0x1FU, 0xFFU }; }
 
-	constexpr bool operator==(const chroma& that) noexcept {
+	constexpr bool operator==(const color_type& that) noexcept {
 		return (
 			this->r == that.r and
 			this->g == that.g and
@@ -105,7 +105,7 @@ public:
 			this->a == that.a
 		);
 	}
-	constexpr bool operator!=(const chroma& that) noexcept {
+	constexpr bool operator!=(const color_type& that) noexcept {
 		return !(*this == that);
 	}
 };

@@ -22,7 +22,7 @@ bool image_file::load(const std::vector<byte>& buffer) {
 	i32 components = 0;
 	pixels_ = stbi_load_from_memory(
 		buffer.data(),
-		as<i32>(buffer.size()),
+		cast<i32>(buffer.size()),
 		&dimensions_.x,
 		&dimensions_.y,
 		&components,

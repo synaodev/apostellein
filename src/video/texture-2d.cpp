@@ -8,7 +8,7 @@
 #define STB_RECT_PACK_IMPLEMENTATION
 #include <stb_rect_pack.h>
 
-#include "./material.hpp"
+#include "./texture-2d.hpp"
 #include "./opengl.hpp"
 
 namespace {
@@ -29,7 +29,7 @@ struct virtual_texture_layer : public not_moveable {
 		context.heuristic = STBRP_HEURISTIC_Skyline_default;
 		context.num_nodes = TOTAL_SEGMENTS;
 		context.align = (context.width + context.num_nodes - 1) / context.num_nodes;
-		nodes.resize(as<udx>(TOTAL_SEGMENTS));
+		nodes.resize(cast<udx>(TOTAL_SEGMENTS));
 	}
 	void reset() {
 		context.active_head = &context.extra[0];
@@ -40,7 +40,7 @@ struct virtual_texture_layer : public not_moveable {
 		context.extra[1].x = image_file::MAXIMUM_LENGTH;
 		context.extra[1].y = FURTHER_HEIGHT;
 		context.extra[1].next = nullptr;
-		for (udx it = 0; it < as<udx>(TOTAL_SEGMENTS - 1); ++it) {
+		for (udx it = 0; it < cast<udx>(TOTAL_SEGMENTS - 1); ++it) {
 			nodes[it].x = 0;
 			nodes[it].y = 0;
 			nodes[it].next = &nodes[it + 1];
@@ -120,18 +120,18 @@ public:
 			layer.reset();
 			layer.spaces.push_back({
 				id, // id
-				as<stbrp_coord>(dimensions.x), // w
-				as<stbrp_coord>(dimensions.y), // h
+				cast<stbrp_coord>(dimensions.x), // w
+				cast<stbrp_coord>(dimensions.y), // h
 				0, 0, // x, y
 				0 // was_packed
 			});
 			if (stbrp_pack_rects(
 				&layer.context,
 				layer.spaces.data(),
-				as<i32>(layer.spaces.size())
+				cast<i32>(layer.spaces.size())
 			)) {
 				const auto diff = std::distance(layers_.data(), &layer);
-				atlas = as<i32>(diff);
+				atlas = cast<i32>(diff);
 				return true;
 			}
 			// if rect-packing failed, rollback
@@ -147,7 +147,7 @@ public:
 			if (!stbrp_pack_rects(
 				&layer.context,
 				layer.spaces.data(),
-				as<i32>(layer.spaces.size())
+				cast<i32>(layer.spaces.size())
 			)) {
 				spdlog::critical("Failed to rollback virtual texture layer!");
 			}
@@ -159,7 +159,7 @@ public:
 			for (auto&& space : layer.spaces) {
 				if (space.id == id and space.was_packed) {
 					const auto diff = std::distance(layers_.data(), &layer);
-					atlas = as<i32>(diff);
+					atlas = cast<i32>(diff);
 					return space;
 				}
 			}
@@ -191,7 +191,7 @@ public:
 		invalidated = false;
 	}
 	bool invalidated {};
-	std::set<material*> cache {};
+	std::set<texture_2d*> cache {};
 private:
 	std::array<virtual_texture_layer, DEFAULT_LAYERS> layers_ {};
 	u32 handle_ {};
@@ -199,16 +199,16 @@ private:
 
 static std::unique_ptr<virtual_texture> vtp_ {};
 
-void material::load(image_file image) {
+void texture_2d::load(image_file image) {
 	if (!image.valid()) {
-		spdlog::error("Material image is invalid!");
+		spdlog::error("Texture image is invalid!");
 		return;
 	}
 	if (!vtp_) {
 		vtp_ = std::make_unique<virtual_texture>();
 	}
 	if (vtp_->cache.find(this) != vtp_->cache.end()) {
-		spdlog::error("This material was almost overwritten! Material ID: {}", id_);
+		spdlog::error("This texture was almost overwritten! Texture ID: {}", id_);
 		return;
 	}
 	dimensions_ = image.dimensions();
@@ -221,7 +221,7 @@ void material::load(image_file image) {
 	vtp_->cache.insert(this);
 }
 
-void material::destroy() {
+void texture_2d::destroy() {
 	if (vtp_) {
 		vtp_->cache.erase(this);
 		if (vtp_->cache.empty()) {
@@ -237,11 +237,11 @@ void material::destroy() {
 	}
 }
 
-i32 material::binding() {
+i32 texture_2d::binding() {
 	return 0;
 }
 
-bool material::recalibrate() {
+bool texture_2d::recalibrate() {
 	if (vtp_ and vtp_->invalidated) {
 		vtp_->recalibrate();
 		return true;

@@ -14,7 +14,7 @@
 
 #include "./vfs.hpp"
 #include "../audio/noise-buffer.hpp"
-#include "../video/material.hpp"
+#include "../video/texture-2d.hpp"
 #include "../util/config-file.hpp"
 #include "../util/message-box.hpp"
 #include "../x2d/bitmap-font.hpp"
@@ -67,7 +67,7 @@ namespace vfs {
 		std::filesystem::path personal_directory {};
 		std::unordered_map<std::string, i18n_entry> i18n {};
 		std::unordered_map<entt::id_type, noise_buffer> noises {};
-		std::unordered_map<std::string, material> materials {};
+		std::unordered_map<std::string, texture_2d> textures {};
 		std::unordered_map<std::string, bitmap_font> fonts {};
 		std::unordered_map<entt::id_type, animation_group> animations {};
 	};
@@ -699,18 +699,18 @@ void vfs::clear_noises() {
 	}
 }
 
-void vfs::clear_materials() {
+void vfs::clear_textures() {
 	if (drv_) {
-		drv_->materials.clear();
+		drv_->textures.clear();
 	}
 }
 
-void vfs::clear_material(const material* handle) {
+void vfs::clear_texture(const texture_2d* handle) {
 	if (!drv_) {
 		return;
 	}
-	auto iter = drv_->materials.begin();
-	auto end = drv_->materials.end();
+	auto iter = drv_->textures.begin();
+	auto end = drv_->textures.end();
 	while (iter != end) {
 		auto& [_, ref] = *iter;
 		if (handle == &ref) {
@@ -719,7 +719,7 @@ void vfs::clear_material(const material* handle) {
 		++iter;
 	}
 	if (iter != end) {
-		drv_->materials.erase(iter);
+		drv_->textures.erase(iter);
 	}
 }
 
@@ -771,13 +771,13 @@ const noise_buffer* vfs::find_noise(const std::string& name) {
 	return std::addressof(iter->second);
 }
 
-const material* vfs::find_material(const std::string& name) {
+const texture_2d* vfs::find_texture(const std::string& name) {
 	if (!drv_) {
 		return nullptr;
 	}
-	auto iter = drv_->materials.find(name);
-	if (iter == drv_->materials.end()) {
-		auto& ref = drv_->materials[name];
+	auto iter = drv_->textures.find(name);
+	if (iter == drv_->textures.end()) {
+		auto& ref = drv_->textures[name];
 		const std::filesystem::path path =
 			drv_->root_directory /
 			vfs_route::IMAGE /
@@ -789,13 +789,13 @@ const material* vfs::find_material(const std::string& name) {
 	return std::addressof(iter->second);
 }
 
-const material* vfs::find_material(const std::string& name, const std::string& route) {
+const texture_2d* vfs::find_texture(const std::string& name, const std::string& route) {
 	if (!drv_) {
 		return nullptr;
 	}
-	auto iter = drv_->materials.find(name);
-	if (iter == drv_->materials.end()) {
-		auto& ref = drv_->materials[name];
+	auto iter = drv_->textures.find(name);
+	if (iter == drv_->textures.end()) {
+		auto& ref = drv_->textures[name];
 		const std::filesystem::path path =
 			drv_->root_directory /
 			route /

@@ -4,7 +4,7 @@
 
 #include "../video/vertex.hpp"
 
-struct material;
+struct texture_2d;
 struct renderer;
 
 namespace gui {
@@ -16,7 +16,7 @@ namespace gui {
 			const rect& raster,
 			i32 number,
 			i32 zeroes,
-			const material* texture
+			const texture_2d* texture
 		);
 		void invalidate() const { invalidated_ = true; }
 		void fix() { this->generate_quads_(); }
@@ -47,7 +47,7 @@ namespace gui {
 		i32 number_ { MAGIC_NUMBER };
 		i32 zeroes_ {};
 		std::vector<i32> digits_ {};
-		const material* texture_ {};
+		const texture_2d* texture_ {};
 		std::vector<vtx_sprite> vertices_ {};
 	};
 }

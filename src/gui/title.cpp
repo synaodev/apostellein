@@ -12,8 +12,8 @@ namespace {
 void gui::title::build(
 	const glm::vec2& position,
 	const glm::vec2& origin,
-	const chroma& back_color,
-	const chroma& front_color,
+	const color_type& back_color,
+	const color_type& front_color,
 	const bitmap_font* font,
 	gui::title::callback recalibrate
 ) {
@@ -74,7 +74,7 @@ void gui::title::push_message(
 		auto& recent = messages_.emplace_back();
 		recent.build(
 			position, {},
-			chroma::WHITE(),
+			color_type::WHITE(),
 			font, words
 		);
 		if (centered) {
@@ -98,7 +98,7 @@ void gui::title::forward_message(
 		auto& recent = messages_.emplace_back();
 		recent.build(
 			position, {},
-			chroma::WHITE(),
+			color_type::WHITE(),
 			font, {}
 		);
 		recent.forward(std::move(words));

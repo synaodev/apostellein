@@ -254,7 +254,7 @@ void player::read(const nlohmann::json& data, environment& env) {
 		data[EQUIPMENT_ENTRY].is_string()
 	) {
 		const std::string hex = data[EQUIPMENT_ENTRY].get<std::string>();
-		equips_._raw = as<u32>(std::strtoul(hex.c_str(), nullptr, 0));
+		equips_._raw = cast<u32>(std::strtoul(hex.c_str(), nullptr, 0));
 	} else {
 		equips_._raw = {};
 	}
@@ -595,7 +595,7 @@ void player::change_poison(environment& env, i32 amount) {
 }
 
 void player::change_equipment(u32 id, bool value) {
-	constexpr u32 MAXIMUM_BITS = as<u32>(sizeof(u32) * 8);
+	constexpr u32 MAXIMUM_BITS = cast<u32>(sizeof(u32) * 8);
 
 	if (id < MAXIMUM_BITS) {
 		equips_._raw.set(id, value);

@@ -5,7 +5,7 @@
 #include <glm/vec2.hpp>
 #include <apostellein/struct.hpp>
 
-struct material;
+struct texture_2d;
 
 struct bitmap_glyph {
 	constexpr bitmap_glyph() noexcept = default;
@@ -60,5 +60,5 @@ private:
 	std::map<char32_t, bitmap_glyph> glyphs_ {};
 	std::map<std::pair<char32_t, char32_t>, r32> kernings_ {};
 	glm::vec2 dimensions_ {};
-	const material* texture_ {};
+	const texture_2d* texture_ {};
 };

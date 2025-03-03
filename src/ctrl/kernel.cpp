@@ -15,7 +15,7 @@
 #include "../hw/vfs.hpp"
 #include "../hw/rng.hpp"
 #include "../util/buttons.hpp"
-#include "../video/material.hpp"
+#include "../video/texture-2d.hpp"
 
 namespace {
 	constexpr char INIT_MODULE[] = "init";
@@ -411,8 +411,8 @@ void kernel::setup_api_(
 		tbl.set_function("i18n_size", [](std::string segment) {
 			return vfs::i18n_size(segment);
 		});
-		tbl.set_function("material", [](std::string name) {
-			auto ptr = vfs::find_material(name);
+		tbl.set_function("texture", [](std::string name) {
+			auto ptr = vfs::find_texture(name);
 			if (ptr) {
 				return ptr->valid();
 			}

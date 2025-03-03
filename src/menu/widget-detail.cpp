@@ -24,8 +24,8 @@ namespace {
 	constexpr udx STATE_ARROW = 1;
 	constexpr udx OPTION_OPTIONS = 6;
 	constexpr udx PROFILE_OPTIONS = controller::MAXIMUM_PROFILES - 1;
-	constexpr udx INPUT_OPTIONS_LEFT = as<udx>(button_name::LAST_ORDINAL);
-	constexpr udx INPUT_OPTIONS_RIGHT = as<udx>(button_name::LAST_BUTTON);
+	constexpr udx INPUT_OPTIONS_LEFT = cast<udx>(button_name::LAST_ORDINAL);
+	constexpr udx INPUT_OPTIONS_RIGHT = cast<udx>(button_name::LAST_BUTTON);
 	constexpr glm::vec2 INPUT_POSITION_LEFT { 3.0f, 16.0f };
 	constexpr glm::vec2 INPUT_POSITION_RIGHT { 175.0f, 16.0f };
 	constexpr udx VIDEO_OPTIONS = 2;
@@ -45,7 +45,7 @@ void option_widget::build(const bitmap_font* font, controller& ctl, overlay&) {
 	flags_.ready = true;
 	text_.build(
 		DEFAULT_POSITION, {},
-		chroma::WHITE(),
+		color_type::WHITE(),
 		font,
 		vfs::i18n_from(OPTION_ENTRY, 0, 7)
 	);
@@ -68,7 +68,7 @@ void option_widget::handle(buttons& bts, controller& ctl, overlay& ovl, headsup&
 			arrow_.transform(0.0f, -fd.y);
 		} else {
 			cursor_ = OPTION_OPTIONS;
-			arrow_.transform(0.0f, fd.y * as<r32>(cursor_));
+			arrow_.transform(0.0f, fd.y * cast<r32>(cursor_));
 		}
 		audio::play(sfx::Select, 0);
 	} else if (bts.pressed.down) {
@@ -77,7 +77,7 @@ void option_widget::handle(buttons& bts, controller& ctl, overlay& ovl, headsup&
 			arrow_.transform(0.0f, fd.y);
 		} else {
 			cursor_ = 0;
-			arrow_.transform(0.0f, -fd.y * as<r32>(OPTION_OPTIONS));
+			arrow_.transform(0.0f, -fd.y * cast<r32>(OPTION_OPTIONS));
 		}
 		audio::play(sfx::Select, 0);
 	} else if (bts.pressed.confirm) {
@@ -133,18 +133,18 @@ void input_widget::build(const bitmap_font* font, controller&, overlay&) {
 	const glm::vec2 fd = font->glyph_dimensions();
 	header_.build(
 		DEFAULT_POSITION, {},
-		chroma::WHITE(),
+		color_type::WHITE(),
 		font, vfs::i18n_at(INPUT_ENTRY, 0)
 	);
 	left_text_.build(
 		DEFAULT_POSITION + INPUT_POSITION_LEFT, {},
-		chroma::WHITE(),
+		color_type::WHITE(),
 		font, {}
 	);
 	this->setup_left_text_();
 	right_text_.build(
 		DEFAULT_POSITION + INPUT_POSITION_RIGHT, {},
-		chroma::WHITE(),
+		color_type::WHITE(),
 		font, {}
 	);
 	this->setup_right_text_();
@@ -166,10 +166,10 @@ void input_widget::handle(buttons& bts, controller&, overlay&, headsup&) {
 		if (input::valid_stored_code()) {
 			auto code = input::receive_stored_code();
 			if (left_side_) {
-				input::swap_keyboard_bindings(code, as<u32>(cursor_));
+				input::swap_keyboard_bindings(code, cast<u32>(cursor_));
 				this->setup_left_text_();
 			} else {
-				input::swap_joystick_bindings(code, as<u32>(cursor_));
+				input::swap_joystick_bindings(code, cast<u32>(cursor_));
 				this->setup_right_text_();
 			}
 			waiting_ = false;
@@ -190,7 +190,7 @@ void input_widget::handle(buttons& bts, controller&, overlay&, headsup&) {
 			cursor_ = left_side_ ?
 				INPUT_OPTIONS_LEFT :
 				INPUT_OPTIONS_RIGHT;
-			arrow_.transform(0.0f, fd.y * as<r32>(cursor_));
+			arrow_.transform(0.0f, fd.y * cast<r32>(cursor_));
 		}
 		audio::play(sfx::Select, 0);
 	} else if (bts.pressed.down) {
@@ -202,7 +202,7 @@ void input_widget::handle(buttons& bts, controller&, overlay&, headsup&) {
 			arrow_.transform(0.0f, fd.y);
 		} else {
 			cursor_ = 0;
-			arrow_.transform(0.0f, -fd.y * as<r32>(options));
+			arrow_.transform(0.0f, -fd.y * cast<r32>(options));
 		}
 		audio::play(sfx::Select, 0);
 	} else if (bts.pressed.right and left_side_) {
@@ -212,7 +212,7 @@ void input_widget::handle(buttons& bts, controller&, overlay&, headsup&) {
 			const glm::vec2 position = arrow_.position();
 			arrow_.position(
 				position.x + (INPUT_POSITION_RIGHT.x - SMALL_TAB_SPACE),
-				(as<r32>(INPUT_OPTIONS_RIGHT) * fd.y) +
+				(cast<r32>(INPUT_OPTIONS_RIGHT) * fd.y) +
 				((fd.y * 2.0f) - LARGE_TAB_SPACE)
 			);
 		} else {
@@ -247,8 +247,8 @@ void input_widget::handle(buttons& bts, controller&, overlay&, headsup&) {
 void input_widget::setup_left_text_() {
 	fmt::memory_buffer out {};
 	for (auto iter = button_name::FIRST_BUTTON; iter <= button_name::LAST_ORDINAL; ++iter) {
-		out.append(vfs::i18n_at(INPUT_ENTRY, as<udx>(iter) + 1));
-		out.append(input::keyboard_string(as<u32>(iter)));
+		out.append(vfs::i18n_at(INPUT_ENTRY, cast<udx>(iter) + 1));
+		out.append(input::keyboard_string(cast<u32>(iter)));
 	}
 	left_text_.replace(fmt::to_string(out));
 	right_text_.invalidate();
@@ -257,8 +257,8 @@ void input_widget::setup_left_text_() {
 void input_widget::setup_right_text_() {
 	fmt::memory_buffer out {};
 	for (auto iter = button_name::FIRST_BUTTON; iter <= button_name::LAST_BUTTON; ++iter) {
-		out.append(vfs::i18n_at(INPUT_ENTRY, as<udx>(iter) + 1));
-		out.append(input::joystick_string(as<u32>(iter)));
+		out.append(vfs::i18n_at(INPUT_ENTRY, cast<udx>(iter) + 1));
+		out.append(input::joystick_string(cast<u32>(iter)));
 	}
 	right_text_.replace(fmt::to_string(out));
 	left_text_.invalidate();
@@ -268,7 +268,7 @@ void video_widget::build(const bitmap_font* font, controller&, overlay&) {
 	flags_.ready = true;
 	text_.build(
 		DEFAULT_POSITION, {},
-		chroma::WHITE(),
+		color_type::WHITE(),
 		font, {}
 	);
 	const glm::vec2 fd = text_.font_dimensions();
@@ -288,7 +288,7 @@ void video_widget::handle(buttons& bts, controller&, overlay&, headsup&) {
 			arrow_.transform(0.0f, -fd.y);
 		} else {
 			cursor_ = VIDEO_OPTIONS;
-			arrow_.transform(0.0f, fd.y * as<r32>(cursor_));
+			arrow_.transform(0.0f, fd.y * cast<r32>(cursor_));
 		}
 		audio::play(sfx::Select, 0);
 	} else if (bts.pressed.down) {
@@ -297,7 +297,7 @@ void video_widget::handle(buttons& bts, controller&, overlay&, headsup&) {
 			arrow_.transform(0.0f, fd.y);
 		} else {
 			cursor_ = 0;
-			arrow_.transform(0.0f, -fd.y * as<r32>(VIDEO_OPTIONS));
+			arrow_.transform(0.0f, -fd.y * cast<r32>(VIDEO_OPTIONS));
 		}
 		audio::play(sfx::Select, 0);
 	} else if (bts.pressed.right or bts.pressed.left) {
@@ -364,7 +364,7 @@ void audio_widget::build(const bitmap_font* font, controller&, overlay&) {
 	flags_.ready = true;
 	text_.build(
 		DEFAULT_POSITION, {},
-		chroma::WHITE(),
+		color_type::WHITE(),
 		font,
 		{}
 	);
@@ -385,7 +385,7 @@ void audio_widget::handle(buttons& bts, controller&, overlay&, headsup&) {
 			arrow_.transform(0.0f, -fd.y);
 		} else {
 			cursor_ = AUDIO_OPTIONS;
-			arrow_.transform(0.0f, fd.y * as<r32>(cursor_));
+			arrow_.transform(0.0f, fd.y * cast<r32>(cursor_));
 		}
 		audio::play(sfx::Select, 0);
 	} else if (bts.pressed.down) {
@@ -394,7 +394,7 @@ void audio_widget::handle(buttons& bts, controller&, overlay&, headsup&) {
 			arrow_.transform(0.0f, fd.y);
 		} else {
 			cursor_ = 0;
-			arrow_.transform(0.0f, -fd.y * as<r32>(AUDIO_OPTIONS));
+			arrow_.transform(0.0f, -fd.y * cast<r32>(AUDIO_OPTIONS));
 		}
 		audio::play(sfx::Select, 0);
 	} else if (bts.holding.right or bts.holding.left) {
@@ -452,7 +452,7 @@ void language_widget::build(const bitmap_font* font, controller&, overlay&) {
 		last_ = LANGUAGE_OPTIONS;
 		text_.build(
 			DEFAULT_POSITION, {},
-			chroma::WHITE(),
+			color_type::WHITE(),
 			font, {}
 		);
 		const glm::vec2 fd = text_.font_dimensions();
@@ -487,11 +487,11 @@ void language_widget::handle(buttons& bts, controller& ctl, overlay& ovl, headsu
 			if (cursor_ > LANGUAGE_OPTIONS) {
 				first_ = (cursor_ + 1) - LANGUAGE_OPTIONS;
 				last_ = cursor_ + 1;
-				arrow_.transform(0.0f, fd.y * as<r32>(LANGUAGE_OPTIONS - 1));
+				arrow_.transform(0.0f, fd.y * cast<r32>(LANGUAGE_OPTIONS - 1));
 			} else {
 				first_ = 0;
 				last_ = LANGUAGE_OPTIONS;
-				arrow_.transform(0.0f, fd.y * as<r32>(cursor_));
+				arrow_.transform(0.0f, fd.y * cast<r32>(cursor_));
 			}
 			this->setup_text_();
 		}
@@ -551,7 +551,7 @@ void profile_widget::build(const bitmap_font* font, controller& ctl, overlay&) {
 		cursor_ = ctl.profile();
 		text_.build(
 			DEFAULT_POSITION, {},
-			chroma::WHITE(),
+			color_type::WHITE(),
 			font, {}
 		);
 		const glm::vec2 fd = text_.font_dimensions();
@@ -560,7 +560,7 @@ void profile_widget::build(const bitmap_font* font, controller& ctl, overlay&) {
 			STATE_ARROW, 0,
 			vfs::find_animation(anim::Heads)
 		);
-		arrow_.transform(0.0f, as<r32>(cursor_) * fd.y);
+		arrow_.transform(0.0f, cast<r32>(cursor_) * fd.y);
 		this->setup_text_();
 		ctl.freeze();
 	} else {
@@ -576,7 +576,7 @@ void profile_widget::handle(buttons& bts, controller& ctl, overlay& ovl, headsup
 			arrow_.transform(0.0f, -fd.y);
 		} else {
 			cursor_ = PROFILE_OPTIONS;
-			arrow_.transform(0.0f, fd.y * as<r32>(cursor_));
+			arrow_.transform(0.0f, fd.y * cast<r32>(cursor_));
 		}
 		audio::play(sfx::Select, 0);
 	} else if (bts.pressed.down) {
@@ -585,7 +585,7 @@ void profile_widget::handle(buttons& bts, controller& ctl, overlay& ovl, headsup
 			arrow_.transform(0.0f, fd.y);
 		} else {
 			cursor_ = 0;
-			arrow_.transform(0.0f, -fd.y * as<r32>(PROFILE_OPTIONS));
+			arrow_.transform(0.0f, -fd.y * cast<r32>(PROFILE_OPTIONS));
 		}
 		audio::play(sfx::Select, 0);
 	} else if (bts.pressed.confirm) {

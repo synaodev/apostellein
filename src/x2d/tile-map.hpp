@@ -8,7 +8,7 @@
 #include "../util/tmx-convert.hpp"
 #include "../video/vertex.hpp"
 
-struct material;
+struct texture_2d;
 struct renderer;
 
 struct tile_layer : public not_copyable {
@@ -34,7 +34,7 @@ struct tile_layer : public not_copyable {
 	}
 public:
 	void build(const tmx::TileLayer& data, std::vector<u32>& attributes, const std::vector<u32>& key);
-	void handle(const glm::ivec2& first, const glm::ivec2& last, const glm::ivec2& dimensions, const material* texture);
+	void handle(const glm::ivec2& first, const glm::ivec2& last, const glm::ivec2& dimensions, const texture_2d* texture);
 	void render(renderer& rdr) const;
 	bool foreground() const { return foreground_; }
 private:
@@ -66,7 +66,7 @@ struct tile_parallax : public not_copyable {
 		return *this;
 	}
 public:
-	void build(const tmx::ImageLayer& data, const material* background);
+	void build(const tmx::ImageLayer& data, const texture_2d* background);
 	void prepare();
 	void handle(const rect& view);
 	void render(r32 ratio, const rect& view, renderer& rdr) const;
@@ -75,7 +75,7 @@ private:
 	glm::vec2 current_ {};
 	glm::vec2 scrolling_ {};
 	glm::vec2 raster_ {};
-	const material* background_ {};
+	const texture_2d* background_ {};
 };
 
 struct tile_map {
@@ -100,7 +100,7 @@ private:
 	std::vector<u32> attributes_ {};
 	std::vector<u32> key_ {};
 	rect previous_ {};
-	const material* texture_ {};
+	const texture_2d* texture_ {};
 	std::vector<tile_parallax> parallaxes_ {};
 	std::vector<tile_layer> layers_ {};
 };

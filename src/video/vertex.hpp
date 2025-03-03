@@ -59,7 +59,7 @@ struct vtx_blank : public vertex_template<vtx_blank> {
 
 	glm::vec2 position {};
 	i32 index {};
-	chroma color { chroma::WHITE() };
+	color_type color { color_type::WHITE() };
 };
 
 struct vtx_sprite : public vertex_template<vtx_sprite> {
@@ -69,7 +69,7 @@ struct vtx_sprite : public vertex_template<vtx_sprite> {
 	i32 index {};
 	glm::vec2 uvs {};
 	r32 atlas {};
-	chroma color { chroma::WHITE() };
+	color_type color { color_type::WHITE() };
 };
 
 using vtx_glyph = vtx_sprite;

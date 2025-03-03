@@ -7,7 +7,7 @@
 #include "./opengl.hpp"
 
 namespace {
-	constexpr udx MAXIMUM_LENGTH = as<udx>(std::numeric_limits<u16>::max());
+	constexpr udx MAXIMUM_LENGTH = cast<udx>(std::numeric_limits<u16>::max());
 
 	std::vector<u16> generate_quad_indices_(udx length) {
 		std::vector<u16> result {};

@@ -2,14 +2,14 @@
 
 #include "./graphic.hpp"
 #include "../hw/vfs.hpp"
-#include "../video/material.hpp"
+#include "../video/texture-2d.hpp"
 #include "../x2d/renderer.hpp"
 
 void gui::graphic::clear() {
 	invalidated_ = true;
 	position_ = {};
 	if (transient_ and picture_) {
-		vfs::clear_material(picture_);
+		vfs::clear_texture(picture_);
 	}
 	picture_ = nullptr;
 }
@@ -33,7 +33,7 @@ void gui::graphic::render(renderer& rdr) const {
 
 void gui::graphic::set(const std::string& name) {
 	this->clear();
-	picture_ = vfs::find_material(name);
+	picture_ = vfs::find_texture(name);
 	if (!picture_ or !picture_->valid()) {
 		spdlog::error("Couldn't load picture named \"{}\"!", name);
 		return;

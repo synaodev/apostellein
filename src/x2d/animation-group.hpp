@@ -8,7 +8,7 @@
 #include <apostellein/struct.hpp>
 
 struct mirror_type;
-struct material;
+struct texture_2d;
 struct renderer;
 
 struct animation_frame {
@@ -131,7 +131,7 @@ public:
 		udx frame,
 		udx variation,
 		const mirror_type& mirror,
-		const chroma& color,
+		const color_type& color,
 		const glm::vec2& scale,
 		r32 angle,
 		const glm::vec2& pivot,
@@ -155,7 +155,7 @@ public:
 		udx frame,
 		udx variation,
 		const mirror_type& mirror,
-		const chroma& color,
+		const color_type& color,
 		const glm::vec2& scale,
 		const glm::vec2& position,
 		const rect& view,
@@ -185,5 +185,5 @@ public:
 	glm::vec2 action_point(udx state, udx variation, const mirror_type& mirror) const;
 private:
 	std::vector<animation_sequence> sequences_ {};
-	const material* texture_ {};
+	const texture_2d* texture_ {};
 };

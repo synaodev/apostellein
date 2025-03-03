@@ -8,20 +8,20 @@
 #include "./renderer.hpp"
 #include "./pipeline-source.hpp"
 #include "../video/opengl.hpp"
-#include "../video/material.hpp"
+#include "../video/texture-2d.hpp"
 #include "../video/swap-chain.hpp"
 
 namespace {
-	constexpr udx MAXIMUM_QUADS = quad_buffer::QUADS_TO_INDICES(1024);
-	constexpr udx MAXIMUM_PRIORITIES = as<udx>(priority_type::deferred) + 1;
-	constexpr udx MAXIMUM_BLENDINGS = as<udx>(blending_type::multiply) + 1;
-	// constexpr udx MAXIMUM_PIPELINES = as<udx>(pipeline_type::light) + 1;
-	constexpr udx MAXIMUM_PIPELINES = as<udx>(pipeline_type::glyph) + 1;
+	constexpr udx MAXIMUM_QUAD_INDICES = quad_buffer::QUADS_TO_INDICES(1024);
+	constexpr udx MAXIMUM_PRIORITIES = cast<udx>(priority_type::deferred) + 1;
+	constexpr udx MAXIMUM_BLENDINGS = cast<udx>(blending_type::multiply) + 1;
+	// constexpr udx MAXIMUM_PIPELINES = cast<udx>(pipeline_type::light) + 1;
+	constexpr udx MAXIMUM_PIPELINES = cast<udx>(pipeline_type::glyph) + 1;
 	constexpr udx MAXIMUM_LISTS = MAXIMUM_PRIORITIES * MAXIMUM_BLENDINGS * MAXIMUM_PIPELINES;
 }
 
 bool renderer::build() {
-	if (!indices_.quads(MAXIMUM_QUADS)) {
+	if (!indices_.quads(MAXIMUM_QUAD_INDICES)) {
 		spdlog::critical("Couldn't setup global index buffer!");
 		return false;
 	}
@@ -110,19 +110,19 @@ bool renderer::build() {
 
 	programs_.resize(MAXIMUM_PIPELINES);
 
-	auto& blank_program = programs_[as<udx>(pipeline_type::blank)];
+	auto& blank_program = programs_[cast<udx>(pipeline_type::blank)];
 	if (!blank_program.create(blank_vertex_object, blank_pixel_object)) {
 		spdlog::critical("\"blank\" program creation failed!");
 		return false;
 	}
 
-	auto& sprite_program = programs_[as<udx>(pipeline_type::sprite)];
+	auto& sprite_program = programs_[cast<udx>(pipeline_type::sprite)];
 	if (!sprite_program.create(sprite_vertex_object, sprite_pixel_object)) {
 		spdlog::critical("\"sprite\" program creation failed!");
 		return false;
 	}
 
-	auto& glyph_program = programs_[as<udx>(pipeline_type::glyph)];
+	auto& glyph_program = programs_[cast<udx>(pipeline_type::glyph)];
 	if (!glyph_program.create(glyph_vertex_object, glyph_pixel_object)) {
 		spdlog::critical("\"glyph\" program creation failed!");
 		return false;
@@ -140,8 +140,8 @@ bool renderer::build() {
 		glyph_program.buffer(pipeline_source::MATRIX_BUFFER_NAME, matrices_);
 		// light_program.buffer(pipeline_source::MATRIX_BUFFER_NAME, matrices_);
 		// light_program.buffer(pipeline_source::LIGHT_BUFFER_NAME, lights_);
-		sprite_program.sampler(pipeline_source::SAMPLER_ARRAY_NAME, material::binding());
-		glyph_program.sampler(pipeline_source::SAMPLER_ARRAY_NAME, material::binding());
+		sprite_program.sampler(pipeline_source::SAMPLER_ARRAY_NAME, texture_2d::binding());
+		glyph_program.sampler(pipeline_source::SAMPLER_ARRAY_NAME, texture_2d::binding());
 		// light_program.sampler(pipeline_source::FRAME_BUFFER_NAME, surface);
 	}
 
@@ -158,7 +158,7 @@ bool renderer::build() {
 }
 
 void renderer::flush(const glm::mat4& viewport) {
-	swap_chain::clear(chroma::TRANSLUCENT());
+	swap_chain::clear(color_type::TRANSLUCENT());
 
 	matrices_.viewport(viewport);
 
@@ -197,7 +197,7 @@ void renderer::flush(const glm::mat4& viewport) {
 					break;
 				}
 			}
-			const auto index = as<udx>(list.pipeline());
+			const auto index = cast<udx>(list.pipeline());
 			list.flush(programs_[index]);
 		}
 	}
@@ -216,7 +216,7 @@ display_list& renderer::query(priority_type priority, blending_type blending, pi
 	}
 	auto quads = quad_buffer::allocate(
 		indices_,
-		programs_[as<udx>(pipeline)].format(),
+		programs_[cast<udx>(pipeline)].format(),
 		priority != priority_type::deferred
 	);
 	lists_.emplace_back(
@@ -230,7 +230,7 @@ display_list& renderer::query(priority_type priority, blending_type blending, pi
 }
 
 udx renderer::visible_lists() const {
-	return as<udx>(std::count_if(
+	return cast<udx>(std::count_if(
 		lists_.begin(),
 		lists_.end(),
 		[](const auto& list) { return list.visible(); }

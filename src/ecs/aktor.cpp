@@ -5,7 +5,7 @@
 #include "../x2d/renderer.hpp"
 
 namespace {
-	constexpr chroma HITBOX_TINT { 0xFFU, 0xFFU, 0xFFU, 0x7FU };
+	constexpr color_type HITBOX_TINT { 0xFFU, 0xFFU, 0xFFU, 0x7FU };
 }
 
 void ecs::location::render(const rect& view, renderer& rdr, const environment& env) {

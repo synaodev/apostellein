@@ -19,15 +19,15 @@ namespace {
 	constexpr glm::vec2 ELEMENT_COUNTER_OFFSET { 38.0f, 10.0f };
 	constexpr rect ELEMENT_COUNTER_RASTER { 56.0f, 9.0f, 8.0f, 9.0f };
 	constexpr rect DEFAULT_CURSOR_RASTER { 0.0f, 0.0f, 32.0f, 16.0f };
-	constexpr chroma CURSOR_COLOR { 0x00U, 0x00U, 0xFFU, 0x4FU }; // Blue
-	constexpr chroma PROVISION_COLOR { 0xFFU, 0x00U, 0x00U, 0x4FU }; // Red
+	constexpr color_type CURSOR_COLOR { 0x00U, 0x00U, 0xFFU, 0x4FU }; // Blue
+	constexpr color_type PROVISION_COLOR { 0xFFU, 0x00U, 0x00U, 0x4FU }; // Red
 
 	template<typename T>
-	constexpr T MAXIMUM_ROWS() { return as<T>(6); }
+	constexpr T MAXIMUM_ROWS() { return cast<T>(6); }
 	template<typename T>
-	constexpr T MAXIMUM_COLUMNS() { return as<T>(5); }
+	constexpr T MAXIMUM_COLUMNS() { return cast<T>(5); }
 	template<typename T>
-	constexpr T MODULO_POINT() { return as<T>(6); }
+	constexpr T MODULO_POINT() { return cast<T>(6); }
 
 	rect index_to_raster_(udx index) {
 		if (index >= controller::MAXIMUM_ITEMS) {
@@ -35,11 +35,11 @@ namespace {
 		}
 		return {
 			FIRST_ELEMENT_POSITION.x + (
-				as<r32>(index % MODULO_POINT<udx>()) *
+				cast<r32>(index % MODULO_POINT<udx>()) *
 				ELEMENT_SPACING.x
 			),
 			FIRST_ELEMENT_POSITION.y + (
-				as<r32>(index / MODULO_POINT<udx>()) *
+				cast<r32>(index / MODULO_POINT<udx>()) *
 				ELEMENT_SPACING.y
 			),
 			DEFAULT_CURSOR_RASTER.w,
@@ -51,8 +51,8 @@ namespace {
 			return {};
 		}
 		return {
-			as<i32>(index % MODULO_POINT<udx>()),
-			as<i32>(index / MODULO_POINT<udx>())
+			cast<i32>(index % MODULO_POINT<udx>()),
+			cast<i32>(index / MODULO_POINT<udx>())
 		};
 	}
 	rect vec_to_raster_(const glm::ivec2& vec) {
@@ -66,11 +66,11 @@ namespace {
 		}
 		return {
 			FIRST_ELEMENT_POSITION.x + (
-				as<r32>(vec.x) *
+				cast<r32>(vec.x) *
 				ELEMENT_SPACING.x
 			),
 			FIRST_ELEMENT_POSITION.y + (
-				as<r32>(vec.y) *
+				cast<r32>(vec.y) *
 				ELEMENT_SPACING.y
 			),
 			DEFAULT_CURSOR_RASTER.w,
@@ -87,8 +87,8 @@ namespace {
 			return controller::INVALID_SLOT;
 		}
 		return (
-			as<udx>(vec.x) +
-			as<udx>(vec.y) *
+			cast<udx>(vec.x) +
+			cast<udx>(vec.y) *
 			MAXIMUM_ROWS<udx>()
 		);
 	}
@@ -98,7 +98,7 @@ void inventory::build() {
 	this->clear();
 
 	auto items_file = vfs::find_animation(anim::Items);
-	auto amount_texture = vfs::find_material(img::Heads);
+	auto amount_texture = vfs::find_texture(img::Heads);
 
 	for (auto&& elm : elements_) {
 		elm.build(
@@ -165,7 +165,7 @@ void inventory::handle(
 					// description event
 					invalidated_ = true;
 					const auto item = ctl.item_at(cursor);
-					knl.run_inventory(as<u32>(item.type));
+					knl.run_inventory(cast<u32>(item.type));
 				} else if (bts.pressed.provision) {
 					// provision item
 					invalidated_ = true;
@@ -233,7 +233,7 @@ void inventory::render(renderer& rdr) const {
 			invalidated_ = false;
 			list.batch_blank(
 				konst::WINDOW_DIMENSIONS<r32>(),
-				chroma::TRANSLUCENT()
+				color_type::TRANSLUCENT()
 			);
 			list.batch_blank(
 				cursor_raster_,

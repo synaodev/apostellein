@@ -66,7 +66,7 @@ void overlay::render(renderer& rdr) const {
 			invalidated_ = false;
 			list.batch_blank(
 				konst::WINDOW_DIMENSIONS<r32>(),
-				chroma::TRANSLUCENT()
+				color_type::TRANSLUCENT()
 			);
 		} else {
 			list.skip(display_list::QUAD);

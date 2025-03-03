@@ -307,7 +307,7 @@ bool input::poll(activity_type& aty, buttons& bts) {
 			}
 			case SDL_CONTROLLERBUTTONDOWN: {
 				if (event.cdevice.which == 0) {
-					const auto code = as<i32>(event.cbutton.button);
+					const auto code = cast<i32>(event.cbutton.button);
 					if (code >= SDL_CONTROLLER_BUTTON_DPAD_UP and code <= SDL_CONTROLLER_BUTTON_DPAD_RIGHT) {
 						switch (code) {
 							case SDL_CONTROLLER_BUTTON_DPAD_UP: {
@@ -355,7 +355,7 @@ bool input::poll(activity_type& aty, buttons& bts) {
 			}
 			case SDL_CONTROLLERBUTTONUP: {
 				if (event.cbutton.which == 0) {
-					const auto code = as<i32>(event.cbutton.button);
+					const auto code = cast<i32>(event.cbutton.button);
 					if (code >= SDL_CONTROLLER_BUTTON_DPAD_UP and code <= SDL_CONTROLLER_BUTTON_DPAD_RIGHT) {
 						switch (code) {
 							case SDL_CONTROLLER_BUTTON_DPAD_UP: {

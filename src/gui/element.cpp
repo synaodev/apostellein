@@ -16,7 +16,7 @@ void gui::element::build(
 	bool amount_backwards,
 	const glm::vec2& amount_offset,
 	const rect& amount_raster,
-	const material* amount_texture
+	const texture_2d* amount_texture
 ) {
 	slot_ = {};
 	if (modulo == 0 or modulo == 1) {
@@ -24,8 +24,8 @@ void gui::element::build(
 		modulo = FALLBACK_MODULO;
 	}
 	const glm::vec2 position {
-		start.x + as<r32>(index % modulo) * spacing.x,
-		start.y + as<r32>(index / modulo) * spacing.y
+		start.x + cast<r32>(index % modulo) * spacing.x,
+		start.y + cast<r32>(index / modulo) * spacing.y
 	};
 	item_.build(
 		position,
@@ -54,7 +54,7 @@ void gui::element::set(const item_slot& value) {
 	if (slot_ != value) {
 		slot_ = value;
 		if (slot_.type > 0) {
-			item_.frame(as<udx>(slot_.type) - 1);
+			item_.frame(cast<udx>(slot_.type) - 1);
 		}
 		if (slot_.count > 0) {
 			amount_.set(slot_.count);

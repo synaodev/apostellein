@@ -25,18 +25,18 @@ namespace {
 		return reinterpret_cast<const void*>(address_offset_calculator<A, B>::value(member));
 	}
 	constexpr std::array LIGHT_TYPES {
-		as<u32>(GL_FLOAT_VEC2)
+		cast<u32>(GL_FLOAT_VEC2)
 	};
 	constexpr std::array BLANK_TYPES {
-		as<u32>(GL_FLOAT_VEC2),
-		as<u32>(GL_INT),
-		as<u32>(GL_FLOAT_VEC4)
+		cast<u32>(GL_FLOAT_VEC2),
+		cast<u32>(GL_INT),
+		cast<u32>(GL_FLOAT_VEC4)
 	};
 	constexpr std::array SPRITE_TYPES {
-		as<u32>(GL_FLOAT_VEC2),
-		as<u32>(GL_INT),
-		as<u32>(GL_FLOAT_VEC3),
-		as<u32>(GL_FLOAT_VEC4)
+		cast<u32>(GL_FLOAT_VEC2),
+		cast<u32>(GL_INT),
+		cast<u32>(GL_FLOAT_VEC3),
+		cast<u32>(GL_FLOAT_VEC4)
 	};
 }
 

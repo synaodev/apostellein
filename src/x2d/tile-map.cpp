@@ -8,7 +8,7 @@
 #include "./tile-map.hpp"
 #include "./renderer.hpp"
 #include "../hw/vfs.hpp"
-#include "../video/material.hpp"
+#include "../video/texture-2d.hpp"
 
 namespace {
 	constexpr char COLLIDABLE_PROPERTY[] = "collide";
@@ -27,10 +27,10 @@ namespace {
 }
 
 tile_layer::tile_layer(const glm::ivec2& dimensions) {
-	tiles_.resize(as<udx>(dimensions.x) * as<udx>(dimensions.y));
+	tiles_.resize(cast<udx>(dimensions.x) * cast<udx>(dimensions.y));
 	vertices_.resize(
-		as<udx>(SCREEN_WIDTH) *
-		as<udx>(SCREEN_HEIGHT) *
+		cast<udx>(SCREEN_WIDTH) *
+		cast<udx>(SCREEN_HEIGHT) *
 		display_list::QUAD
 	);
 }
@@ -52,13 +52,13 @@ void tile_layer::build(const tmx::TileLayer& data, std::vector<u32>& attributes,
 	attributes.resize(array.size());
 
 	for (udx idx = 0; idx < array.size(); ++idx) {
-		if (const auto type = as<i32>(array[idx].ID) - 1; type >= 0) {
+		if (const auto type = cast<i32>(array[idx].ID) - 1; type >= 0) {
 			tiles_[idx] = {
 				type % konst::TILE<i32>(),
 				type / konst::TILE<i32>()
 			};
 			if (collidable_) {
-				attributes[idx]  = key[as<udx>(type)];
+				attributes[idx]  = key[cast<udx>(type)];
 			}
 		} else {
 			tiles_[idx] = INVALID_TILE;
@@ -70,12 +70,12 @@ void tile_layer::handle(
 	const glm::ivec2& first,
 	const glm::ivec2& last,
 	const glm::ivec2& dimensions,
-	const material* texture
+	const texture_2d* texture
 ) {
 	const glm::ivec2 diff = last - first;
 	const auto range = (
-		as<udx>(diff.x) *
-		as<udx>(diff.y) *
+		cast<udx>(diff.x) *
+		cast<udx>(diff.y) *
 		display_list::QUAD
 	);
 	if (range > vertices_.size()) {
@@ -89,9 +89,9 @@ void tile_layer::handle(
 	for (i32 y = first.y; y < last.y; ++y) {
 		for (i32 x = first.x; x < last.x; ++x) {
 			auto& tile = tiles_[
-				as<udx>(x) +
-				as<udx>(y) *
-				as<udx>(dimensions.x)
+				cast<udx>(x) +
+				cast<udx>(y) *
+				cast<udx>(dimensions.x)
 			];
 			if (tile.x >= 0 and tile.y >= 0) {
 				uvs = glm::vec2(tile * konst::TILE<i32>());
@@ -99,33 +99,33 @@ void tile_layer::handle(
 				auto vtx = &vertices_[indices_ * display_list::QUAD];
 				vtx[0].position = pos;
 				vtx[0].index = 1;
-				vtx[0].uvs = (uvs + off) / material::MAXIMUM_DIMENSIONS;
+				vtx[0].uvs = (uvs + off) / texture_2d::MAXIMUM_DIMENSIONS;
 				vtx[0].atlas = atlas;
-				vtx[0].color = chroma::WHITE();
+				vtx[0].color = color_type::WHITE();
 
 				vtx[1].position = { pos.x, pos.y + konst::TILE<r32>() };
 				vtx[1].index = 1;
-				vtx[1].uvs = glm::vec2(uvs.x + off.x, uvs.y + off.y + konst::TILE<r32>()) / material::MAXIMUM_DIMENSIONS;
+				vtx[1].uvs = glm::vec2(uvs.x + off.x, uvs.y + off.y + konst::TILE<r32>()) / texture_2d::MAXIMUM_DIMENSIONS;
 				vtx[1].atlas = atlas;
-				vtx[1].color = chroma::WHITE();
+				vtx[1].color = color_type::WHITE();
 
 				vtx[2].position = { pos.x + konst::TILE<r32>(), pos.y };
 				vtx[2].index = 1;
-				vtx[2].uvs = glm::vec2(uvs.x + off.x + konst::TILE<r32>(), uvs.y + off.y) / material::MAXIMUM_DIMENSIONS;
+				vtx[2].uvs = glm::vec2(uvs.x + off.x + konst::TILE<r32>(), uvs.y + off.y) / texture_2d::MAXIMUM_DIMENSIONS;
 				vtx[2].atlas = atlas;
-				vtx[2].color = chroma::WHITE();
+				vtx[2].color = color_type::WHITE();
 
 				vtx[3].position = pos + konst::TILE<r32>();
 				vtx[3].index = 1;
-				vtx[3].uvs = (uvs + off + konst::TILE<r32>()) / material::MAXIMUM_DIMENSIONS;
+				vtx[3].uvs = (uvs + off + konst::TILE<r32>()) / texture_2d::MAXIMUM_DIMENSIONS;
 				vtx[3].atlas = atlas;
-				vtx[3].color = chroma::WHITE();
+				vtx[3].color = color_type::WHITE();
 
 				++indices_;
 			}
 			pos.x += konst::TILE<r32>();
 		}
-		pos.x = as<r32>(first.x * konst::TILE<i32>());
+		pos.x = cast<r32>(first.x * konst::TILE<i32>());
 		pos.y += konst::TILE<r32>();
 	}
 }
@@ -139,7 +139,7 @@ void tile_layer::render(renderer& rdr) const {
 	list.upload(vertices_, indices_ * display_list::QUAD);
 }
 
-void tile_parallax::build(const tmx::ImageLayer& data, const material* background) {
+void tile_parallax::build(const tmx::ImageLayer& data, const texture_2d* background) {
 	for (auto&& prop : data.getProperties()) {
 		auto& name = prop.getName();
 		if (name == SCROLL_X_PROPERTY) {
@@ -199,18 +199,18 @@ void tile_map::load_properties(const tmx::Map& data, const rect& bounds) {
 	invalidated_ = true;
 	dimensions_ = {
 		glm::max(
-			as<i32>(bounds.w) / konst::TILE<i32>(),
+			cast<i32>(bounds.w) / konst::TILE<i32>(),
 			SCREEN_WIDTH
 		),
 		glm::max(
-			as<i32>(bounds.h) / konst::TILE<i32>(),
+			cast<i32>(bounds.h) / konst::TILE<i32>(),
 			SCREEN_HEIGHT
 		)
 	};
 	auto& tilesets = data.getTilesets();
 	if (!tilesets.empty()) {
 		const std::string name = tmx_convert::path_to_name(tilesets[0].getImagePath());
-		texture_ = vfs::find_material(name);
+		texture_ = vfs::find_texture(name);
 
 		const std::string path = vfs::key_path(name);
 		key_ = vfs::buffer_uints(path);
@@ -232,7 +232,7 @@ void tile_map::load_parallax(const tmx::ImageLayer& data) {
 	invalidated_ = true;
 
 	const std::string name = tmx_convert::path_to_name(data.getImagePath());
-	auto background_ = vfs::find_material(name);
+	auto background_ = vfs::find_texture(name);
 
 	auto& recent = parallaxes_.emplace_back();
 	recent.build(data, background_);
@@ -292,9 +292,9 @@ tile_type tile_map::tile(i32 x, i32 y) const {
 	}();
 	if (x >= 0 and y >= 0 and x < dimensions_.x and y < dimensions_.y) {
 		const auto idx = (
-			as<udx>(x) +
-			as<udx>(y) *
-			as<udx>(dimensions_.x)
+			cast<udx>(x) +
+			cast<udx>(y) *
+			cast<udx>(dimensions_.x)
 		);
 		if (idx < attributes_.size()) {
 			return attributes_[idx];

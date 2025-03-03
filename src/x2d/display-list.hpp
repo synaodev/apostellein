@@ -8,7 +8,7 @@
 #include "../video/quad-buffer.hpp"
 #include "../video/blending-type.hpp"
 
-struct material;
+struct texture_2d;
 struct mirror_type;
 
 enum class pipeline_type : udx {
@@ -53,17 +53,17 @@ struct display_list : public not_copyable {
 	~display_list() = default;
 public:
 	static constexpr udx QUAD = 4;
-	void batch_blank(const rect& raster,const chroma& color);
+	void batch_blank(const rect& raster,const color_type& color);
 	void batch_sprite(
 		const glm::vec2& position,
 		const glm::vec2& raster,
 		const rect& uvs,
-		const material& texture
+		const texture_2d& texture
 	);
 	void batch_sprite(
 		const rect& raster,
 		const rect& uvs,
-		const material& texture
+		const texture_2d& texture
 	) {
 		this->batch_sprite(
 			raster.position(),
@@ -75,15 +75,15 @@ public:
 	void batch_sprite(
 		const std::array<glm::vec2, 4>& raster,
 		const rect& uvs,
-		const material& texture,
+		const texture_2d& texture,
 		const mirror_type& mirror,
-		const chroma& color
+		const color_type& color
 	);
 	void batch_parallax(
 		const rect& view,
 		const glm::vec2& shift,
 		const glm::vec2& raster,
-		const material& texture
+		const texture_2d& texture
 	);
 	template<typename V>
 	void upload(const std::vector<V>& vertices, udx count) {

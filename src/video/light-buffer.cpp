@@ -23,9 +23,9 @@ bool light_buffer::flush(i32 scaling) {
 	}
 	const glm::vec4 value {
 		konst::WINDOW_DIMENSIONS<r32>(),
-		konst::WINDOW_DIMENSIONS<r32>() * as<r32>(scaling)
+		konst::WINDOW_DIMENSIONS<r32>() * cast<r32>(scaling)
 	};
-	const auto count = as<u32>(drawable_);
+	const auto count = cast<u32>(drawable_);
 	if (ogl::direct_state_available()) {
 		glCheck(glNamedBufferSubData(
 			handle_, 0,

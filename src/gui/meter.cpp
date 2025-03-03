@@ -53,7 +53,7 @@ void gui::meter::render(renderer& rdr) const {
 		);
 		if (invalidated_) {
 			invalidated_ = false;
-			list.batch_blank(raster_, chroma::WHITE());
+			list.batch_blank(raster_, color_type::WHITE());
 		} else {
 			list.skip(display_list::QUAD);
 		}
@@ -67,7 +67,7 @@ void gui::meter::set(i32 current, i32 maximum) {
 	} else if (current_ != current or maximum_ != maximum) {
 		current_ = current;
 		maximum_ = maximum;
-		const auto ratio = as<r32>(current_) / as<r32>(maximum_);
+		const auto ratio = cast<r32>(current_) / cast<r32>(maximum_);
 		raster_.h = glm::round(ratio * dimensions_.y);
 		raster_.y = position_.y + raster_.h;
 		invalidated_ = true;

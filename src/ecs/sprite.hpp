@@ -35,7 +35,7 @@ namespace ecs {
 				frame = that.frame;
 				that.frame = 0;
 				color = that.color;
-				that.color = chroma::WHITE();
+				that.color = color_type::WHITE();
 				layer = that.layer;
 				that.layer = 0;
 				mirror = that.mirror;
@@ -58,7 +58,7 @@ namespace ecs {
 			timer = 0;
 			variation = 0;
 			frame = 0;
-			color = chroma::WHITE();
+			color = color_type::WHITE();
 			layer = 0;
 			mirror = {};
 			scale = { 1.0f, 1.0f };
@@ -95,7 +95,7 @@ namespace ecs {
 		i64 timer {};
 		udx variation {};
 		udx frame {};
-		chroma color { chroma::WHITE() };
+		color_type color { color_type::WHITE() };
 		i32 layer {};
 		mirror_type mirror {};
 		glm::vec2 scale { 1.0f };

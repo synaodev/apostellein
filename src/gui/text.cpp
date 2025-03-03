@@ -3,7 +3,7 @@
 #include <apostellein/cast.hpp>
 
 #include "./text.hpp"
-#include "../video/material.hpp"
+#include "../video/texture-2d.hpp"
 #include "../x2d/bitmap-font.hpp"
 #include "../x2d/renderer.hpp"
 
@@ -28,21 +28,21 @@ namespace {
 void gui::unicode(const std::string& utf8, std::u32string& utf32) {
 	const auto end = std::end(utf8);
 	auto decode_point = [end](auto iter) -> std::tuple<char32_t, decltype(iter)> {
-		const auto trailing = UNICODE_TRAILING[as<byte>(*iter)];
+		const auto trailing = UNICODE_TRAILING[cast<byte>(*iter)];
 		if ((iter + trailing) < end) {
 			char32_t code = U'\0';
 			switch (trailing) {
-				case 5: code += as<byte>(*iter++); code <<= 6;
+				case 5: code += cast<byte>(*iter++); code <<= 6;
 				[[fallthrough]];
-				case 4: code += as<byte>(*iter++); code <<= 6;
+				case 4: code += cast<byte>(*iter++); code <<= 6;
 				[[fallthrough]];
-				case 3: code += as<byte>(*iter++); code <<= 6;
+				case 3: code += cast<byte>(*iter++); code <<= 6;
 				[[fallthrough]];
-				case 2: code += as<byte>(*iter++); code <<= 6;
+				case 2: code += cast<byte>(*iter++); code <<= 6;
 				[[fallthrough]];
-				case 1: code += as<byte>(*iter++); code <<= 6;
+				case 1: code += cast<byte>(*iter++); code <<= 6;
 				[[fallthrough]];
-				case 0: code += as<byte>(*iter++);
+				case 0: code += cast<byte>(*iter++);
 			}
 			return std::make_tuple(code - UNICODE_OFFSETS[trailing], iter);
 		}
@@ -60,7 +60,7 @@ void gui::unicode(const std::string& utf8, std::u32string& utf32) {
 void gui::text::build(
 	const glm::vec2& position,
 	const glm::vec2& origin,
-	const chroma& color,
+	const color_type& color,
 	const bitmap_font* font,
 	const std::string& words
 ) {
@@ -156,7 +156,7 @@ udx gui::text::drawable() const {
 		buffer_.begin(), buffer_.end(),
 		[](auto c) { return c == U'\n' or c == U'\t'; }
 	);
-	return buffer_.size() - as<udx>(result);
+	return buffer_.size() - cast<udx>(result);
 }
 
 void gui::text::generate_quads_() {
@@ -193,25 +193,25 @@ void gui::text::generate_quads_() {
 					auto vtx = &vertices_[idx * display_list::QUAD];
 					vtx[0].position = { pos.x + g.x_offset, pos.y + g.y_offset };
 					vtx[0].index = g.channel;
-					vtx[0].uvs = glm::vec2(g.x + off.x, g.y + off.y) / material::MAXIMUM_DIMENSIONS;
+					vtx[0].uvs = glm::vec2(g.x + off.x, g.y + off.y) / texture_2d::MAXIMUM_DIMENSIONS;
 					vtx[0].atlas = atlas;
 					vtx[0].color = color_;
 
 					vtx[1].position = { pos.x + g.x_offset, pos.y + g.y_offset + g.h };
 					vtx[1].index = g.channel;
-					vtx[1].uvs = glm::vec2(g.x + off.x, g.y + g.h + off.y) / material::MAXIMUM_DIMENSIONS;
+					vtx[1].uvs = glm::vec2(g.x + off.x, g.y + g.h + off.y) / texture_2d::MAXIMUM_DIMENSIONS;
 					vtx[1].atlas = atlas;
 					vtx[1].color = color_;
 
 					vtx[2].position = { pos.x + g.x_offset + g.w, pos.y + g.y_offset };
 					vtx[2].index = g.channel;
-					vtx[2].uvs = glm::vec2(g.x + g.w + off.x, g.y + off.y) / material::MAXIMUM_DIMENSIONS;
+					vtx[2].uvs = glm::vec2(g.x + g.w + off.x, g.y + off.y) / texture_2d::MAXIMUM_DIMENSIONS;
 					vtx[2].atlas = atlas;
 					vtx[2].color = color_;
 
 					vtx[3].position = { pos.x + g.x_offset + g.w, pos.y + g.y_offset + g.h };
 					vtx[3].index = g.channel;
-					vtx[3].uvs = glm::vec2(g.x + g.w + off.x, g.y + g.h + off.y) / material::MAXIMUM_DIMENSIONS;
+					vtx[3].uvs = glm::vec2(g.x + g.w + off.x, g.y + g.h + off.y) / texture_2d::MAXIMUM_DIMENSIONS;
 					vtx[3].atlas = atlas;
 					vtx[3].color = color_;
 

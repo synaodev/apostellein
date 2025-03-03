@@ -16,7 +16,7 @@ namespace gui {
 			bool amount_backwards,
 			const glm::vec2& amount_offset,
 			const rect& amount_raster,
-			const material* amount_texture
+			const texture_2d* amount_texture
 		);
 		void invalidate() const {
 			item_.invalidate();

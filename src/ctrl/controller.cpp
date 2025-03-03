@@ -158,5 +158,5 @@ void controller::shift_slots_(udx removed) {
 }
 
 r64 controller::seconds() const {
-	return as<r64>(ticks_) * konst::INVERSE_TICK<r64>();
+	return cast<r64>(ticks_) * konst::INVERSE_TICK<r64>();
 }

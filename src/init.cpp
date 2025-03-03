@@ -100,8 +100,8 @@ int main_loop(config_file& cfg) {
 				{
 					if (current > previous) {
 						const auto ratio = (
-							as<r32>(elapsed - previous) /
-							as<r32>(current - previous)
+							cast<r32>(elapsed - previous) /
+							cast<r32>(current - previous)
 						);
 						state.render(ratio, rdr);
 					} else {

@@ -39,7 +39,7 @@ void dialogue::build() {
 	};
 	text_.build(
 		RASTER_HIGH + TEXT_OFFSET_NORMAL, {},
-		chroma::WHITE(),
+		color_type::WHITE(),
 		vfs::find_font(0), {}
 	);
 	faces_.build(
@@ -82,7 +82,7 @@ void dialogue::handle(const buttons& bts, headsup& hud, const inventory& ivt) {
 					arrow_.transform(0.0f, -fd.y);
 				} else {
 					cursor_ = choices_;
-					arrow_.transform(0.0f, fd.y * as<r32>(choices_));
+					arrow_.transform(0.0f, fd.y * cast<r32>(choices_));
 				}
 				audio::play(sfx::Select, 0);
 			} else if (bts.pressed.down) {
@@ -91,7 +91,7 @@ void dialogue::handle(const buttons& bts, headsup& hud, const inventory& ivt) {
 					arrow_.transform(0.0f, fd.y);
 				} else {
 					cursor_ = 0;
-					arrow_.transform(0.0f, -fd.y * as<r32>(choices_));
+					arrow_.transform(0.0f, -fd.y * cast<r32>(choices_));
 				}
 				audio::play(sfx::Select, 0);
 			} else if (bts.pressed.confirm) {
@@ -154,7 +154,7 @@ void dialogue::render(renderer& rdr) const {
 		);
 		if (invalidated_) {
 			invalidated_ = false;
-			list.batch_blank(raster_, chroma::TRANSLUCENT());
+			list.batch_blank(raster_, color_type::TRANSLUCENT());
 		} else {
 			list.skip(display_list::QUAD);
 		}
@@ -205,7 +205,7 @@ void dialogue::close_textbox() {
 	timer_ = 0;
 	delay_ = DEFAULT_DELAY;
 	text_.clear();
-	text_.color(chroma::WHITE());
+	text_.color(color_type::WHITE());
 	text_.position(raster_.position() + TEXT_OFFSET_NORMAL);
 	faces_.state(0);
 	faces_.variation(0);
@@ -253,10 +253,10 @@ void dialogue::color_text(i32 r, i32 g, i32 b) {
 	r = glm::clamp(r, 0, 255);
 	g = glm::clamp(r, 0, 255);
 	b = glm::clamp(r, 0, 255);
-	const chroma color {
-		as<byte>(r),
-		as<byte>(g),
-		as<byte>(b),
+	const color_type color {
+		cast<byte>(r),
+		cast<byte>(g),
+		cast<byte>(b),
 		0xFFU
 	};
 	text_.color(color);

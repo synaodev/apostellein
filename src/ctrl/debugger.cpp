@@ -198,7 +198,7 @@ void debugger::ui_(runtime& state) {
 		ImGui::SetNextWindowSize(FIELD_DIMENSIONS(), ImGuiCond_Appearing);
 		if (ImGui::Begin("Fields")) {
 			static std::vector<std::string> fields = vfs::list_fields();
-			static i32 size = as<i32>(fields.size());
+			static i32 size = cast<i32>(fields.size());
 			static i32 selected = 0;
 
 			ImGui::PushItemWidth(-1.0f);
@@ -226,7 +226,7 @@ void debugger::ui_(runtime& state) {
 				} else if (ImGui::Button("Transfer")) {
 					state.ctl_.freeze();
 					state.hud_.fade_out();
-					state.ctl_.transfer(fields[as<udx>(selected)], id);
+					state.ctl_.transfer(fields[cast<udx>(selected)], id);
 				}
 			}
 		}
@@ -245,7 +245,7 @@ void debugger::ui_(runtime& state) {
 
 			if (state.knl_.changed()) {
 				symbols = state.knl_.symbols();
-				size = as<i32>(symbols.size());
+				size = cast<i32>(symbols.size());
 				selected = 0;
 			}
 
@@ -281,7 +281,7 @@ void debugger::ui_(runtime& state) {
 				ImGui::Button("Execute");
 				ImGui::EndDisabled();
 			} else if (ImGui::Button("Execute")) {
-				state.knl_.run_symbol(symbols[as<udx>(selected)]);
+				state.knl_.run_symbol(symbols[cast<udx>(selected)]);
 			}
 		}
 		ImGui::End();

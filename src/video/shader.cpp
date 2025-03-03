@@ -9,7 +9,7 @@
 #include "./frame-buffer.hpp"
 
 namespace {
-	constexpr i32 INVALID_POSITION = as<i32>(GL_INVALID_INDEX);
+	constexpr i32 INVALID_POSITION = cast<i32>(GL_INVALID_INDEX);
 	constexpr udx TEMPORARY_LENGTH = 512;
 }
 
@@ -39,14 +39,14 @@ bool shader_object::create(const std::string& source, shader_stage stage) {
 			&length
 		));
 		std::string message {};
-		message.resize(as<udx>(length));
+		message.resize(cast<udx>(length));
 		glCheck(glGetShaderInfoLog(
 			handle_,
-			as<i32>(message.size()),
+			cast<i32>(message.size()),
 			nullptr,
 			message.data()
 		));
-		message.resize(as<udx>(
+		message.resize(cast<udx>(
 			glm::max(0, length - 2)
 		));
 		spdlog::error("Failed to compile shader object! OpenGL Error: {}", message);
@@ -89,14 +89,14 @@ bool shader_program::create(const shader_object& obj) {
 			&length
 		));
 		std::string message {};
-		message.resize(as<udx>(length));
+		message.resize(cast<udx>(length));
 		glCheck(glGetProgramInfoLog(
 			handle_,
-			as<i32>(message.size()),
+			cast<i32>(message.size()),
 			nullptr,
 			message.data()
 		));
-		message.resize(as<udx>(
+		message.resize(cast<udx>(
 			glm::max(0, length - 2)
 		));
 		spdlog::error("Failed to link shader program! OpenGL Error: {}", message);
@@ -133,7 +133,7 @@ bool shader_program::create(const shader_object& vtx, const shader_object& pix) 
 			GL_INFO_LOG_LENGTH,
 			&length
 		));
-		output.resize(as<udx>(length));
+		output.resize(cast<udx>(length));
 		glCheck(glGetProgramInfoLog(
 			handle_,
 			length,
@@ -155,7 +155,7 @@ bool shader_program::create(const shader_object& vtx, const shader_object& pix) 
 	));
 
 	std::vector<u32> types {};
-	types.resize(as<udx>(attributes));
+	types.resize(cast<udx>(attributes));
 	std::string buffer {};
 	buffer.resize(TEMPORARY_LENGTH);
 	for (i32 idx = 0; idx < attributes; ++idx) {
@@ -164,8 +164,8 @@ bool shader_program::create(const shader_object& vtx, const shader_object& pix) 
 		u32 type = 0;
 		glCheck(glGetActiveAttrib(
 			handle_,
-			as<u32>(idx),
-			as<i32>(buffer.size()),
+			cast<u32>(idx),
+			cast<i32>(buffer.size()),
 			&length,
 			&size,
 			&type,
@@ -173,8 +173,8 @@ bool shader_program::create(const shader_object& vtx, const shader_object& pix) 
 		));
 		i32 position = INVALID_POSITION;
 		glCheck(position = glGetAttribLocation(handle_, buffer.c_str()));
-		if (position < as<i32>(types.size())) {
-			types[as<udx>(position)] = type;
+		if (position < cast<i32>(types.size())) {
+			types[cast<udx>(position)] = type;
 		}
 	}
 

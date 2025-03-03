@@ -27,7 +27,7 @@ public:
 	bool create(const glm::ivec2& dimensions, i32 binding);
 	void destroy();
 	template<typename F>
-	void execute(const F& function, const chroma& color) {
+	void execute(const F& function, const color_type& color) {
 		static_assert(std::is_function<F>::value);
 		assert(handle_);
 		this->start_(color);
@@ -36,14 +36,14 @@ public:
 	}
 	template<typename F>
 	void execute(const F& function) {
-		this->execute(function, chroma::TRANSLUCENT());
+		this->execute(function, color_type::TRANSLUCENT());
 	}
 	bool blit(frame_buffer& target) const;
 	bool blit() const;
 	bool valid() const { return handle_ != 0; }
 	i32 binding() const { return binding_; }
 private:
-	void start_(const chroma& color);
+	void start_(const color_type& color);
 	void finish_();
 	u32 handle_ {};
 	u32 buffer_ {};

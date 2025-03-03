@@ -46,7 +46,7 @@ public:
 		return (
 			static_cast<udx>(dimensions_.x) *
 			static_cast<udx>(dimensions_.y) *
-			sizeof(chroma)
+			sizeof(color_type)
 		);
 	}
 private:

@@ -167,7 +167,7 @@ public:
 			VERTICES_TO_INDICES<i32>(count),
 			GL_UNSIGNED_SHORT,
 			nullptr,
-			as<i32>(length_ * sector_)
+			cast<i32>(length_ * sector_)
 		));
 		if (fences_[sector_]) {
 			glCheck(glDeleteSync(fences_[sector_]));
@@ -339,7 +339,7 @@ struct direct_quad_stream : public quad_buffer {
 			VERTICES_TO_INDICES<i32>(count),
 			GL_UNSIGNED_SHORT,
 			nullptr,
-			as<i32>(length_ * sector_)
+			cast<i32>(length_ * sector_)
 		));
 		if (fences_[sector_]) {
 			glCheck(glDeleteSync(fences_[sector_]));

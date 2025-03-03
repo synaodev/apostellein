@@ -17,7 +17,7 @@ namespace gui {
 			const animation_group* item_file,
 			const glm::vec2& amount_position,
 			const rect& amount_raster,
-			const material* amount_texture
+			const texture_2d* amount_texture
 		);
 		void invalidate() const {
 			frame_.invalidate();

@@ -29,7 +29,7 @@ namespace rng {
 		const auto nanoseconds = std::chrono::high_resolution_clock::now()
 			.time_since_epoch()
 			.count();
-		const auto seed = as<u32>(nanoseconds);
+		const auto seed = cast<u32>(nanoseconds);
 
 		// Create RNG
 		drv_->effective.seed(seed);

@@ -72,13 +72,13 @@ namespace video {
 		if (drv_->frame_rate == 0) {
 			return 0;
 		}
-		const auto fps = as<r64>(drv_->frame_rate);
+		const auto fps = cast<r64>(drv_->frame_rate);
 		if (drv_->yield) {
 			return konst::SECONDS_TO_NANOSECONDS(1.0 / fps);
 		}
 		const auto now = std::chrono::steady_clock::now();
 		const auto result = konst::SECONDS_TO_NANOSECONDS(1.0 / fps) - (now - drv_->time).count();
-		return glm::max(as<i64>(0), result);
+		return glm::max(cast<i64>(0), result);
 	}
 
 	glm::ivec2 calculate_actual_viewport_() {
@@ -215,7 +215,7 @@ namespace video {
 		);
 
 		// Generate a valid OpenGL context
-		for (; !drv_->context or ogl::version != ogl::version_type::none; --ogl::version) {
+		for (; !drv_->context and ogl::version != ogl::version_type::none; --ogl::version) {
 			if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, ogl::major_version()) < 0) {
 				spdlog::critical("Setting OpenGL major version failed! SDL Error: {}", SDL_GetError());
 				return false;
@@ -292,7 +292,7 @@ namespace video {
 
 		// Clear frame buffer
 		swap_chain::viewport(video::calculate_actual_viewport_());
-		swap_chain::clear(chroma::BASE());
+		swap_chain::clear(color_type::BASE());
 		SDL_GL_SwapWindow(drv_->window);
 
 		// Set swap interval
@@ -339,7 +339,7 @@ namespace video {
 				// clear resources before deleting context
 				vfs::clear_animations();
 				vfs::clear_fonts();
-				vfs::clear_materials();
+				vfs::clear_textures();
 
 				SDL_GL_DeleteContext(drv_->context);
 				drv_->context = nullptr;

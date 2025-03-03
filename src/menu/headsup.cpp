@@ -10,7 +10,7 @@
 namespace {
 	constexpr udx TITLE_FONT = 2;
 	constexpr glm::vec2 TITLE_POSITION { 320.0f, 80.0f };
-	constexpr chroma TITLE_BACK_COLOR { 0x3FU, 0x3FU, 0xFFU, 0xFFU };
+	constexpr color_type TITLE_BACK_COLOR { 0x3FU, 0x3FU, 0xFFU, 0xFFU };
 	constexpr glm::vec2 INDICATOR_POSITION { 2.0f, 2.0f };
 	constexpr glm::vec2 POISON_POSITION { 10.0f, 5.0f };
 	constexpr rect POISON_RASTER { 56.0f, 0.0f, 8.0f, 9.0f };
@@ -35,13 +35,13 @@ namespace {
 void headsup::build() {
 	title_.build(
 		TITLE_POSITION, {},
-		TITLE_BACK_COLOR, chroma::WHITE(),
+		TITLE_BACK_COLOR, color_type::WHITE(),
 		vfs::find_font(TITLE_FONT),
 		[](udx index) { return vfs::find_font(index); }
 	);
 	auto heads_file = vfs::find_animation(anim::Heads);
 	auto items_file = vfs::find_animation(anim::Items);
-	auto counter_texture = vfs::find_material(img::Heads);
+	auto counter_texture = vfs::find_texture(img::Heads);
 	indicator_.build(
 		INDICATOR_POSITION,
 		0, 0,
