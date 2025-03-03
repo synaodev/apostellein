@@ -32,12 +32,12 @@ void gui::provision::build(
 	);
 }
 
-void gui::provision::render(renderer& rdr) const {
+void gui::provision::render(renderer_2d& renderer) const {
 	if (slot_.type > 0) {
-		frame_.render(rdr);
-		item_.render(rdr);
+		frame_.render(renderer);
+		item_.render(renderer);
 		if (slot_.count > 1 or slot_.weapon) {
-			amount_.render(rdr);
+			amount_.render(renderer);
 		}
 	}
 }

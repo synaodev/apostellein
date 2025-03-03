@@ -8,7 +8,7 @@
 #include "../video/index-buffer.hpp"
 #include "../video/shader.hpp"
 
-struct renderer {
+struct renderer_2d {
 public:
 	bool build();
 	void clear() { lists_.clear(); }

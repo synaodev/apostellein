@@ -5,7 +5,7 @@
 #include <entt/entity/entity.hpp>
 #include <apostellein/rect.hpp>
 
-struct renderer;
+struct renderer_2d;
 struct environment;
 
 namespace ecs {
@@ -36,6 +36,6 @@ namespace ecs {
 			ecs::submersible& sub
 		);
 		static void handle(environment& env);
-		static void render(const rect& view, renderer& rdr, const environment& env);
+		static void render(const rect& view, renderer_2d& renderer, const environment& env);
 	};
 }

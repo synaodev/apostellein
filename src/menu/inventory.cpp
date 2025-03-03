@@ -11,7 +11,7 @@
 #include "../hw/vfs.hpp"
 #include "../util/buttons.hpp"
 #include "../util/id-table.hpp"
-#include "../x2d/renderer.hpp"
+#include "../x2d/renderer-2d.hpp"
 
 namespace {
 	constexpr glm::vec2 FIRST_ELEMENT_POSITION { 2.0f, 2.0f };
@@ -219,12 +219,12 @@ void inventory::handle(
 	}
 }
 
-void inventory::render(renderer& rdr) const {
+void inventory::render(renderer_2d& renderer) const {
 	if (active_) {
 		for (auto&& elm : elements_) {
-			elm.render(rdr);
+			elm.render(renderer);
 		}
-		auto& list = rdr.query(
+		auto& list = renderer.query(
 			priority_type::deferred,
 			blending_type::alpha,
 			pipeline_type::blank

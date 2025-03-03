@@ -28,7 +28,7 @@ public:
 		headsup& hud,
 		const dialogue& dlg
 	);
-	void render(renderer& rdr) const;
+	void render(renderer_2d& renderer) const;
 	bool active() const { return active_; }
 private:
 	mutable bool invalidated_ {};

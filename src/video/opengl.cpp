@@ -2,7 +2,6 @@
 #include <apostellein/konst.hpp>
 
 #include "./opengl.hpp"
-#include "./shader.hpp"
 
 namespace ogl {
 	version_type version { version_type::none };

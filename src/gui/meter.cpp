@@ -2,7 +2,7 @@
 #include <apostellein/cast.hpp>
 
 #include "./meter.hpp"
-#include "../x2d/renderer.hpp"
+#include "../x2d/renderer-2d.hpp"
 
 void gui::meter::build(
 	const glm::vec2& position,
@@ -44,9 +44,9 @@ void gui::meter::update(i64 delta) {
 	}
 }
 
-void gui::meter::render(renderer& rdr) const {
+void gui::meter::render(renderer_2d& renderer) const {
 	if (maximum_ > 0) {
-		auto& list = rdr.query(
+		auto& list = renderer.query(
 			priority_type::deferred,
 			blending_type::alpha,
 			pipeline_type::blank
@@ -57,7 +57,7 @@ void gui::meter::render(renderer& rdr) const {
 		} else {
 			list.skip(display_list::QUAD);
 		}
-		frame_.render(rdr);
+		frame_.render(renderer);
 	}
 }
 

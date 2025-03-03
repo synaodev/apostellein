@@ -6,7 +6,7 @@
 #include "../video/vertex.hpp"
 
 struct bitmap_font;
-struct renderer;
+struct renderer_2d;
 
 namespace gui {
 	// utf-8 to utf-32
@@ -34,7 +34,7 @@ namespace gui {
 				++letter_;
 			}
 		}
-		void render(renderer& rdr) const;
+		void render(renderer_2d& renderer) const;
 		void append(const std::string& words, bool immediate = true) {
 			invalidated_ = true;
 			gui::unicode(words, buffer_);

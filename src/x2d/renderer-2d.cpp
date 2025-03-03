@@ -5,7 +5,7 @@
 #include <apostellein/konst.hpp>
 #include <apostellein/cast.hpp>
 
-#include "./renderer.hpp"
+#include "./renderer-2d.hpp"
 #include "./pipeline-source.hpp"
 #include "../video/opengl.hpp"
 #include "../video/texture-2d.hpp"
@@ -20,7 +20,7 @@ namespace {
 	constexpr udx MAXIMUM_LISTS = MAXIMUM_PRIORITIES * MAXIMUM_BLENDINGS * MAXIMUM_PIPELINES;
 }
 
-bool renderer::build() {
+bool renderer_2d::build() {
 	if (!indices_.quads(MAXIMUM_QUAD_INDICES)) {
 		spdlog::critical("Couldn't setup global index buffer!");
 		return false;
@@ -157,7 +157,7 @@ bool renderer::build() {
 	return true;
 }
 
-void renderer::flush(const glm::mat4& viewport) {
+void renderer_2d::flush(const glm::mat4& viewport) {
 	swap_chain::clear(color_type::TRANSLUCENT());
 
 	matrices_.viewport(viewport);
@@ -203,7 +203,7 @@ void renderer::flush(const glm::mat4& viewport) {
 	}
 }
 
-display_list& renderer::query(priority_type priority, blending_type blending, pipeline_type pipeline) {
+display_list& renderer_2d::query(priority_type priority, blending_type blending, pipeline_type pipeline) {
 	for (auto&& list : lists_) {
 		if (list.matches(priority, blending, pipeline)) {
 			return list;
@@ -229,7 +229,7 @@ display_list& renderer::query(priority_type priority, blending_type blending, pi
 	return this->query(priority, blending, pipeline);
 }
 
-udx renderer::visible_lists() const {
+udx renderer_2d::visible_lists() const {
 	return cast<udx>(std::count_if(
 		lists_.begin(),
 		lists_.end(),

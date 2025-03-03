@@ -3,7 +3,7 @@
 
 #include "./barrier.hpp"
 #include "../video/texture-2d.hpp"
-#include "../x2d/renderer.hpp"
+#include "../x2d/renderer-2d.hpp"
 
 namespace {
 	constexpr i32 HIGHEST_MAXIMUM = 16;
@@ -33,7 +33,7 @@ void gui::barrier::fix() {
 	);
 }
 
-void gui::barrier::render(renderer& rdr) const {
+void gui::barrier::render(renderer_2d& rdr) const {
 	if (texture_ and !vertices_.empty()) {
 		auto& list = rdr.query(
 			priority_type::deferred,

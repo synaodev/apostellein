@@ -24,10 +24,10 @@ public:
 			arrow_.update(delta);
 		}
 	}
-	void render(renderer& rdr) const override {
+	void render(renderer_2d& renderer) const override {
 		if (flags_.ready and flags_.active) {
-			text_.render(rdr);
-			arrow_.render(rdr);
+			text_.render(renderer);
+			arrow_.render(renderer);
 		}
 	}
 private:
@@ -60,19 +60,19 @@ public:
 			arrow_.update(delta);
 		}
 	}
-	void render(renderer& rdr) const override {
+	void render(renderer_2d& renderer) const override {
 		if (flags_.ready and flags_.active) {
-			header_.render(rdr);
-			left_text_.render(rdr);
-			right_text_.render(rdr);
+			header_.render(renderer);
+			left_text_.render(renderer);
+			right_text_.render(renderer);
 			if (waiting_) {
 				if (flash_) {
 					arrow_.invalidate();
 				} else {
-					arrow_.render(rdr);
+					arrow_.render(renderer);
 				}
 			} else {
-				arrow_.render(rdr);
+				arrow_.render(renderer);
 			}
 		}
 	}
@@ -109,10 +109,10 @@ public:
 			arrow_.update(delta);
 		}
 	}
-	void render(renderer& rdr) const override {
+	void render(renderer_2d& renderer) const override {
 		if (flags_.ready and flags_.active) {
-			text_.render(rdr);
-			arrow_.render(rdr);
+			text_.render(renderer);
+			arrow_.render(renderer);
 		}
 	}
 private:
@@ -142,10 +142,10 @@ public:
 			arrow_.update(delta);
 		}
 	}
-	void render(renderer& rdr) const override {
+	void render(renderer_2d& renderer) const override {
 		if (flags_.ready and flags_.active) {
-			text_.render(rdr);
-			arrow_.render(rdr);
+			text_.render(renderer);
+			arrow_.render(renderer);
 		}
 	}
 private:
@@ -175,10 +175,10 @@ public:
 			arrow_.update(delta);
 		}
 	}
-	void render(renderer& rdr) const override {
+	void render(renderer_2d& renderer) const override {
 		if (flags_.ready and flags_.active) {
-			text_.render(rdr);
-			arrow_.render(rdr);
+			text_.render(renderer);
+			arrow_.render(renderer);
 		}
 	}
 private:
@@ -216,15 +216,15 @@ public:
 			arrow_.update(delta);
 		}
 	}
-	void render(renderer& rdr) const override {
+	void render(renderer_2d& renderer) const override {
 		if (flags_.ready and flags_.active) {
-			text_.render(rdr);
-			arrow_.render(rdr);
+			text_.render(renderer);
+			arrow_.render(renderer);
 		}
 	}
 private:
 	void setup_text_();
-	widget_type type_ { widget_type::option };
+	const widget_type type_ { widget_type::option };
 	bool loading_ {};
 	bool saving_ {};
 	udx cursor_ {};

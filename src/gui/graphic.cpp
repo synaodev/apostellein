@@ -3,7 +3,7 @@
 #include "./graphic.hpp"
 #include "../hw/vfs.hpp"
 #include "../video/texture-2d.hpp"
-#include "../x2d/renderer.hpp"
+#include "../x2d/renderer-2d.hpp"
 
 void gui::graphic::clear() {
 	invalidated_ = true;
@@ -14,9 +14,9 @@ void gui::graphic::clear() {
 	picture_ = nullptr;
 }
 
-void gui::graphic::render(renderer& rdr) const {
+void gui::graphic::render(renderer_2d& renderer) const {
 	if (picture_) {
-		auto& list = rdr.query(
+		auto& list = renderer.query(
 			priority_type::deferred,
 			blending_type::alpha,
 			pipeline_type::sprite

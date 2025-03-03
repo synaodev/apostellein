@@ -6,7 +6,7 @@
 #include "../util/tmx-convert.hpp"
 
 struct rect;
-struct renderer;
+struct renderer_2d;
 struct headsup;
 struct controller;
 struct kernel;
@@ -60,7 +60,7 @@ public:
 	void prepare();
 	void handle(kernel& knl, headsup& hud, camera& cam, player& plr, const tile_map& map);
 	void update(i64 delta);
-	void render(r32 ratio, const rect& view, renderer& rdr) const;
+	void render(r32 ratio, const rect& view, renderer_2d& renderer) const;
 	entt::entity search(const entt::hashed_string& type) const;
 	entt::entity search(i32 id) const;
 	entt::entity allocate() { return registry_.create(); }

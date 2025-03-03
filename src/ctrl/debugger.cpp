@@ -18,7 +18,7 @@
 #include "../util/buttons.hpp"
 #include "../util/config-file.hpp"
 #include "../x2d/pipeline-source.hpp"
-#include "../x2d/renderer.hpp"
+#include "../x2d/renderer-2d.hpp"
 
 namespace {
 	const ImVec2 MAIN_POSITION() { return { 20.0f, 20.0f }; }
@@ -44,7 +44,7 @@ debugger::~debugger() {
 	}
 }
 
-bool debugger::build(const config_file& cfg, const renderer& rdr) {
+bool debugger::build(const config_file& cfg, const renderer_2d& renderer) {
 	if (cfg.debugger()) {
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -69,13 +69,13 @@ bool debugger::build(const config_file& cfg, const renderer& rdr) {
 			return ImGui_ImplSDL2_ProcessEvent(reinterpret_cast<const SDL_Event*>(ptr));
 		});
 		window_ = window;
-		rdr_ = &rdr;
+		renderer_ = &renderer;
 	}
 	return true;
 }
 
 void debugger::handle(const buttons& bts, runtime& state) {
-	if (window_ and rdr_) {
+	if (window_ and renderer_) {
 		if (bts.pressed.debugger) {
 			visible_ = !visible_;
 		}
@@ -151,8 +151,8 @@ void debugger::ui_(runtime& state) {
 		{
 			const std::string text = fmt::format(
 				"Display Lists: {}/{}",
-				rdr_->visible_lists(),
-				rdr_->all_lists()
+				renderer_->visible_lists(),
+				renderer_->all_lists()
 			);
 			ImGui::TextUnformatted(text.c_str());
 		}

@@ -51,15 +51,15 @@ void gui::title::fix(const bitmap_font* font) {
 	}
 }
 
-void gui::title::render(renderer& rdr) const {
+void gui::title::render(renderer_2d& renderer) const {
 	if (timer_ > 0) {
-		back_text_.render(rdr);
+		back_text_.render(renderer);
 		if (timer_ >= FRONT_TIME) {
-			front_text_.render(rdr);
+			front_text_.render(renderer);
 		}
 	}
 	for (auto&& msg : messages_) {
-		msg.render(rdr);
+		msg.render(renderer);
 	}
 }
 

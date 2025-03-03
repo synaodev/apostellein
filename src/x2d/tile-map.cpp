@@ -6,7 +6,7 @@
 #include <apostellein/cast.hpp>
 
 #include "./tile-map.hpp"
-#include "./renderer.hpp"
+#include "./renderer-2d.hpp"
 #include "../hw/vfs.hpp"
 #include "../video/texture-2d.hpp"
 
@@ -130,8 +130,8 @@ void tile_layer::handle(
 	}
 }
 
-void tile_layer::render(renderer& rdr) const {
-	auto& list = rdr.query(
+void tile_layer::render(renderer_2d& renderer) const {
+	auto& list = renderer.query(
 		priority_type::automatic,
 		blending_type::alpha,
 		pipeline_type::sprite
@@ -168,9 +168,9 @@ void tile_parallax::handle(const rect& view) {
 	}
 }
 
-void tile_parallax::render(r32 ratio, const rect& view, renderer& rdr) const {
+void tile_parallax::render(r32 ratio, const rect& view, renderer_2d& renderer) const {
 	if (background_) {
-		auto& list = rdr.query(
+		auto& list = renderer.query(
 			priority_type::automatic,
 			blending_type::alpha,
 			pipeline_type::sprite
@@ -265,21 +265,21 @@ void tile_map::handle(const rect& view, bool force) {
 	}
 }
 
-void tile_map::render(r32 ratio, const rect& view, renderer& rdr) const {
+void tile_map::render(r32 ratio, const rect& view, renderer_2d& renderer) const {
 	for (auto&& pllx : parallaxes_) {
-		pllx.render(ratio, view, rdr);
+		pllx.render(ratio, view, renderer);
 	}
 	for (auto&& layer : layers_) {
 		if (!layer.foreground()) {
-			layer.render(rdr);
+			layer.render(renderer);
 		}
 	}
 }
 
-void tile_map::render(renderer& rdr) const {
+void tile_map::render(renderer_2d& renderer) const {
 	for (auto&& layer : layers_) {
 		if (layer.foreground()) {
-			layer.render(rdr);
+			layer.render(renderer);
 		}
 	}
 }

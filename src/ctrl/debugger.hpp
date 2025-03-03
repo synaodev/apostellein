@@ -5,7 +5,7 @@
 enum class activity_type;
 struct config_file;
 struct buttons;
-struct renderer;
+struct renderer_2d;
 struct runtime;
 
 #if defined(APOSTELLEIN_IMGUI_DEBUGGER)
@@ -13,14 +13,14 @@ struct runtime;
 struct debugger {
 	~debugger();
 public:
-	bool build(const config_file& cfg, const renderer& rdr);
+	bool build(const config_file& cfg, const renderer_2d& renderer);
 	void handle(const buttons& bts, runtime& state);
 	void update(i64 delta);
 	void flush() const;
 private:
 	void ui_(runtime& state);
 	void* window_ {};
-	const renderer* rdr_ {};
+	const renderer_2d* renderer_ {};
 	i64 timer_ {};
 	i64 fading_ {};
 	i64 frames_ {};

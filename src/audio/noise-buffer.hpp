@@ -3,7 +3,7 @@
 #include <string>
 #include <apostellein/struct.hpp>
 
-struct speaker;
+struct speaker_unit;
 
 struct noise_buffer : public not_copyable {
 	noise_buffer() noexcept = default;
@@ -25,7 +25,7 @@ public:
 	void destroy();
 	bool valid() const { return ready_; }
 private:
-	friend struct speaker;
+	friend struct speaker_unit;
 	bool ready_ {};
 	u32 handle_ {};
 };

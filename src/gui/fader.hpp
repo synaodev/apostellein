@@ -3,7 +3,7 @@
 #include <apostellein/def.hpp>
 #include <glm/vec2.hpp>
 
-struct renderer;
+struct renderer_2d;
 
 namespace gui {
 	enum class fade_type {
@@ -20,7 +20,7 @@ namespace gui {
 			}
 		}
 		void handle();
-		void render(r32 ratio, renderer& rdr) const;
+		void render(r32 ratio, renderer_2d& renderer) const;
 		void fade_in();
 		void fade_out();
 		bool finished() const { return type_ == fade_type::done_out; }

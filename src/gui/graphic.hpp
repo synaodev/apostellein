@@ -5,7 +5,7 @@
 #include <apostellein/struct.hpp>
 
 struct texture_2d;
-struct renderer;
+struct renderer_2d;
 
 namespace gui {
 	struct graphic : public not_copyable {
@@ -18,7 +18,7 @@ namespace gui {
 		void clear();
 		void invalidate() const { invalidated_ = true; }
 		void fix() const { this->invalidate(); }
-		void render(renderer& rdr) const;
+		void render(renderer_2d& renderer) const;
 		void set(const std::string& name);
 		void position(const glm::vec2& value) {
 			if (position_ != value) {

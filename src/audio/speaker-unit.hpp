@@ -4,12 +4,12 @@
 
 struct noise_buffer;
 
-struct speaker : public not_copyable {
-	speaker() noexcept = default;
-	speaker(speaker&& that) noexcept {
+struct speaker_unit : public not_copyable {
+	speaker_unit() noexcept = default;
+	speaker_unit(speaker_unit&& that) noexcept {
 		*this = std::move(that);
 	}
-	speaker& operator=(speaker&& that) noexcept {
+	speaker_unit& operator=(speaker_unit&& that) noexcept {
 		if (this != &that) {
 			ready_ = that.ready_;
 			that.ready_ = false;
@@ -20,7 +20,7 @@ struct speaker : public not_copyable {
 		}
 		return *this;
 	}
-	~speaker() { this->destroy(); }
+	~speaker_unit() { this->destroy(); }
 public:
 	void create();
 	void destroy();

@@ -16,7 +16,7 @@
 #include "./ctrl/runtime.hpp"
 #include "./util/buttons.hpp"
 #include "./util/message-box.hpp"
-#include "./x2d/renderer.hpp"
+#include "./x2d/renderer-2d.hpp"
 
 namespace {
 	using namespace std::chrono_literals;
@@ -60,13 +60,13 @@ int main_loop(config_file& cfg) {
 	activity_type aty {};
 	buttons bts {};
 	// init renderer
-	renderer rdr {};
-	if (!rdr.build()) {
+	renderer_2d renderer {};
+	if (!renderer.build()) {
 		return EXIT_FAILURE;
 	}
 	// init runtime
 	runtime state {};
-	if (!state.build(cfg, rdr)) {
+	if (!state.build(cfg, renderer)) {
 		return EXIT_FAILURE;
 	}
 	// init timers
@@ -103,9 +103,9 @@ int main_loop(config_file& cfg) {
 							cast<r32>(elapsed - previous) /
 							cast<r32>(current - previous)
 						);
-						state.render(ratio, rdr);
+						state.render(ratio, renderer);
 					} else {
-						state.render(1.0f, rdr);
+						state.render(1.0f, renderer);
 					}
 					video::flush();
 				}

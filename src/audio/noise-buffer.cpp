@@ -3,7 +3,7 @@
 
 #include "./noise-buffer.hpp"
 #include "./openal.hpp"
-#include "./speaker.hpp"
+#include "./speaker-unit.hpp"
 
 namespace {
 	i32 format_from_spec_(const SDL_AudioSpec* spec) {

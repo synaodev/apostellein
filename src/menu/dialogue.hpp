@@ -17,7 +17,7 @@ public:
 	void fix();
 	void handle(const buttons& bts, headsup& hud, const inventory& ivt);
 	void update(i64 delta);
-	void render(renderer& rdr) const;
+	void render(renderer_2d& renderer) const;
 	void open_textbox_high();
 	void open_textbox_low();
 	template<typename T>

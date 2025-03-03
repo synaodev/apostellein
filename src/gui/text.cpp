@@ -5,7 +5,7 @@
 #include "./text.hpp"
 #include "../video/texture-2d.hpp"
 #include "../x2d/bitmap-font.hpp"
-#include "../x2d/renderer.hpp"
+#include "../x2d/renderer-2d.hpp"
 
 namespace {
 	static constexpr r32 TAB_WIDTH = 4.0f;
@@ -81,9 +81,9 @@ void gui::text::clear() {
 	vertices_.clear();
 }
 
-void gui::text::render(renderer& rdr) const {
+void gui::text::render(renderer_2d& renderer) const {
 	if (font_ and letter_ > 0 and !vertices_.empty()) {
-		auto& list = rdr.query(
+		auto& list = renderer.query(
 			priority_type::deferred,
 			blending_type::alpha,
 			pipeline_type::glyph

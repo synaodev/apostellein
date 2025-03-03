@@ -5,7 +5,7 @@
 #include <apostellein/rect.hpp>
 #include <apostellein/struct.hpp>
 
-struct renderer;
+struct renderer_2d;
 struct environment;
 
 namespace ecs {
@@ -53,7 +53,7 @@ namespace ecs {
 		bool overlaps(const rect& that) const {
 			return this->bounds().overlaps(that);
 		}
-		static void render(const rect& view, renderer& rdr, const environment& env);
+		static void render(const rect& view, renderer_2d& renderer, const environment& env);
 	};
 
 	struct trigger {

@@ -29,7 +29,7 @@ namespace gui {
 			item_.fix();
 			amount_.fix();
 		}
-		void render(renderer& rdr) const;
+		void render(renderer_2d& renderer) const;
 		void set(const item_slot& value);
 		void set() { slot_ = {}; }
 		const item_slot& get() const { return slot_; }

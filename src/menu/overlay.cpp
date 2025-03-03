@@ -9,7 +9,7 @@
 #include "../hw/audio.hpp"
 #include "../hw/vfs.hpp"
 #include "../util/buttons.hpp"
-#include "../x2d/renderer.hpp"
+#include "../x2d/renderer-2d.hpp"
 
 namespace {
 	constexpr udx MAXIMUM_WIDGETS = 4;
@@ -54,10 +54,10 @@ void overlay::handle(buttons& bts, controller& ctl, headsup& hud) {
 	}
 }
 
-void overlay::render(renderer& rdr) const {
+void overlay::render(renderer_2d& renderer) const {
 	if (!widgets_.empty()) {
-		widgets_.back()->render(rdr);
-		auto& list = rdr.query(
+		widgets_.back()->render(renderer);
+		auto& list = renderer.query(
 			priority_type::deferred,
 			blending_type::alpha,
 			pipeline_type::blank

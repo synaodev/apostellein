@@ -25,7 +25,7 @@ public:
 			wgt.update(delta);
 		}
 	}
-	void render(renderer& rdr) const;
+	void render(renderer_2d& renderer) const;
 	void push(widget_type type);
 	void clear() {
 		if (!widgets_.empty()) {

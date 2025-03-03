@@ -44,7 +44,7 @@ public:
 		indicator_.update(delta);
 		meter_.update(delta);
 	}
-	void render(r32 ratio, renderer& rdr, const controller& ctl) const;
+	void render(r32 ratio, renderer_2d& renderer, const controller& ctl) const;
 	void set(const headsup_params& params);
 	void clear_title() { title_.clear(); }
 	template<typename T>

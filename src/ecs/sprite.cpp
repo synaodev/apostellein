@@ -81,9 +81,9 @@ void ecs::sprite::update(i64 delta, environment& env) {
 	});
 }
 
-void ecs::sprite::render(r32 ratio, const rect& view, renderer& rdr, const environment& env) {
+void ecs::sprite::render(r32 ratio, const rect& view, renderer_2d& renderer, const environment& env) {
 	env.slice<ecs::sprite>().each(
-	[&ratio, &view, &rdr, &env](entt::entity, const ecs::sprite& spt) {
+	[&ratio, &view, &renderer, &env](entt::entity, const ecs::sprite& spt) {
 		if (spt.file_ and spt.color.a > 0x00U) {
 			const glm::vec2 position = konst::INTERPOLATE(
 				spt.previous_,
@@ -102,7 +102,7 @@ void ecs::sprite::render(r32 ratio, const rect& view, renderer& rdr, const envir
 					spt.pivot,
 					position,
 					view,
-					rdr
+					renderer
 				);
 			} else {
 				spt.file_->render(
@@ -114,7 +114,7 @@ void ecs::sprite::render(r32 ratio, const rect& view, renderer& rdr, const envir
 					spt.scale,
 					position,
 					view,
-					rdr
+					renderer
 				);
 			}
 		}

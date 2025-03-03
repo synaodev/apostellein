@@ -4,7 +4,7 @@
 
 #include "../x2d/mirror-type.hpp"
 
-struct renderer;
+struct renderer_2d;
 struct animation_group;
 
 namespace gui {
@@ -18,7 +18,7 @@ namespace gui {
 		void invalidate() const { invalidated_ = true; }
 		void fix() { this->invalidate(); }
 		void update(i64 delta);
-		void render(renderer& rdr) const;
+		void render(renderer_2d& renderer) const;
 		void position(const glm::vec2& value) {
 			if (position_ != value) {
 				position_ = value;

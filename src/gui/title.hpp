@@ -30,7 +30,7 @@ namespace gui {
 				}
 			}
 		}
-		void render(renderer& rdr) const;
+		void render(renderer_2d& renderer) const;
 		template<typename T>
 		void display(const std::basic_string<T>& words) {
 			timer_ = title::default_timer_();

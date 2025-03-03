@@ -25,7 +25,7 @@ namespace gui {
 			frame_.fix();
 		}
 		void update(i64 delta);
-		void render(renderer& rdr) const;
+		void render(renderer_2d& renderer) const;
 		void set(i32 current, i32 maximum);
 		i32 get() const { return current_; }
 	private:

@@ -7,7 +7,7 @@
 #include "./vfs.hpp"
 #include "../audio/openal.hpp"
 #include "../audio/noise-buffer.hpp"
-#include "../audio/speaker.hpp"
+#include "../audio/speaker-unit.hpp"
 #include "../util/config-file.hpp"
 
 namespace {
@@ -32,7 +32,7 @@ namespace audio {
 		config_file* config {};
 		ALCdevice* device {};
 		ALCcontext* context {};
-		std::vector<speaker> speakers {};
+		std::vector<speaker_unit> speakers {};
 		std::vector<task_info> tasks {};
 		r32 volume {};
 	};

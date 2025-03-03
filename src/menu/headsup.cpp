@@ -113,16 +113,16 @@ void headsup::handle(const controller& ctl) {
 	fader_.handle();
 }
 
-void headsup::render(r32 ratio, renderer& rdr, const controller& ctl) const {
-	title_.render(rdr);
+void headsup::render(r32 ratio, renderer_2d& renderer, const controller& ctl) const {
+	title_.render(renderer);
 	if (!ctl.state().locked) {
-		indicator_.render(rdr);
-		poison_.render(rdr);
-		barrier_.render(rdr);
-		oxygen_.render(rdr);
-		provision_.render(rdr);
-		meter_.render(rdr);
-		graphic_.render(rdr);
+		indicator_.render(renderer);
+		poison_.render(renderer);
+		barrier_.render(renderer);
+		oxygen_.render(renderer);
+		provision_.render(renderer);
+		meter_.render(renderer);
+		graphic_.render(renderer);
 	} else {
 		indicator_.invalidate();
 		poison_.invalidate();
@@ -132,7 +132,7 @@ void headsup::render(r32 ratio, renderer& rdr, const controller& ctl) const {
 		meter_.invalidate();
 		graphic_.invalidate();
 	}
-	fader_.render(ratio, rdr);
+	fader_.render(ratio, renderer);
 }
 
 void headsup::set(const headsup_params& params) {

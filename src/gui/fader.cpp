@@ -2,7 +2,7 @@
 #include <spdlog/spdlog.h>
 
 #include "./fader.hpp"
-#include "../x2d/renderer.hpp"
+#include "../x2d/renderer-2d.hpp"
 
 namespace {
 	constexpr r32 INCREMENTATION = 12.0f;
@@ -39,9 +39,9 @@ void gui::fader::handle() {
 	}
 }
 
-void gui::fader::render(r32 ratio, renderer& rdr) const {
+void gui::fader::render(r32 ratio, renderer_2d& renderer) const {
 	if (this->visible()) {
-		auto& list = rdr.query(
+		auto& list = renderer.query(
 			priority_type::deferred,
 			blending_type::alpha,
 			pipeline_type::blank

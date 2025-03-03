@@ -4,7 +4,7 @@
 
 struct config_file;
 struct bitmap_font;
-struct renderer;
+struct renderer_2d;
 struct buttons;
 struct controller;
 
@@ -29,7 +29,7 @@ public:
 	virtual void fix(const bitmap_font* font) = 0;
 	virtual void handle(buttons& bts, controller& ctl, overlay& ovl, headsup& hud) = 0;
 	virtual void update(i64 delta) = 0;
-	virtual void render(renderer& rdr) const = 0;
+	virtual void render(renderer_2d& renderer) const = 0;
 	bool ready() const { return flags_.ready; }
 	bool active() const { return flags_.active; }
 protected:

@@ -9,7 +9,7 @@
 
 struct mirror_type;
 struct texture_2d;
-struct renderer;
+struct renderer_2d;
 
 struct animation_frame {
 	constexpr animation_frame() noexcept = default;
@@ -137,7 +137,7 @@ public:
 		const glm::vec2& pivot,
 		const glm::vec2& position,
 		const rect& view,
-		renderer& rdr
+		renderer_2d& renderer
 	) const;
 	bool visible(
 		udx state,
@@ -159,7 +159,7 @@ public:
 		const glm::vec2& scale,
 		const glm::vec2& position,
 		const rect& view,
-		renderer& rdr
+		renderer_2d& renderer
 	) const;
 	bool visible(
 		udx state,
@@ -176,7 +176,7 @@ public:
 		udx frame,
 		udx variation,
 		const glm::vec2& position,
-		renderer& rdr
+		renderer_2d& renderer
 	) const;
 	void load(const std::string& path);
 	bool finished(udx state, udx frame, i64 timer) const;

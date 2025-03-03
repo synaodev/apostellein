@@ -10,7 +10,7 @@
 #include "../util/buttons.hpp"
 #include "../util/id-table.hpp"
 #include "../x2d/bitmap-font.hpp"
-#include "../x2d/renderer.hpp"
+#include "../x2d/renderer-2d.hpp"
 
 namespace {
 	constexpr udx STATE_ARROW = 1;
@@ -134,20 +134,20 @@ void dialogue::update(i64 delta) {
 	}
 }
 
-void dialogue::render(renderer& rdr) const {
+void dialogue::render(renderer_2d& renderer) const {
 	if (flags_.textbox) {
-		text_.render(rdr);
+		text_.render(renderer);
 		if (flags_.facebox) {
-			faces_.render(rdr);
+			faces_.render(renderer);
 		} else {
 			faces_.invalidate();
 		}
 		if (flags_.question) {
-			arrow_.render(rdr);
+			arrow_.render(renderer);
 		} else {
 			arrow_.invalidate();
 		}
-		auto& list = rdr.query(
+		auto& list = renderer.query(
 			priority_type::deferred,
 			blending_type::alpha,
 			pipeline_type::blank

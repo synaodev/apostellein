@@ -122,7 +122,7 @@ target_sources (apostellein PRIVATE
 	"src/ai/weapons.cpp"
 	"src/audio/noise-buffer.cpp"
 	"src/audio/openal.cpp"
-	"src/audio/speaker.cpp"
+	"src/audio/speaker-unit.cpp"
 	"src/ctrl/controller.cpp"
 	"src/ctrl/debugger.cpp"
 	"src/ctrl/kernel.cpp"
@@ -177,7 +177,7 @@ target_sources (apostellein PRIVATE
 	"src/x2d/bitmap-font.cpp"
 	"src/x2d/display-list.cpp"
 	"src/x2d/pipeline-source.cpp"
-	"src/x2d/renderer.cpp"
+	"src/x2d/renderer-2d.cpp"
 	"src/x2d/tile-map.cpp"
 
 	"lib/src/glad/gl.cpp"

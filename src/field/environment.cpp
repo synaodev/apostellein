@@ -81,11 +81,11 @@ void environment::update(i64 delta) {
 	ecs::sprite::update(delta, *this);
 }
 
-void environment::render(r32 ratio, const rect& view, renderer& rdr) const {
-	ecs::sprite::render(ratio, view, rdr, *this);
-	ecs::liquid::render(view, rdr, *this);
-	// ecs::location::render(view, rdr, *this);
-	// ecs::kinematics::render(rdr, *this);
+void environment::render(r32 ratio, const rect& view, renderer_2d& renderer) const {
+	ecs::sprite::render(ratio, view, renderer, *this);
+	ecs::liquid::render(view, renderer, *this);
+	// ecs::location::render(view, renderer, *this);
+	// ecs::kinematics::render(renderer, *this);
 }
 
 void environment::clear() {

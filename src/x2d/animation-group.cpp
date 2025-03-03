@@ -5,7 +5,7 @@
 #include <apostellein/cast.hpp>
 
 #include "./animation-group.hpp"
-#include "./renderer.hpp"
+#include "./renderer-2d.hpp"
 #include "./mirror-type.hpp"
 #include "../hw/vfs.hpp"
 #include "../video/texture-2d.hpp"
@@ -283,7 +283,7 @@ void animation_group::render(
 	const glm::vec2& pivot,
 	const glm::vec2& position,
 	const rect& view,
-	renderer& rdr
+	renderer_2d& renderer
 ) const {
 	if (texture_ and state < sequences_.size()) {
 		auto& sequence = sequences_[state];
@@ -298,7 +298,7 @@ void animation_group::render(
 		);
 		if (view.overlaps(raster.bounds)) {
 			const rect quad = sequence.quad_with(frame, variation);
-			auto& list = rdr.query(
+			auto& list = renderer.query(
 				priority_type::automatic,
 				blending_type::alpha,
 				pipeline_type::sprite
@@ -344,7 +344,7 @@ void animation_group::render(
 	const glm::vec2& scale,
 	const glm::vec2& position,
 	const rect& view,
-	renderer& rdr
+	renderer_2d& renderer
 ) const {
 	if (texture_ and state < sequences_.size()) {
 		auto& sequence = sequences_[state];
@@ -357,7 +357,7 @@ void animation_group::render(
 		);
 		if (view.overlaps(raster.bounds)) {
 			const rect quad = sequence.quad_with(frame, variation);
-			auto& list = rdr.query(
+			auto& list = renderer.query(
 				priority_type::automatic,
 				blending_type::alpha,
 				pipeline_type::sprite
@@ -396,10 +396,10 @@ void animation_group::render(
 	udx frame,
 	udx variation,
 	const glm::vec2& position,
-	renderer& rdr
+	renderer_2d& renderer
 ) const {
 	if (texture_ and state < sequences_.size()) {
-		auto& list = rdr.query(
+		auto& list = renderer.query(
 			priority_type::deferred,
 			blending_type::alpha,
 			pipeline_type::sprite

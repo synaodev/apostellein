@@ -9,7 +9,7 @@
 #include "../video/vertex.hpp"
 
 struct texture_2d;
-struct renderer;
+struct renderer_2d;
 
 struct tile_layer : public not_copyable {
 	tile_layer() noexcept = default;
@@ -35,7 +35,7 @@ struct tile_layer : public not_copyable {
 public:
 	void build(const tmx::TileLayer& data, std::vector<u32>& attributes, const std::vector<u32>& key);
 	void handle(const glm::ivec2& first, const glm::ivec2& last, const glm::ivec2& dimensions, const texture_2d* texture);
-	void render(renderer& rdr) const;
+	void render(renderer_2d& renderer) const;
 	bool foreground() const { return foreground_; }
 private:
 	bool collidable_ {};
@@ -69,7 +69,7 @@ public:
 	void build(const tmx::ImageLayer& data, const texture_2d* background);
 	void prepare();
 	void handle(const rect& view);
-	void render(r32 ratio, const rect& view, renderer& rdr) const;
+	void render(r32 ratio, const rect& view, renderer_2d& renderer) const;
 private:
 	glm::vec2 previous_ {};
 	glm::vec2 current_ {};
@@ -88,9 +88,9 @@ public:
 	void prepare();
 	void handle(const rect& view, bool force = false);
 	// background
-	void render(r32 ratio, const rect& view, renderer& rdr) const;
+	void render(r32 ratio, const rect& view, renderer_2d& renderer) const;
 	// foreground
-	void render(renderer& rdr) const;
+	void render(renderer_2d& renderer) const;
 	const glm::ivec2& dimensions() const { return dimensions_; }
 	tile_type tile(i32 x, i32 y) const;
 	tile_type tile(const glm::ivec2& index) const { return this->tile(index.x, index.y); }

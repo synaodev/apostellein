@@ -28,7 +28,7 @@ void gui::scheme::update(i64 delta) {
 	}
 }
 
-void gui::scheme::render(renderer& rdr) const {
+void gui::scheme::render(renderer_2d& renderer) const {
 	if (file_) {
 		file_->render(
 			invalidated_,
@@ -36,7 +36,7 @@ void gui::scheme::render(renderer& rdr) const {
 			frame_,
 			variation_,
 			position_,
-			rdr
+			renderer
 		);
 	}
 }

@@ -7,7 +7,7 @@
 #include "../x2d/mirror-type.hpp"
 
 struct rect;
-struct renderer;
+struct renderer_2d;
 struct animation_group;
 struct environment;
 
@@ -83,8 +83,8 @@ namespace ecs {
 		static void prepare(environment& env);
 		static void handle(environment& env);
 		static void update(i64 delta, environment& env);
-		static void render(r32 ratio, const rect& view, renderer& rdr, const environment& env);
-		static udx visible(r32 ration, const rect& view, const environment& env);
+		static void render(r32 ratio, const rect& view, renderer_2d& renderer, const environment& env);
+		static udx visible(r32 ratio, const rect& view, const environment& env);
 	private:
 		// weirdly specific layout, I know
 		const animation_group* file_ {};

@@ -15,14 +15,14 @@
 #include "../hw/vfs.hpp"
 #include "../util/buttons.hpp"
 #include "../video/texture-2d.hpp"
-#include "../x2d/renderer.hpp"
+#include "../x2d/renderer-2d.hpp"
 
 namespace {
 	constexpr char PROFILE_NAME[] = "profile-";
 }
 
-bool runtime::build(const config_file& cfg, const renderer& rdr) {
-	if (!dbr_.build(cfg, rdr)) {
+bool runtime::build(const config_file& cfg, const renderer_2d& renderer) {
+	if (!dbr_.build(cfg, renderer)) {
 		return false;
 	}
 	ctl_.build();
@@ -115,18 +115,18 @@ void runtime::update(i64 delta) {
 	dbr_.update(delta);
 }
 
-void runtime::render(r32 ratio, renderer& rdr) const {
-	ovl_.render(rdr);
-	hud_.render(ratio, rdr, ctl_);
-	dlg_.render(rdr);
-	ivt_.render(rdr);
+void runtime::render(r32 ratio, renderer_2d& renderer) const {
+	ovl_.render(renderer);
+	hud_.render(ratio, renderer, ctl_);
+	dlg_.render(renderer);
+	ivt_.render(renderer);
 	if (!hud_.fader_finished()) {
 		const rect view = cam_.view(ratio);
-		map_.render(ratio, view, rdr);
-		env_.render(ratio, view, rdr);
-		map_.render(rdr);
+		map_.render(ratio, view, renderer);
+		env_.render(ratio, view, renderer);
+		map_.render(renderer);
 	}
-	rdr.flush(cam_.matrix(ratio));
+	renderer.flush(cam_.matrix(ratio));
 	dbr_.flush();
 }
 

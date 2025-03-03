@@ -16,10 +16,10 @@ enum class activity_type;
 
 struct runtime {
 public:
-	bool build(const config_file& cfg, const renderer& rdr);
+	bool build(const config_file& cfg, const renderer_2d& renderer);
 	void handle(udx ticks, activity_type& aty, buttons& bts);
 	void update(i64 delta);
-	void render(r32 ratio, renderer& rdr) const;
+	void render(r32 ratio, renderer_2d& renderer) const;
 private:
 	void boot_();
 	bool save_();

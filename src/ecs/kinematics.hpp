@@ -4,7 +4,7 @@
 #include <apostellein/struct.hpp>
 
 struct tile_map;
-struct renderer;
+struct renderer_2d;
 struct environment;
 
 struct composite_rect {
@@ -151,7 +151,7 @@ namespace ecs {
 			}
 		}
 		static void handle(environment& env, const tile_map& map);
-		static void render(renderer& rdr, const environment& env);
+		static void render(renderer_2d& renderer, const environment& env);
 	private:
 		void try_x_(ecs::location& loc, const tile_map& map, r32 inertia);
 		void try_y_(ecs::location& loc, const tile_map& map, r32 inertia);

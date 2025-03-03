@@ -5,7 +5,7 @@
 
 #include "./counter.hpp"
 #include "../video/texture-2d.hpp"
-#include "../x2d/renderer.hpp"
+#include "../x2d/renderer-2d.hpp"
 
 namespace {
 	constexpr i32 BASE_TEN_RADIX = 10;
@@ -48,9 +48,9 @@ void gui::counter::build(
 	this->set(number);
 }
 
-void gui::counter::render(renderer& rdr) const {
+void gui::counter::render(renderer_2d& renderer) const {
 	if (visible_ and !digits_.empty() and !vertices_.empty()) {
-		auto& list = rdr.query(
+		auto& list = renderer.query(
 			priority_type::deferred,
 			blending_type::alpha,
 			pipeline_type::sprite

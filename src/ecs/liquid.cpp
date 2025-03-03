@@ -4,7 +4,7 @@
 #include "./aktor.hpp"
 #include "../field/environment.hpp"
 #include "../hw/audio.hpp"
-#include "../x2d/renderer.hpp"
+#include "../x2d/renderer-2d.hpp"
 
 namespace {
 	constexpr color_type WATER_TINT { 0x00U, 0x3FU, 0x7FU, 0x7FU };
@@ -47,10 +47,10 @@ void ecs::liquid::handle(environment& env) {
 	});
 }
 
-void ecs::liquid::render(const rect& view, renderer& rdr, const environment& env) {
+void ecs::liquid::render(const rect& view, renderer_2d& renderer, const environment& env) {
 	auto slice = env.slice<ecs::liquid>();
 	if (!slice.empty()) {
-		auto& list = rdr.query(
+		auto& list = renderer.query(
 			priority_type::automatic,
 			blending_type::add,
 			pipeline_type::blank

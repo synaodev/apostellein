@@ -5,7 +5,7 @@
 #include "../video/vertex.hpp"
 
 struct texture_2d;
-struct renderer;
+struct renderer_2d;
 
 namespace gui {
 	struct barrier : public not_copyable {
@@ -20,7 +20,7 @@ namespace gui {
 		);
 		void invalidate() const { invalidated_ = true; }
 		void fix();
-		void render(renderer& rdr) const;
+		void render(renderer_2d& renderer) const;
 		void set(i32 current, i32 maximum, i32 indent);
 		i32 get() const { return current_; }
 	private:
