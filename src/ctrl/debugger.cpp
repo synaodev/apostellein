@@ -69,13 +69,13 @@ bool debugger::build(const config_file& cfg, const renderer_2d& renderer) {
 			return ImGui_ImplSDL2_ProcessEvent(reinterpret_cast<const SDL_Event*>(ptr));
 		});
 		window_ = window;
-		renderer_ = &renderer;
+		reporter_ = renderer.reporter();
 	}
 	return true;
 }
 
 void debugger::handle(const buttons& bts, runtime& state) {
-	if (window_ and renderer_) {
+	if (window_ and reporter_) {
 		if (bts.pressed.debugger) {
 			visible_ = !visible_;
 		}
@@ -149,10 +149,11 @@ void debugger::ui_(runtime& state) {
 			ImGui::TextUnformatted(text.c_str());
 		}
 		{
+			const auto& [visible_lists, all_lists] = reporter_();
 			const std::string text = fmt::format(
 				"Display Lists: {}/{}",
-				renderer_->visible_lists(),
-				renderer_->all_lists()
+				visible_lists,
+				all_lists
 			);
 			ImGui::TextUnformatted(text.c_str());
 		}

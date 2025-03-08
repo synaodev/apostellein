@@ -229,7 +229,7 @@ display_list& renderer_2d::query(priority_type priority, blending_type blending,
 	return this->query(priority, blending, pipeline);
 }
 
-udx renderer_2d::visible_lists() const {
+udx renderer_2d::calculate_visible_lists_() const {
 	return cast<udx>(std::count_if(
 		lists_.begin(),
 		lists_.end(),

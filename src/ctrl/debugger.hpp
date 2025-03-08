@@ -1,10 +1,12 @@
 #pragma once
 
+#include <functional>
 #include <apostellein/def.hpp>
 
 enum class activity_type;
 struct config_file;
 struct buttons;
+struct renderer_report;
 struct renderer_2d;
 struct runtime;
 
@@ -20,7 +22,7 @@ public:
 private:
 	void ui_(runtime& state);
 	void* window_ {};
-	const renderer_2d* renderer_ {};
+	std::function<std::pair<udx, udx>(void)> reporter_ {};
 	i64 timer_ {};
 	i64 fading_ {};
 	i64 frames_ {};

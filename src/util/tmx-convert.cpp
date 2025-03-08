@@ -100,5 +100,5 @@ rect tmx_convert::rect_to_rect(const tmx::FloatRect& rectangle) {
 }
 
 rect tmx_convert::rect_to_rect(const tmx::Map& map) {
-	return rect_to_rect(map.getBounds());
+	return tmx_convert::rect_to_rect(map.getBounds());
 }

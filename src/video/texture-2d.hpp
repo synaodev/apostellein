@@ -60,7 +60,7 @@ public:
 		}
 		return {};
 	}
-	byte* pixels() { return image_.pixels(); }
+	// byte* pixels() { return image_.pixels(); }
 	const byte* pixels() const { return image_.pixels(); }
 	static i32 binding();
 	static bool recalibrate();
