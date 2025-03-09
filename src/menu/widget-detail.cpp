@@ -25,9 +25,9 @@ namespace {
 	constexpr udx OPTION_OPTIONS = 6;
 	constexpr udx PROFILE_OPTIONS = controller::MAXIMUM_PROFILES - 1;
 	constexpr udx INPUT_OPTIONS_LEFT = cast<udx>(button_name::LAST_ORDINAL);
-	constexpr udx INPUT_OPTIONS_RIGHT = cast<udx>(button_name::LAST_BUTTON);
+	// constexpr udx INPUT_OPTIONS_RIGHT = cast<udx>(button_name::LAST_BUTTON);
 	constexpr glm::vec2 INPUT_POSITION_LEFT { 3.0f, 16.0f };
-	constexpr glm::vec2 INPUT_POSITION_RIGHT { 175.0f, 16.0f };
+	// constexpr glm::vec2 INPUT_POSITION_RIGHT { 175.0f, 16.0f };
 	constexpr udx VIDEO_OPTIONS = 2;
 	constexpr udx AUDIO_OPTIONS = 1;
 	constexpr udx LANGUAGE_OPTIONS = 9;
@@ -142,12 +142,12 @@ void input_widget::build(const bitmap_font* font, controller&, overlay&) {
 		font, {}
 	);
 	this->setup_left_text_();
-	right_text_.build(
-		DEFAULT_POSITION + INPUT_POSITION_RIGHT, {},
-		color_type::WHITE(),
-		font, {}
-	);
-	this->setup_right_text_();
+	// right_text_.build(
+	// 	DEFAULT_POSITION + INPUT_POSITION_RIGHT, {},
+	// 	color_type::WHITE(),
+	// 	font, {}
+	// );
+	// this->setup_right_text_();
 	arrow_.build(
 		{}, STATE_ARROW,
 		0, vfs::find_animation(anim::Heads)
@@ -168,35 +168,35 @@ void input_widget::handle(buttons& bts, controller&, overlay&, headsup&) {
 			if (left_side_) {
 				input::swap_keyboard_bindings(code, cast<u32>(cursor_));
 				this->setup_left_text_();
-			} else {
+			} /*else {
 				input::swap_joystick_bindings(code, cast<u32>(cursor_));
 				this->setup_right_text_();
-			}
+			}*/
 			waiting_ = false;
 			flash_ = false;
 			audio::play(sfx::TitleBeg, 0);
 			input::zero(bts);
-		} else if (!input::joystick_attached() and !left_side_) {
+		} /*else if (!input::joystick_attached() and !left_side_) {
 			waiting_ = false;
 			flash_ = false;
 			input::stop_listening();
 			audio::play(sfx::Inven, 0);
-		}
+		}*/
 	} else if (bts.pressed.up) {
 		if (cursor_ > 0) {
 			--cursor_;
 			arrow_.transform(0.0f, -fd.y);
 		} else {
-			cursor_ = left_side_ ?
-				INPUT_OPTIONS_LEFT :
-				INPUT_OPTIONS_RIGHT;
+			cursor_ = // left_side_ ?
+				INPUT_OPTIONS_LEFT /*:
+				INPUT_OPTIONS_RIGHT*/;
 			arrow_.transform(0.0f, fd.y * cast<r32>(cursor_));
 		}
 		audio::play(sfx::Select, 0);
 	} else if (bts.pressed.down) {
-		auto options = left_side_ ?
-			INPUT_OPTIONS_LEFT :
-			INPUT_OPTIONS_RIGHT;
+		auto options = // left_side_ ?
+			INPUT_OPTIONS_LEFT /*:
+			INPUT_OPTIONS_RIGHT*/;
 		if (cursor_ < options) {
 			++cursor_;
 			arrow_.transform(0.0f, fd.y);
@@ -205,7 +205,7 @@ void input_widget::handle(buttons& bts, controller&, overlay&, headsup&) {
 			arrow_.transform(0.0f, -fd.y * cast<r32>(options));
 		}
 		audio::play(sfx::Select, 0);
-	} else if (bts.pressed.right and left_side_) {
+	} /*else if (bts.pressed.right and left_side_) {
 		left_side_ = false;
 		if (cursor_ > INPUT_OPTIONS_RIGHT) {
 			cursor_ = INPUT_OPTIONS_RIGHT;
@@ -223,18 +223,18 @@ void input_widget::handle(buttons& bts, controller&, overlay&, headsup&) {
 		left_side_ = true;
 		arrow_.transform(-INPUT_POSITION_RIGHT.x + SMALL_TAB_SPACE, 0.0f);
 		audio::play(sfx::Select, 0);
-	} else if (bts.pressed.confirm) {
+	}*/ else if (bts.pressed.confirm) {
 		if (left_side_) {
 			waiting_ = true;
 			flash_ = false;
 			input::listen_to_keyboard();
 			audio::play(sfx::Inven, 0);
-		} else if (input::joystick_attached()) {
+		} /*else if (input::joystick_attached()) {
 			waiting_ = true;
 			flash_ = false;
 			input::listen_to_joystick();
 			audio::play(sfx::Inven, 0);
-		}
+		}*/
 	} else if (bts.pressed.cancel or bts.pressed.options) {
 		flags_.active = false;
 	}
@@ -251,18 +251,18 @@ void input_widget::setup_left_text_() {
 		out.append(input::keyboard_string(cast<u32>(iter)));
 	}
 	left_text_.replace(fmt::to_string(out));
-	right_text_.invalidate();
+	// right_text_.invalidate();
 }
 
-void input_widget::setup_right_text_() {
-	fmt::memory_buffer out {};
-	for (auto iter = button_name::FIRST_BUTTON; iter <= button_name::LAST_BUTTON; ++iter) {
-		out.append(vfs::i18n_at(INPUT_ENTRY, cast<udx>(iter) + 1));
-		out.append(input::joystick_string(cast<u32>(iter)));
-	}
-	right_text_.replace(fmt::to_string(out));
-	left_text_.invalidate();
-}
+// void input_widget::setup_right_text_() {
+// 	fmt::memory_buffer out {};
+// 	for (auto iter = button_name::FIRST_BUTTON; iter <= button_name::LAST_BUTTON; ++iter) {
+// 		out.append(vfs::i18n_at(INPUT_ENTRY, cast<udx>(iter) + 1));
+// 		out.append(input::joystick_string(cast<u32>(iter)));
+// 	}
+// 	right_text_.replace(fmt::to_string(out));
+// 	left_text_.invalidate();
+// }
 
 void video_widget::build(const bitmap_font* font, controller&, overlay&) {
 	flags_.ready = true;

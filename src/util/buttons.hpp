@@ -49,6 +49,8 @@ struct buttons {
 	internals pressed {};
 	internals holding {};
 	internals released {};
+	i32 x {};
+	i32 y {};
 public:
 	constexpr void clear() {
 		pressed._raw = {};

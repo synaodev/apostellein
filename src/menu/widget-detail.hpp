@@ -44,14 +44,14 @@ public:
 		if (flags_.ready and flags_.active) {
 			header_.invalidate();
 			left_text_.invalidate();
-			right_text_.invalidate();
+			// right_text_.invalidate();
 			arrow_.invalidate();
 		}
 	}
 	void fix(const bitmap_font* font) override {
 		header_.fix(font);
 		left_text_.fix(font);
-		right_text_.fix(font);
+		// right_text_.fix(font);
 		arrow_.fix();
 	}
 	void handle(buttons& bts, controller& ctl, overlay& ovl, headsup& hud) override;
@@ -64,7 +64,7 @@ public:
 		if (flags_.ready and flags_.active) {
 			header_.render(renderer);
 			left_text_.render(renderer);
-			right_text_.render(renderer);
+			// right_text_.render(renderer);
 			if (waiting_) {
 				if (flash_) {
 					arrow_.invalidate();
@@ -78,14 +78,14 @@ public:
 	}
 private:
 	void setup_left_text_();
-	void setup_right_text_();
+	// void setup_right_text_();
 	bool left_side_ { true };
 	bool waiting_ {};
 	bool flash_ {};
 	udx cursor_ {};
 	gui::text header_ {};
 	gui::text left_text_ {};
-	gui::text right_text_ {};
+	// gui::text right_text_ {};
 	gui::scheme arrow_ {};
 };
 
