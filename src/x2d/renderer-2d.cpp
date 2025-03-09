@@ -134,14 +134,7 @@ bool renderer_2d::build() {
 	// 	return false;
 	// }
 
-	glCheck(glEnable(GL_BLEND));
-	glCheck(glBlendFuncSeparate(
-		GL_SRC_ALPHA,
-		GL_ONE_MINUS_SRC_ALPHA,
-		GL_ONE,
-		GL_ONE_MINUS_SRC_ALPHA
-	));
-	glCheck(glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD));
+	swap_chain::reset();
 
 	return true;
 }
@@ -153,39 +146,7 @@ void renderer_2d::flush(const glm::mat4& viewport) {
 
 	for (auto&& list : lists_) {
 		if (list.visible()) {
-			if (blending_ != list.blending()) {
-				switch (blending_ = list.blending(); blending_) {
-				case blending_type::alpha: {
-					glCheck(glBlendFuncSeparate(
-						GL_SRC_ALPHA,
-						GL_ONE_MINUS_SRC_ALPHA,
-						GL_ONE,
-						GL_ONE_MINUS_SRC_ALPHA
-					));
-					break;
-				}
-				case blending_type::add: {
-					glCheck(glBlendFuncSeparate(
-						GL_SRC_ALPHA,
-						GL_ONE,
-						GL_ONE,
-						GL_ONE
-					));
-					break;
-				}
-				case blending_type::multiply: {
-					glCheck(glBlendFuncSeparate(
-						GL_DST_COLOR,
-						GL_ZERO,
-						GL_DST_COLOR,
-						GL_ZERO
-					));
-					break;
-				}
-				default:
-					break;
-				}
-			}
+			swap_chain::blend(list.blending());
 			const auto index = cast<udx>(list.pipeline());
 			list.flush(programs_[index]);
 		}

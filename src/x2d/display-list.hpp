@@ -5,8 +5,8 @@
 #include <apostellein/rect.hpp>
 
 #include "./priority-type.hpp"
+#include "../video/swap-chain.hpp"
 #include "../video/quad-buffer.hpp"
-#include "../video/blending-type.hpp"
 
 struct texture_2d;
 struct mirror_type;

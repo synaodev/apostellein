@@ -8,11 +8,22 @@
 namespace swap_chain {
 	// private
 	glm::ivec2 dimensions_ {};
-	color_type color_ { color_type::WHITE() };
+	color_type color_ { color_type::BASE() };
+	blending_type blending_ { blending_type::alpha };
 	// public
 	void reset() {
+		glCheck(glEnable(GL_BLEND));
+		glCheck(glBlendEquationSeparate(GL_FUNC_ADD, GL_FUNC_ADD));
+		glCheck(glBlendFuncSeparate(
+			GL_SRC_ALPHA,
+			GL_ONE_MINUS_SRC_ALPHA,
+			GL_ONE,
+			GL_ONE_MINUS_SRC_ALPHA
+		));
+
 		dimensions_ = {};
-		color_ = color_type::WHITE();
+		color_ = color_type::BASE();
+		blending_ = blending_type::alpha;
 	}
 	void clear(const color_type& color) {
 		if (color_ != color) {
@@ -34,5 +45,40 @@ namespace swap_chain {
 	}
 	const glm::ivec2& viewport() {
 		return dimensions_;
+	}
+	void blend(blending_type blending) {
+		if (blending_ != blending) {
+			switch (blending_ = blending; blending_) {
+			case blending_type::alpha: {
+				glCheck(glBlendFuncSeparate(
+					GL_SRC_ALPHA,
+					GL_ONE_MINUS_SRC_ALPHA,
+					GL_ONE,
+					GL_ONE_MINUS_SRC_ALPHA
+				));
+				break;
+			}
+			case blending_type::add: {
+				glCheck(glBlendFuncSeparate(
+					GL_SRC_ALPHA,
+					GL_ONE,
+					GL_ONE,
+					GL_ONE
+				));
+				break;
+			}
+			case blending_type::multiply: {
+				glCheck(glBlendFuncSeparate(
+					GL_DST_COLOR,
+					GL_ZERO,
+					GL_DST_COLOR,
+					GL_ZERO
+				));
+				break;
+			}
+			default:
+				break;
+			}
+		}
 	}
 }
