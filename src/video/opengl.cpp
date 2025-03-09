@@ -80,8 +80,5 @@ void APIENTRY ogl::debug_callback(
 		default: return spdlog::level::info;
 		}
 	}();
-	auto logger = spdlog::get(konst::GRAPHICS);
-	if (logger) {
-		logger->log(level, "[{} {}]: {}", source_name, type_name, message);
-	}
+	spdlog::log(level, "[{} {}]: {}", source_name, type_name, message);
 }

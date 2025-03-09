@@ -2,7 +2,6 @@
 #include <thread>
 #include <chrono>
 #include <spdlog/spdlog.h>
-#include <spdlog/sinks/rotating_file_sink.h>
 #include <SDL2/SDL.h>
 #include <apostellein/konst.hpp>
 #include <apostellein/cast.hpp>
@@ -252,17 +251,9 @@ namespace video {
 
 		// Add OpenGL debug callback if available
 		if (cfg.logging()) {
-			auto logger = spdlog::rotating_logger_st(
-				konst::GRAPHICS,
-				vfs::log_path(konst::GRAPHICS),
-				konst::MAXIMUM_BYTES,
-				konst::MAXIMUM_SINKS,
-				true
-			);
-			logger->set_pattern(konst::PATTERN);
-
 			glCheck(glDebugMessageCallback(ogl::debug_callback, nullptr));
 			glCheck(glEnable(GL_DEBUG_OUTPUT));
+			glCheck(glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS));
 		}
 
 		// Print vendor information for debugging purposes

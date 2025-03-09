@@ -33,7 +33,7 @@ private:
 
 struct debugger {
 public:
-	bool build(const config_file&, const renderer&) const { return true; }
+	bool build(const config_file&, const renderer_2d&) const { return true; }
 	void handle(const buttons&, const runtime&) const {}
 	void update(i64) const {}
 	void flush() const {}

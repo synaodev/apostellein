@@ -112,7 +112,6 @@ namespace konst {
 #else
 	constexpr char APPLICATION[] = "Apostellein";
 #endif
-	constexpr char GRAPHICS[] = "OpenGL";
 	constexpr char ORGANIZATION[] = "studio-synao";
 	constexpr char IDENTIFIER[] = "a59323db-3294-41e4-a375-9d05595db2e9";
 	constexpr char PATTERN[] = "[%X.%e] %^[%l] %v%$";

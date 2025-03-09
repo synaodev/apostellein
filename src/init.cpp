@@ -4,6 +4,7 @@
 #include <thread>
 #include <spdlog/spdlog.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_main.h>
 #include <apostellein/konst.hpp>
 #include <apostellein/cast.hpp>
 
