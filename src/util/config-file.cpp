@@ -10,7 +10,6 @@ namespace {
 	constexpr char SETUP_ENTRY[] = "Setup";
 	constexpr char DEBUGGER_ENTRY[] = "Debugger";
 	constexpr char LOGGING_ENTRY[] = "Logging";
-	constexpr char SANDY_BRIDGE_ENTRY[] = "SandyBridge";
 	constexpr char LANGUAGE_ENTRY[] = "Language";
 	constexpr char VIDEO_ENTRY[] = "Video";
 	constexpr char VERTICAL_SYNC_ENTRY[] = "VerticalSync";
@@ -100,7 +99,6 @@ void config_file::create() {
 	data_[SETUP_ENTRY][DEBUGGER_ENTRY] = konst::IMGUI;
 	data_[SETUP_ENTRY][LOGGING_ENTRY] = konst::DEBUG;
 	data_[SETUP_ENTRY][LANGUAGE_ENTRY] = DEFAULT_LANGUAGE;
-	data_[SETUP_ENTRY][SANDY_BRIDGE_ENTRY] = false;
 
 	data_[VIDEO_ENTRY][FRAME_RATE_ENTRY] = DEFAULT_FRAME_RATE;
 	data_[VIDEO_ENTRY][FULL_SCREEN_ENTRY] = false;
@@ -160,21 +158,6 @@ bool config_file::logging() const {
 
 void config_file::logging(bool value) {
 	data_[SETUP_ENTRY][LOGGING_ENTRY] = value;
-}
-
-bool config_file::sandy_bridge() const {
-	if (
-		data_.contains(SETUP_ENTRY) and
-		data_[SETUP_ENTRY].contains(SANDY_BRIDGE_ENTRY) and
-		data_[SETUP_ENTRY][SANDY_BRIDGE_ENTRY].is_boolean()
-	) {
-		return data_[SETUP_ENTRY][SANDY_BRIDGE_ENTRY].get<bool>();
-	}
-	return false;
-}
-
-void config_file::sandy_bridge(bool value) {
-	data_[SETUP_ENTRY][SANDY_BRIDGE_ENTRY] = value;
 }
 
 std::string config_file::language() const {

@@ -22,6 +22,8 @@ namespace {
 	constexpr i32 MINIMUM_FRAME_RATE = DEFAULT_FRAME_RATE / 2;
 	constexpr i32 MINIMUM_REFRESH_RATE = DEFAULT_FRAME_RATE;
 	constexpr i32 MAXIMUM_REFRESH_RATE = DEFAULT_FRAME_RATE * 4;
+	constexpr u32 MINIMUM_MAJOR_OPENGL = 4;
+	constexpr u32 MINIMUM_MINOR_OPENGL = 5;
 	constexpr u32 DEFAULT_WINDOW_FLAGS = SDL_WINDOW_HIDDEN | SDL_WINDOW_OPENGL;
 	constexpr u32 HIGH_DPI_WINDOW_FLAGS = DEFAULT_WINDOW_FLAGS | SDL_WINDOW_ALLOW_HIGHDPI;
 
@@ -145,9 +147,6 @@ namespace video {
 		drv_ = std::make_unique<driver>();
 
 		// Get config
-		ogl::version = cfg.sandy_bridge() ?
-			ogl::version_type::v33 :
-			ogl::version_type::v46;
 		drv_->config = &cfg;
 		drv_->vertical_sync = cfg.vertical_sync();
 		drv_->adaptive_sync = cfg.adaptive_sync();
@@ -170,7 +169,15 @@ namespace video {
 			spdlog::critical("Setting core profile failed! SDL Error: {}", SDL_GetError());
 			return false;
 		}
-		if (ogl::debug_callback_available() and cfg.logging()) {
+		if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, MINIMUM_MAJOR_OPENGL) < 0) {
+			spdlog::critical("Setting OpenGL major version failed! SDL Error: {}", SDL_GetError());
+			return false;
+		}
+		if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, MINIMUM_MINOR_OPENGL) < 0) {
+			spdlog::critical("Setting OpenGL minor version failed! SDL Error: {}", SDL_GetError());
+			return false;
+		}
+		if (cfg.logging()) {
 			if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG) < 0) {
 				spdlog::critical("Setting debug profile flags failed! SDL Error: {}", SDL_GetError());
 				return false;
@@ -215,20 +222,9 @@ namespace video {
 		);
 
 		// Generate a valid OpenGL context
-		for (; !drv_->context and ogl::version != ogl::version_type::none; --ogl::version) {
-			if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, ogl::major_version()) < 0) {
-				spdlog::critical("Setting OpenGL major version failed! SDL Error: {}", SDL_GetError());
-				return false;
-			}
-			if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, ogl::minor_version()) < 0) {
-				spdlog::critical("Setting OpenGL minor version failed! SDL Error: {}", SDL_GetError());
-				return false;
-			}
-			drv_->context = SDL_GL_CreateContext(drv_->window);
-		}
-		if (!drv_->context) {
+		if (drv_->context = SDL_GL_CreateContext(drv_->window); !drv_->context) {
 			const std::string message = fmt::format(
-				"At least OpenGL 3.3 is required! SDL Error: {}",
+				"At least OpenGL 4.5 is required! SDL Error: {}",
 				SDL_GetError()
 			);
 			message_box::error(message);
@@ -255,7 +251,7 @@ namespace video {
 		}
 
 		// Add OpenGL debug callback if available
-		if (ogl::debug_callback_available() and cfg.logging()) {
+		if (cfg.logging()) {
 			auto logger = spdlog::rotating_logger_st(
 				konst::GRAPHICS,
 				vfs::log_path(konst::GRAPHICS),

@@ -134,17 +134,6 @@ bool renderer_2d::build() {
 	// 	return false;
 	// }
 
-	if (!ogl::binding_points_available()) {
-		blank_program.buffer(pipeline_source::MATRIX_BUFFER_NAME, matrices_);
-		sprite_program.buffer(pipeline_source::MATRIX_BUFFER_NAME, matrices_);
-		glyph_program.buffer(pipeline_source::MATRIX_BUFFER_NAME, matrices_);
-		// light_program.buffer(pipeline_source::MATRIX_BUFFER_NAME, matrices_);
-		// light_program.buffer(pipeline_source::LIGHT_BUFFER_NAME, lights_);
-		sprite_program.sampler(pipeline_source::SAMPLER_ARRAY_NAME, texture_2d::binding());
-		glyph_program.sampler(pipeline_source::SAMPLER_ARRAY_NAME, texture_2d::binding());
-		// light_program.sampler(pipeline_source::FRAME_BUFFER_NAME, surface);
-	}
-
 	glCheck(glEnable(GL_BLEND));
 	glCheck(glBlendFuncSeparate(
 		GL_SRC_ALPHA,

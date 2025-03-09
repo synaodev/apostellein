@@ -2,32 +2,25 @@
 
 #include "./pipeline-source.hpp"
 #include "../video/light-buffer.hpp"
+#include "../video/matrix-buffer.hpp"
 #include "../video/opengl.hpp"
 
 // public
 std::string pipeline_source::directive() {
-	return fmt::format(
-		"#version {} core\n",
-		ogl::glsl_version()
-	);
+	return "#version 450 core\n";
 }
 
 std::string pipeline_source::matrix_buffer() {
 	return fmt::format(
-		"layout(std140{}) uniform {} {{\n"
-			"\tmat4 viewports[2];\n"
+		"layout(std140, binding = 0) uniform matrix_buffer {{\n"
+			"\tmat4 viewports[{}];\n"
 		"}};",
-		ogl::binding_points_available() ? ", binding = 0" : "",
-		pipeline_source::MATRIX_BUFFER_NAME
+		matrix_buffer::maximum()
 	);
 }
 
 std::string pipeline_source::sampler_array() {
-	return fmt::format(
-		"{}uniform sampler2DArray {};",
-		ogl::binding_points_available() ? "layout(binding = 0) " : "",
-		pipeline_source::SAMPLER_ARRAY_NAME
-	);
+	return "layout(binding = 0) uniform sampler2DArray sampler_array;";
 }
 
 std::string pipeline_source::light_buffer() {
@@ -37,23 +30,18 @@ std::string pipeline_source::light_buffer() {
 			"\tvec4 attenuation;\n" // xyz = attenuation, w = unused
 			"\tvec4 color;\n"
 		"}};\n"
-		"layout(std140{}) uniform {} {{\n"
+		"layout(std140, binding = 1) uniform light_buffer {{\n"
 			"\tvec4 scaling;\n" // xy = dimensions, zw = resolution
 			"\tuint count;\n"
 			"\tLight lights[{}];\n"
 		"}};",
-		ogl::binding_points_available() ? ", binding = 1" : "",
-		pipeline_source::LIGHT_BUFFER_NAME,
 		light_buffer::maximum()
 	);
 }
 
 std::string pipeline_source::frame_buffer() {
-	return fmt::format(
-		"{}uniform sampler2D {};",
-		ogl::binding_points_available() ? "layout(binding = 0) " : "",
-		pipeline_source::FRAME_BUFFER_NAME
-	);
+	// TODO: This will not be bound to "0" in any serious use case.
+	return "layout(binding = 0) uniform sampler2D frame_buffer;";
 }
 
 static constexpr char SOURCE_BLANK_VERTEX[] = R"({}{}
@@ -122,15 +110,14 @@ in PS {{
 }} ps;
 layout(location = 0) out vec4 pixel;
 void main() {{
-	pixel = ps.color * texture({}, ps.uvs);
+	pixel = ps.color * texture(sampler_array, ps.uvs);
 }})";
 
 std::string pipeline_source::sprite_pixel_code() {
 	return fmt::format(
 		SOURCE_SPRITE_PIXEL,
 		pipeline_source::directive(),
-		pipeline_source::sampler_array(),
-		pipeline_source::SAMPLER_ARRAY_NAME
+		pipeline_source::sampler_array()
 	);
 }
 
@@ -167,7 +154,7 @@ in PS {{
 }} ps;
 layout(location = 0) out vec4 pixel;
 void main() {{
-	vec4 table = texture({}, ps.uvs);
+	vec4 table = texture(sampler_array, ps.uvs);
 	pixel = ps.color * (1.0f - table[ps.index]);
 }})";
 
@@ -175,8 +162,7 @@ std::string pipeline_source::glyph_pixel_code() {
 	return fmt::format(
 		SOURCE_GLYPH_PIXEL,
 		pipeline_source::directive(),
-		pipeline_source::sampler_array(),
-		pipeline_source::SAMPLER_ARRAY_NAME
+		pipeline_source::sampler_array()
 	);
 }
 
@@ -198,7 +184,7 @@ static constexpr char SOURCE_LIGHT_PIXEL[] = R"({}{}{}{}
 layout(location = 0) out vec4 pixel;
 void main() {{
 	vec2 screen = gl_FragCoord.xy / scaling.xy;
-	vec4 color = texture({}, screen);
+	vec4 color = texture(frame_buffer, screen);
 	pixel = color;
 	for (uint i = 0U; i < count; ++i) {{
 		vec4 position = viewports[1] * vec4(lights[i].position.xy, 0.0f, 1.0f) * 0.5f + 0.5f;
@@ -223,7 +209,6 @@ std::string pipeline_source::light_pixel_code() {
 		pipeline_source::directive(),
 		pipeline_source::matrix_buffer(),
 		pipeline_source::light_buffer(),
-		pipeline_source::frame_buffer(),
-		pipeline_source::FRAME_BUFFER_NAME
+		pipeline_source::frame_buffer()
 	);
 }

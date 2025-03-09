@@ -3,25 +3,28 @@
 #include "./matrix-buffer.hpp"
 #include "./opengl.hpp"
 
+namespace {
+	constexpr udx MAXIMUM_MATRICES = 2;
+}
+
+udx matrix_buffer::maximum() {
+	return MAXIMUM_MATRICES;
+}
+
+udx matrix_buffer::length() const {
+	return sizeof(glm::mat4) * matrix_buffer::maximum();
+}
+
 bool matrix_buffer::projection(const glm::mat4& value) {
 	if (!handle_) {
 		spdlog::error("Cannot update matrix buffer projection! Reason: Invalid");
 		return false;
 	}
-	if (ogl::direct_state_available()) {
-		glCheck(glNamedBufferSubData(
-			handle_, 0,
-			sizeof(glm::mat4),
-			&value[0][0]
-		));
-	} else {
-		glCheck(glBindBuffer(GL_UNIFORM_BUFFER, handle_));
-		glCheck(glBufferSubData(
-			GL_UNIFORM_BUFFER, 0,
-			sizeof(glm::mat4),
-			&value[0][0]
-		));
-	}
+	glCheck(glNamedBufferSubData(
+		handle_, 0,
+		sizeof(glm::mat4),
+		&value[0][0]
+	));
 	return this->viewport(value);
 }
 
@@ -34,21 +37,11 @@ bool matrix_buffer::viewport(const glm::mat4& value) {
 		return true;
 	}
 	cached_ = value;
-	if (ogl::direct_state_available()) {
-		glCheck(glNamedBufferSubData(
-			handle_,
-			sizeof(glm::mat4),
-			sizeof(glm::mat4),
-			&value[0][0]
-		));
-	} else {
-		glCheck(glBindBuffer(GL_UNIFORM_BUFFER, handle_));
-		glCheck(glBufferSubData(
-			GL_UNIFORM_BUFFER,
-			sizeof(glm::mat4),
-			sizeof(glm::mat4),
-			&value[0][0]
-		));
-	}
+	glCheck(glNamedBufferSubData(
+		handle_,
+		sizeof(glm::mat4),
+		sizeof(glm::mat4),
+		&value[0][0]
+	));
 	return true;
 }

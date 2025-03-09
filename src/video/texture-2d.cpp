@@ -55,52 +55,21 @@ struct virtual_texture_layer : public not_moveable {
 
 struct virtual_texture : public not_moveable {
 	virtual_texture() {
-		if (ogl::direct_state_available()) {
-			glCheck(glCreateTextures(GL_TEXTURE_2D_ARRAY, 1, &handle_));
-			glCheck(glTextureStorage3D(
-				handle_,
-				DEFAULT_MIPMAP,
-				DEFAULT_FORMAT,
-				image_file::MAXIMUM_LENGTH,
-				image_file::MAXIMUM_LENGTH,
-				DEFAULT_LAYERS
-			));
-			glCheck(glTextureParameteri(handle_, GL_TEXTURE_WRAP_S, GL_REPEAT));
-			glCheck(glTextureParameteri(handle_, GL_TEXTURE_WRAP_T, GL_REPEAT));
-			glCheck(glTextureParameteri(handle_, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE));
-			glCheck(glTextureParameteri(handle_, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-			glCheck(glTextureParameteri(handle_, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-			glCheck(glBindTextureUnit(0, handle_));
-		} else  {
-			glCheck(glGenTextures(1, &handle_));
-			glCheck(glActiveTexture(GL_TEXTURE0));
-			glCheck(glBindTexture(GL_TEXTURE_2D_ARRAY, handle_));
-			if (ogl::texture_storage_available()) {
-				glCheck(glTexStorage3D(
-					GL_TEXTURE_2D_ARRAY,
-					DEFAULT_MIPMAP,
-					DEFAULT_FORMAT,
-					image_file::MAXIMUM_LENGTH,
-					image_file::MAXIMUM_LENGTH,
-					DEFAULT_LAYERS
-				));
-			} else {
-				glCheck(glTexImage3D(
-					GL_TEXTURE_2D_ARRAY, 0,
-					DEFAULT_FORMAT,
-					image_file::MAXIMUM_LENGTH,
-					image_file::MAXIMUM_LENGTH,
-					DEFAULT_LAYERS,
-					0, GL_RGBA, GL_UNSIGNED_BYTE,
-					nullptr
-				));
-			}
-			glCheck(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT));
-			glCheck(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT));
-			glCheck(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE));
-			glCheck(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-			glCheck(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-		}
+		glCheck(glCreateTextures(GL_TEXTURE_2D_ARRAY, 1, &handle_));
+		glCheck(glTextureStorage3D(
+			handle_,
+			DEFAULT_MIPMAP,
+			DEFAULT_FORMAT,
+			image_file::MAXIMUM_LENGTH,
+			image_file::MAXIMUM_LENGTH,
+			DEFAULT_LAYERS
+		));
+		glCheck(glTextureParameteri(handle_, GL_TEXTURE_WRAP_S, GL_REPEAT));
+		glCheck(glTextureParameteri(handle_, GL_TEXTURE_WRAP_T, GL_REPEAT));
+		glCheck(glTextureParameteri(handle_, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE));
+		glCheck(glTextureParameteri(handle_, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+		glCheck(glTextureParameteri(handle_, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+		glCheck(glBindTextureUnit(0, handle_));
 	}
 	~virtual_texture() {
 		if (handle_ != 0) {
@@ -167,17 +136,11 @@ public:
 		return std::nullopt;
 	}
 	void recalibrate() {
-		const auto glReceiveTexture = ogl::direct_state_available() ?
-			glTextureSubImage3D :
-			glTexSubImage3D;
-		const auto target = ogl::direct_state_available() ?
-			handle_ :
-			GL_TEXTURE_2D_ARRAY;
 		for (auto&& iter : cache) {
 			i32 atlas = 0;
 			if (const auto space = this->remember(iter->id(), atlas); space) {
-				glCheck(glReceiveTexture(
-					target, 0,
+				glCheck(glTextureSubImage3D(
+					handle_, 0,
 					space->x, space->y, atlas,
 					space->w, space->h, 1,
 					GL_RGBA, GL_UNSIGNED_BYTE,

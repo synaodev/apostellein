@@ -22,11 +22,10 @@ struct matrix_buffer : public const_buffer {
 	}
 	~matrix_buffer() = default;
 public:
+	static udx maximum();
+	udx length() const override;
 	bool projection(const glm::mat4& value);
 	bool viewport(const glm::mat4& value);
-	udx length() const override {
-		return sizeof(glm::mat4) * 2;
-	}
 private:
 	glm::mat4 cached_ { 1.0f };
 };

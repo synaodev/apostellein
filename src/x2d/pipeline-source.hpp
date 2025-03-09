@@ -4,10 +4,10 @@
 #include <vector>
 
 namespace pipeline_source {
-	constexpr char MATRIX_BUFFER_NAME[] = "matrix_buffer";
-	constexpr char LIGHT_BUFFER_NAME[] = "light_buffer";
-	constexpr char SAMPLER_ARRAY_NAME[] = "sampler_array";
-	constexpr char FRAME_BUFFER_NAME[] = "frame_buffer";
+	// constexpr char MATRIX_BUFFER_NAME[] = "matrix_buffer";
+	// constexpr char LIGHT_BUFFER_NAME[] = "light_buffer";
+	// constexpr char SAMPLER_ARRAY_NAME[] = "sampler_array";
+	// constexpr char FRAME_BUFFER_NAME[] = "frame_buffer";
 
 	std::string directive();
 	std::string matrix_buffer();

@@ -26,44 +26,23 @@ bool light_buffer::flush(i32 scaling) {
 		konst::WINDOW_DIMENSIONS<r32>() * cast<r32>(scaling)
 	};
 	const auto count = cast<u32>(drawable_);
-	if (ogl::direct_state_available()) {
-		glCheck(glNamedBufferSubData(
-			handle_, 0,
-			sizeof(glm::vec4),
-			&value[0]
-		));
-		glCheck(glNamedBufferSubData(
-			handle_,
-			sizeof(glm::vec4),
-			sizeof(u32),
-			&count
-		));
-		glCheck(glNamedBufferSubData(
-			handle_,
-			sizeof(glm::vec4) * 2,
-			MAXIMUM_LIGHTS * sizeof(light_param),
-			staging_.get()
-		));
-	} else {
-		glCheck(glBindBuffer(GL_UNIFORM_BUFFER, handle_));
-		glCheck(glBufferSubData(
-			GL_UNIFORM_BUFFER, 0,
-			sizeof(glm::vec4),
-			&value[0]
-		));
-		glCheck(glBufferSubData(
-			GL_UNIFORM_BUFFER,
-			sizeof(glm::vec4),
-			sizeof(u32),
-			&count
-		));
-		glCheck(glBufferSubData(
-			GL_UNIFORM_BUFFER,
-			sizeof(glm::vec4) * 2,
-			MAXIMUM_LIGHTS * sizeof(light_param),
-			staging_.get()
-		));
-	}
+	glCheck(glNamedBufferSubData(
+		handle_, 0,
+		sizeof(glm::vec4),
+		&value[0]
+	));
+	glCheck(glNamedBufferSubData(
+		handle_,
+		sizeof(glm::vec4),
+		sizeof(u32),
+		&count
+	));
+	glCheck(glNamedBufferSubData(
+		handle_,
+		sizeof(glm::vec4) * 2,
+		MAXIMUM_LIGHTS * sizeof(light_param),
+		staging_.get()
+	));
 	drawable_ = 0;
 	return true;
 }

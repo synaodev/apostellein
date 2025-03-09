@@ -24,68 +24,29 @@ bool frame_buffer::create(const glm::ivec2& dimensions, i32 binding) {
 	dimensions_ = dimensions;
 	binding_ = binding;
 
+	glCheck(glCreateFramebuffers(1, &handle_));
+	glCheck(glCreateTextures(GL_TEXTURE_2D, 1, &buffer_));
+	glCheck(glTextureStorage2D(
+		buffer_,
+		DEFAULT_MIPMAP,
+		DEFAULT_FORMAT,
+		dimensions.x,
+		dimensions.y
+	));
+	glCheck(glTextureParameteri(buffer_, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
+	glCheck(glTextureParameteri(buffer_, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
+	glCheck(glTextureParameteri(buffer_, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
+	glCheck(glTextureParameteri(buffer_, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
+	glCheck(glBindTextureUnit(binding, buffer_));
+
 	const u32 attachment = GL_COLOR_ATTACHMENT0;
+	glCheck(glNamedFramebufferTexture(handle_, GL_COLOR_ATTACHMENT0, buffer_, 0));
+	glCheck(glNamedFramebufferDrawBuffers(handle_, 1, &attachment));
+
 	bool result = false;
-	if (ogl::direct_state_available()) {
-		glCheck(glCreateFramebuffers(1, &handle_));
-		glCheck(glCreateTextures(GL_TEXTURE_2D, 1, &buffer_));
-		glCheck(glTextureStorage2D(
-			buffer_,
-			DEFAULT_MIPMAP,
-			DEFAULT_FORMAT,
-			dimensions.x,
-			dimensions.y
-		));
-		glCheck(glTextureParameteri(buffer_, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-		glCheck(glTextureParameteri(buffer_, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-		glCheck(glTextureParameteri(buffer_, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-		glCheck(glTextureParameteri(buffer_, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-		glCheck(glBindTextureUnit(binding, buffer_));
-		glCheck(glNamedFramebufferTexture(handle_, GL_COLOR_ATTACHMENT0, buffer_, 0));
-		glCheck(glNamedFramebufferDrawBuffers(handle_, 1, &attachment));
-		glCheck(result = (
-			glCheckNamedFramebufferStatus(GL_FRAMEBUFFER, handle_) == GL_FRAMEBUFFER_COMPLETE
-		));
-	} else {
-		glCheck(glGenFramebuffers(1, &handle_));
-		glCheck(glBindFramebuffer(GL_FRAMEBUFFER, handle_));
-
-		i32 previous = 0;
-		glCheck(glGetIntegerv(GL_TEXTURE_BINDING_2D, &previous));
-		glCheck(glGenTextures(1, &buffer_));
-		glCheck(glActiveTexture(GL_TEXTURE0 + binding));
-		glCheck(glBindTexture(GL_TEXTURE_2D, buffer_));
-		if (ogl::texture_storage_available()) {
-			glCheck(glTexStorage2D(
-				GL_TEXTURE_2D,
-				DEFAULT_MIPMAP,
-				DEFAULT_FORMAT,
-				dimensions.x,
-				dimensions.y
-			));
-		} else {
-			glCheck(glTexImage2D(
-				GL_TEXTURE_2D, 0,
-				DEFAULT_FORMAT,
-				dimensions.x,
-				dimensions.y,
-				0, GL_RGBA, GL_UNSIGNED_BYTE,
-				nullptr
-			));
-		}
-		glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-		glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-		glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-		glCheck(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-		glCheck(glBindTexture(GL_TEXTURE_2D, cast<u32>(previous)));
-
-		glCheck(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, buffer_, 0));
-		glCheck(glDrawBuffers(1, &attachment));
-		glCheck(result = (
-			glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE
-		));
-		glCheck(glBindFramebuffer(GL_FRAMEBUFFER, 0));
-	}
+	glCheck(result = (
+		glCheckNamedFramebufferStatus(GL_FRAMEBUFFER, handle_) == GL_FRAMEBUFFER_COMPLETE
+	));
 	if (!result) {
 		spdlog::error("Frame buffer is not complete!");
 		this->destroy();
@@ -111,22 +72,12 @@ bool frame_buffer::blit(frame_buffer& target) const {
 		spdlog::error("Cannot blit frame buffer! Reason: Invalid");
 		return false;
 	}
-	if (ogl::direct_state_available()) {
-		glCheck(glBlitNamedFramebuffer(
-			handle_, target.handle_,
-			0, 0, dimensions_.x, dimensions_.y,
-			0, 0, target.dimensions_.x, target.dimensions_.y,
-			GL_COLOR_BUFFER_BIT, GL_NEAREST
-		));
-	} else {
-		glCheck(glBindFramebuffer(GL_READ_FRAMEBUFFER, handle_));
-		glCheck(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, target.handle_));
-		glCheck(glBlitFramebuffer(
-			0, 0, dimensions_.x, dimensions_.y,
-			0, 0, target.dimensions_.x, target.dimensions_.y,
-			GL_COLOR_BUFFER_BIT, GL_NEAREST
-		));
-	}
+	glCheck(glBlitNamedFramebuffer(
+		handle_, target.handle_,
+		0, 0, dimensions_.x, dimensions_.y,
+		0, 0, target.dimensions_.x, target.dimensions_.y,
+		GL_COLOR_BUFFER_BIT, GL_NEAREST
+	));
 	return true;
 }
 
@@ -136,22 +87,12 @@ bool frame_buffer::blit() const {
 		return false;
 	}
 	auto& viewport = swap_chain::viewport();
-	if (ogl::direct_state_available()) {
-		glCheck(glBlitNamedFramebuffer(
-			handle_, 0,
-			0, 0, dimensions_.x, dimensions_.y,
-			0, 0, viewport.x, viewport.y,
-			GL_COLOR_BUFFER_BIT, GL_NEAREST
-		));
-	} else {
-		glCheck(glBindFramebuffer(GL_READ_FRAMEBUFFER, handle_));
-		glCheck(glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0));
-		glCheck(glBlitFramebuffer(
-			0, 0, dimensions_.x, dimensions_.y,
-			0, 0, viewport.x, viewport.y,
-			GL_COLOR_BUFFER_BIT, GL_NEAREST
-		));
-	}
+	glCheck(glBlitNamedFramebuffer(
+		handle_, 0,
+		0, 0, dimensions_.x, dimensions_.y,
+		0, 0, viewport.x, viewport.y,
+		GL_COLOR_BUFFER_BIT, GL_NEAREST
+	));
 	return true;
 }
 
@@ -162,21 +103,15 @@ void frame_buffer::start_(const color_type& color) {
 		cast<r32>(color.b) / 255.0f,
 		cast<r32>(color.a) / 255.0f
 	};
-	glCheck(glBindFramebuffer(GL_FRAMEBUFFER, handle_));
-	if (ogl::direct_state_available()) {
-		glCheck(glClearNamedFramebufferfv(
-			handle_,
-			GL_COLOR, 0,
-			values.data()
-		));
-	} else {
-		glCheck(glClearBufferfv(GL_COLOR, 0, values.data()));
-	}
+	glCheck(glClearNamedFramebufferfv(
+		handle_,
+		GL_COLOR, 0,
+		values.data()
+	));
 	glCheck(glViewport(0, 0, dimensions_.x, dimensions_.y));
 }
 
 void frame_buffer::finish_() {
-	glCheck(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 	auto& viewport = swap_chain::viewport();
 	glCheck(glViewport(0, 0, viewport.x, viewport.y));
 }

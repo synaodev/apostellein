@@ -25,8 +25,6 @@ public:
 	void debugger(bool value);
 	bool logging() const;
 	void logging(bool value);
-	bool sandy_bridge() const;
-	void sandy_bridge(bool value);
 	std::string language() const;
 	void language(const std::string& value);
 	bool vertical_sync() const;

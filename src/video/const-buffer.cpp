@@ -17,33 +17,13 @@ bool const_buffer::create(u32 binding) {
 		return false;
 	}
 	this->destroy();
-	if (ogl::direct_state_available()) {
-		glCheck(glCreateBuffers(1, &handle_));
-		glCheck(glNamedBufferStorage(
-			handle_,
-			this->length(),
-			nullptr,
-			GL_DYNAMIC_STORAGE_BIT
-		));
-	} else if (ogl::buffer_storage_available()) {
-		glCheck(glGenBuffers(1, &handle_));
-		glCheck(glBindBuffer(GL_UNIFORM_BUFFER, handle_));
-		glCheck(glBufferStorage(
-			GL_UNIFORM_BUFFER,
-			this->length(),
-			nullptr,
-			GL_DYNAMIC_STORAGE_BIT
-		));
-	} else {
-		glCheck(glGenBuffers(1, &handle_));
-		glCheck(glBindBuffer(GL_UNIFORM_BUFFER, handle_));
-		glCheck(glBufferData(
-			GL_UNIFORM_BUFFER,
-			this->length(),
-			nullptr,
-			GL_DYNAMIC_DRAW
-		));
-	}
+	glCheck(glCreateBuffers(1, &handle_));
+	glCheck(glNamedBufferStorage(
+		handle_,
+		this->length(),
+		nullptr,
+		GL_DYNAMIC_STORAGE_BIT
+	));
 	glCheck(glBindBufferBase(
 		GL_UNIFORM_BUFFER,
 		binding,

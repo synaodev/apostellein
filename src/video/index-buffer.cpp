@@ -46,30 +46,11 @@ bool index_buffer::quads(udx count) {
 
 	const std::vector<u16> indices = generate_quad_indices_(count);
 
-	if (ogl::direct_state_available()) {
-		glCheck(glCreateBuffers(1, &handle_));
-		glCheck(glNamedBufferStorage(
-			handle_, sizeof(u16) * indices.size(),
-			indices.data(), 0
-		));
-	} else if (ogl::buffer_storage_available()) {
-		glCheck(glGenBuffers(1, &handle_));
-		glCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle_));
-		glCheck(glBufferStorage(
-			GL_ELEMENT_ARRAY_BUFFER,
-			sizeof(u16) * indices.size(),
-			indices.data(), 0
-		));
-	} else {
-		glCheck(glGenBuffers(1, &handle_));
-		glCheck(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, handle_));
-		glCheck(glBufferData(
-			GL_ELEMENT_ARRAY_BUFFER,
-			sizeof(u16) * indices.size(),
-			indices.data(),
-			GL_STATIC_DRAW
-		));
-	}
+	glCheck(glCreateBuffers(1, &handle_));
+	glCheck(glNamedBufferStorage(
+		handle_, sizeof(u16) * indices.size(),
+		indices.data(), 0
+	));
 
 	return true;
 }
