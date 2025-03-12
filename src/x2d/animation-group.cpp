@@ -227,31 +227,31 @@ void animation_sequence::update(i64 delta, i64& timer, udx& frame) const {
 	}
 }
 
-void animation_sequence::update(i64 delta, bool& invalidated, i64& timer, udx& frame) const {
-	if (delay_ >= 2 and count_ > 1) {
-		if (repeating_) {
-			if (timer += delta; timer >= delay_) {
-				invalidated = true;
-				timer %= delay_;
-				++frame;
-				frame %= count_;
-			}
-		} else {
-			if (frame < (count_ - 1)) {
-				if (timer += delta; timer >= delay_) {
-					invalidated = true;
-					timer %= delay_;
-					++frame;
-				}
-			} else if (timer <= delay_) {
-				timer += delta;
-			}
-		}
-	} else {
-		timer = 0;
-		frame = 0;
-	}
-}
+// void animation_sequence::update(i64 delta, bool& invalidated, i64& timer, udx& frame) const {
+// 	if (delay_ >= 2 and count_ > 1) {
+// 		if (repeating_) {
+// 			if (timer += delta; timer >= delay_) {
+// 				invalidated = true;
+// 				timer %= delay_;
+// 				++frame;
+// 				frame %= count_;
+// 			}
+// 		} else {
+// 			if (frame < (count_ - 1)) {
+// 				if (timer += delta; timer >= delay_) {
+// 					invalidated = true;
+// 					timer %= delay_;
+// 					++frame;
+// 				}
+// 			} else if (timer <= delay_) {
+// 				timer += delta;
+// 			}
+// 		}
+// 	} else {
+// 		timer = 0;
+// 		frame = 0;
+// 	}
+// }
 
 bool animation_sequence::finished(udx frame, i64 timer) const {
 	if (frame >= (count_ - 1)) {
@@ -266,11 +266,11 @@ void animation_group::update(i64 delta, udx state, i64& timer, udx& frame) const
 	}
 }
 
-void animation_group::update(i64 delta, bool& invalidated, udx state, i64& timer, udx& frame) const {
-	if (state < sequences_.size()) {
-		sequences_[state].update(delta, invalidated, timer, frame);
-	}
-}
+// void animation_group::update(i64 delta, bool& invalidated, udx state, i64& timer, udx& frame) const {
+// 	if (state < sequences_.size()) {
+// 		sequences_[state].update(delta, invalidated, timer, frame);
+// 	}
+// }
 
 void animation_group::render(
 	udx state,
@@ -391,7 +391,6 @@ bool animation_group::visible(
 }
 
 void animation_group::render(
-	bool& invalidated,
 	udx state,
 	udx frame,
 	udx variation,
@@ -404,17 +403,17 @@ void animation_group::render(
 			blending_type::alpha,
 			pipeline_type::sprite
 		);
-		if (invalidated) {
-			invalidated = false;
+		// if (invalidated) {
+			// invalidated = false;
 
 			auto& sequence = sequences_[state];
 			const glm::vec2 dimensions = sequence.dimensions();
 			const glm::vec2 origin = sequence.origin_with(frame, variation, {});
 			const rect quad = sequence.quad_with(frame, variation);
 			list.batch_sprite(position - origin, dimensions, quad, *texture_);
-		} else {
-			list.skip(display_list::QUAD);
-		}
+		// } else {
+		// 	list.skip(display_list::QUAD);
+		// }
 	}
 }
 

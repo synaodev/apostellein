@@ -22,21 +22,21 @@ namespace gui {
 			const std::string& words
 		);
 		void clear();
-		void invalidate() const { invalidated_ = true; }
+		// void invalidate() const { invalidated_ = true; }
 		void fix(const bitmap_font* font) {
-			invalidated_ = true;
+			// invalidated_ = true;
 			font_ = font;
 			this->generate_quads_();
 		}
 		void handle() {
 			if (!this->finished()) {
-				invalidated_ = true;
+				// invalidated_ = true;
 				++letter_;
 			}
 		}
 		void render(renderer_2d& renderer) const;
 		void append(const std::string& words, bool immediate = true) {
-			invalidated_ = true;
+			// invalidated_ = true;
 			gui::unicode(words, buffer_);
 			const auto length = this->drawable();
 			if (immediate or letter_ > length) {
@@ -49,7 +49,7 @@ namespace gui {
 			this->append(words, immediate);
 		}
 		void append(const std::u32string& words, bool immediate = true) {
-			invalidated_ = true;
+			// invalidated_ = true;
 			buffer_.append(words);
 			const auto length = this->drawable();
 			if (immediate or letter_ > length) {
@@ -58,7 +58,7 @@ namespace gui {
 			this->generate_quads_();
 		}
 		void replace(const std::u32string& words, bool immediate = true) {
-			invalidated_ = true;
+			// invalidated_ = true;
 			buffer_ = words;
 			const auto length = this->drawable();
 			if (immediate or letter_ > length) {
@@ -67,7 +67,7 @@ namespace gui {
 			this->generate_quads_();
 		}
 		void forward(std::u32string&& words, bool immediate = true) {
-			invalidated_ = true;
+			// invalidated_ = true;
 			buffer_ = std::move(words);
 			const auto length = this->drawable();
 			if (immediate or letter_ > length) {
@@ -87,7 +87,7 @@ namespace gui {
 		}
 		void color(const color_type& value) {
 			if (color_ != value) {
-				invalidated_ = true;
+				// invalidated_ = true;
 				color_ = value;
 				this->generate_attributes_();
 			}
@@ -103,7 +103,7 @@ namespace gui {
 	private:
 		void generate_quads_();
 		void generate_attributes_();
-		mutable bool invalidated_ {};
+		// mutable bool invalidated_ {};
 		glm::vec2 position_ {};
 		glm::vec2 origin_ {};
 		color_type color_ { color_type::WHITE() };

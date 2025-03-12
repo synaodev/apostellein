@@ -6,7 +6,7 @@
 #include "../x2d/renderer-2d.hpp"
 
 void gui::graphic::clear() {
-	invalidated_ = true;
+	// invalidated_ = true;
 	position_ = {};
 	if (transient_ and picture_) {
 		vfs::clear_texture(picture_);
@@ -21,13 +21,13 @@ void gui::graphic::render(renderer_2d& renderer) const {
 			blending_type::alpha,
 			pipeline_type::sprite
 		);
-		if (invalidated_) {
-			invalidated_ = false;
+		// if (invalidated_) {
+			// invalidated_ = false;
 			const rect quad { picture_->dimensions() };
 			list.batch_sprite(quad, quad, *picture_);
-		} else {
-			list.skip(display_list::QUAD);
-		}
+		// } else {
+			// list.skip(display_list::QUAD);
+		// }
 	}
 }
 

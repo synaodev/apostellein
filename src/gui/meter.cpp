@@ -29,7 +29,7 @@ void gui::meter::build(
 }
 
 void gui::meter::clear() {
-	this->invalidate();
+	// this->invalidate();
 	current_ = 0;
 	maximum_ = 0;
 	raster_ = {
@@ -51,12 +51,12 @@ void gui::meter::render(renderer_2d& renderer) const {
 			blending_type::alpha,
 			pipeline_type::blank
 		);
-		if (invalidated_) {
-			invalidated_ = false;
+		// if (invalidated_) {
+			// invalidated_ = false;
 			list.batch_blank(raster_, color_type::WHITE());
-		} else {
-			list.skip(display_list::QUAD);
-		}
+		// } else {
+			// list.skip(display_list::QUAD);
+		// }
 		frame_.render(renderer);
 	}
 }
@@ -70,6 +70,6 @@ void gui::meter::set(i32 current, i32 maximum) {
 		const auto ratio = cast<r32>(current_) / cast<r32>(maximum_);
 		raster_.h = glm::round(ratio * dimensions_.y);
 		raster_.y = position_.y + raster_.h;
-		invalidated_ = true;
+		// invalidated_ = true;
 	}
 }

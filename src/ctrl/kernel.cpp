@@ -90,9 +90,9 @@ void kernel::handle(
 						if (ovl.empty() and !ivt.active()) {
 							ctl.unlock();
 						}
-						ovl.invalidate();
+						// ovl.invalidate();
 						dlg.close_textbox();
-						ivt.invalidate();
+						// ivt.invalidate();
 						timer_ = 0;
 						running_ = false;
 						waiting_ = false;
@@ -428,13 +428,13 @@ void kernel::setup_api_(
 		tbl.set_function("load", [&ovl] {
 			ovl.load();
 		});
-		tbl.set_function("fade_in", sol::yielding([&hud, &dlg] {
+		tbl.set_function("fade_in", sol::yielding([&hud/*, &dlg*/] {
 			hud.fade_in();
-			dlg.invalidate();
+			// dlg.invalidate();
 		}));
-		tbl.set_function("fade_out", sol::yielding([&hud, &dlg] {
+		tbl.set_function("fade_out", sol::yielding([&hud/*, &dlg*/] {
 			hud.fade_out();
-			dlg.invalidate();
+			// dlg.invalidate();
 		}));
 		tbl.set_function("show", [&hud](std::string name, r32 x, r32 y) {
 			hud.show_graphic(name, { x, y });
@@ -451,16 +451,16 @@ void kernel::setup_api_(
 		tbl.set_function("message", [&hud](bool centered, r32 x, r32 y, udx font, std::u32string words) {
 			hud.forward_message(centered, { x, y }, font - 1, std::move(words));
 		});
-		tbl.set_function("low", [&hud, &dlg] {
-			hud.invalidate();
+		tbl.set_function("low", [/*&hud, */&dlg] {
+			// hud.invalidate();
 			dlg.open_textbox_low();
 		});
-		tbl.set_function("high", [&hud, &dlg] {
-			hud.invalidate();
+		tbl.set_function("high", [/*&hud, */&dlg] {
+			// hud.invalidate();
 			dlg.open_textbox_high();
 		});
-		tbl.set_function("close", [&hud, &dlg] {
-			hud.invalidate();
+		tbl.set_function("close", [/*&hud, */&dlg] {
+			// hud.invalidate();
 			dlg.close_textbox();
 		});
 		tbl.set_function("clear", [&dlg] {

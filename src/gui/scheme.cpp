@@ -9,7 +9,7 @@ void gui::scheme::build(
 	udx variation,
 	const animation_group* file
 ) {
-	invalidated_ = true;
+	// invalidated_ = true;
 	position_ = position;
 	state_ = state;
 	variation_ = variation;
@@ -20,7 +20,7 @@ void gui::scheme::update(i64 delta) {
 	if (file_) {
 		file_->update(
 			delta,
-			invalidated_,
+			// invalidated_,
 			state_,
 			timer_,
 			frame_
@@ -31,7 +31,7 @@ void gui::scheme::update(i64 delta) {
 void gui::scheme::render(renderer_2d& renderer) const {
 	if (file_) {
 		file_->render(
-			invalidated_,
+			// invalidated_,
 			state_,
 			frame_,
 			variation_,

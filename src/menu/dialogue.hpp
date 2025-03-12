@@ -13,7 +13,7 @@ public:
 	static constexpr u32 MAXIMUM_CHOICES = 4;
 	void build();
 	void clear() { this->close_textbox(); }
-	void invalidate() const { invalidated_ = true; }
+	// void invalidate() const { invalidated_ = true; }
 	void fix();
 	void handle(const buttons& bts, headsup& hud, const inventory& ivt);
 	void update(i64 delta);
@@ -37,7 +37,7 @@ public:
 	bool writing() const { return flags_.writing; }
 	udx answer() const { return cursor_ + 1; }
 private:
-	mutable bool invalidated_ {};
+	// mutable bool invalidated_ {};
 	union {
 		bitfield_raw<u32> _raw {};
 		bitfield_index<u32, 0> textbox;

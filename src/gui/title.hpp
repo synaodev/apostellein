@@ -15,13 +15,13 @@ namespace gui {
 			gui::title::callback recalibrate
 		);
 		void clear();
-		void invalidate() const {
-			front_text_.invalidate();
-			back_text_.invalidate();
-			for (auto&& msg : messages_) {
-				msg.invalidate();
-			}
-		}
+		// void invalidate() const {
+		// 	front_text_.invalidate();
+		// 	back_text_.invalidate();
+		// 	for (auto&& msg : messages_) {
+		// 		msg.invalidate();
+		// 	}
+		// }
 		void fix(const bitmap_font* font);
 		void update(i64 delta) {
 			if (timer_ > 0) {

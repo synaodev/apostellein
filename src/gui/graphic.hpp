@@ -16,20 +16,20 @@ namespace gui {
 			this->clear();
 		}
 		void clear();
-		void invalidate() const { invalidated_ = true; }
-		void fix() const { this->invalidate(); }
+		// void invalidate() const { invalidated_ = true; }
+		void fix() const { /*this->invalidate();*/ }
 		void render(renderer_2d& renderer) const;
 		void set(const std::string& name);
 		void position(const glm::vec2& value) {
-			if (position_ != value) {
-				invalidated_ = true;
+			// if (position_ != value) {
+				// invalidated_ = true;
 				position_ = value;
-			}
+			// }
 		}
 		const glm::vec2& position() const { return position_; }
 		bool valid() const { return picture_ != nullptr; }
 	private:
-		mutable bool invalidated_ {};
+		// mutable bool invalidated_ {};
 		bool transient_ {};
 		glm::vec2 position_ {};
 		const texture_2d* picture_ {};

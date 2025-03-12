@@ -73,7 +73,7 @@ public:
 	void append(const glm::vec2& action_point);
 	void append(const glm::vec2& start, const glm::vec4& points);
 	void update(i64 delta, i64& timer, udx& frame) const;
-	void update(i64 delta, bool& invalidated, i64& timer, udx& frame) const;
+	// void update(i64 delta, bool& invalidated, i64& timer, udx& frame) const;
 	const animation_frame& frame_with(udx frame, udx variation) const;
 	rect quad_with(udx frame, udx variation) const;
 	rect unsafe_quad_with(udx idx) const;
@@ -125,7 +125,7 @@ struct animation_group : public not_copyable {
 	~animation_group() = default;
 public:
 	void update(i64 delta, udx state, i64& timer, udx& frame) const;
-	void update(i64 delta, bool& invalidated, udx state, i64& timer, udx& frame) const;
+	// void update(i64 delta, bool& invalidated, udx state, i64& timer, udx& frame) const;
 	void render(
 		udx state,
 		udx frame,
@@ -171,7 +171,6 @@ public:
 		const rect& view
 	) const;
 	void render(
-		bool& invalidated,
 		udx state,
 		udx frame,
 		udx variation,

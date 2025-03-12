@@ -60,6 +60,6 @@ void gui::element::set(const item_slot& value) {
 			amount_.set(slot_.count);
 		}
 	}
-	item_.invalidate();
-	amount_.invalidate();
+	// item_.invalidate();
+	// amount_.invalidate();
 }

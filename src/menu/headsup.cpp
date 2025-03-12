@@ -123,7 +123,7 @@ void headsup::render(r32 ratio, renderer_2d& renderer, const controller& ctl) co
 		provision_.render(renderer);
 		meter_.render(renderer);
 		graphic_.render(renderer);
-	} else {
+	} /*else {
 		indicator_.invalidate();
 		poison_.invalidate();
 		barrier_.invalidate();
@@ -131,7 +131,7 @@ void headsup::render(r32 ratio, renderer_2d& renderer, const controller& ctl) co
 		provision_.invalidate();
 		meter_.invalidate();
 		graphic_.invalidate();
-	}
+	}*/
 	fader_.render(ratio, renderer);
 }
 

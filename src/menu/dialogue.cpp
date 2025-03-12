@@ -27,7 +27,7 @@ namespace {
 }
 
 void dialogue::build() {
-	invalidated_ = true;
+	// invalidated_ = true;
 	flags_._raw = {};
 	cursor_ = 0;
 	choices_ = 0;
@@ -58,7 +58,7 @@ void dialogue::fix() {
 	faces_.fix();
 	arrow_.fix();
 	text_.fix(font);
-	invalidated_ = true;
+	// invalidated_ = true;
 }
 
 void dialogue::handle(const buttons& bts, headsup& hud, const inventory& ivt) {
@@ -103,11 +103,11 @@ void dialogue::handle(const buttons& bts, headsup& hud, const inventory& ivt) {
 			flags_.writing = false;
 		}
 	}
-	if (invalidated_ and flags_.textbox) {
+	if (/*invalidated_ and*/ flags_.textbox) {
 		hud.clear_title();
-		if (ivt.active()) {
-			ivt.invalidate();
-		}
+		// if (ivt.active()) {
+		// 	ivt.invalidate();
+		// }
 	}
 }
 
@@ -139,30 +139,30 @@ void dialogue::render(renderer_2d& renderer) const {
 		text_.render(renderer);
 		if (flags_.facebox) {
 			faces_.render(renderer);
-		} else {
+		} /*else {
 			faces_.invalidate();
-		}
+		}*/
 		if (flags_.question) {
 			arrow_.render(renderer);
-		} else {
+		} /*else {
 			arrow_.invalidate();
-		}
+		}*/
 		auto& list = renderer.query(
 			priority_type::deferred,
 			blending_type::alpha,
 			pipeline_type::blank
 		);
-		if (invalidated_) {
-			invalidated_ = false;
+		// if (invalidated_) {
+			// invalidated_ = false;
 			list.batch_blank(raster_, color_type::TRANSLUCENT());
-		} else {
-			list.skip(display_list::QUAD);
-		}
+		// } else {
+			// list.skip(display_list::QUAD);
+		// }
 	}
 }
 
 void dialogue::open_textbox_high() {
-	invalidated_ = true;
+	// invalidated_ = true;
 	flags_.textbox = true;
 	cursor_ = 0;
 	choices_ = 0;
@@ -180,7 +180,7 @@ void dialogue::open_textbox_high() {
 }
 
 void dialogue::open_textbox_low() {
-	invalidated_ = true;
+	// invalidated_ = true;
 	flags_.textbox = true;
 	cursor_ = 0;
 	choices_ = 0;
@@ -198,7 +198,7 @@ void dialogue::open_textbox_low() {
 }
 
 void dialogue::close_textbox() {
-	invalidated_ = true;
+	// invalidated_ = true;
 	flags_._raw = {};
 	cursor_ = 0;
 	choices_ = 0;

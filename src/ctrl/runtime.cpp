@@ -146,7 +146,7 @@ bool runtime::transfer_() {
 	ctl_.lock();
 	knl_.clear();
 	ovl_.clear();
-	hud_.invalidate();
+	// hud_.invalidate();
 	cam_.clear();
 	env_.clear();
 	map_.clear();

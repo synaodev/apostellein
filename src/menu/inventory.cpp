@@ -115,7 +115,7 @@ void inventory::build() {
 }
 
 void inventory::clear() {
-	invalidated_ = true;
+	// invalidated_ = true;
 	active_ = false;
 	provision_ = controller::INVALID_SLOT;
 	cursor_raster_ = DEFAULT_CURSOR_RASTER;
@@ -136,7 +136,7 @@ void inventory::handle(
 	if (ovl.empty()) {
 		if (!active_) {
 			if (!knl.running() and bts.pressed.inventory) {
-				invalidated_ = true;
+				// invalidated_ = true;
 				active_ = true;
 				ctl.freeze();
 				cursor_raster_ = index_to_raster_(ctl.cursor());
@@ -152,7 +152,7 @@ void inventory::handle(
 			}
 		} else if (bts.pressed.inventory) {
 			if (!knl.running()) {
-				invalidated_ = true;
+				// invalidated_ = true;
 				active_ = false;
 				ctl.unlock();
 				audio::play(sfx::Inven, 0);
@@ -163,58 +163,58 @@ void inventory::handle(
 			if (!dlg.textbox_open()) {
 				if (bts.pressed.confirm and !knl.running()) {
 					// description event
-					invalidated_ = true;
+					// invalidated_ = true;
 					const auto item = ctl.item_at(cursor);
 					knl.run_inventory(cast<u32>(item.type));
 				} else if (bts.pressed.provision) {
 					// provision item
-					invalidated_ = true;
+					// invalidated_ = true;
 					provision_ = vec_to_index(cursor_2D);
 					ctl.provision(provision_);
 					audio::play(sfx::TitleBeg, 0);
 				} else if (bts.pressed.cancel and provision_ != controller::INVALID_SLOT) {
 					// de-provision item
-					invalidated_ = true;
+					// invalidated_ = true;
 					provision_ = controller::INVALID_SLOT;
 					ctl.provision(provision_);
 					audio::play(sfx::TitleBeg, 0);
 				} else if (bts.pressed.right) {
 					// scrolling
 					if (cursor_2D.x < MAXIMUM_ROWS<i32>() - 1) {
-						invalidated_ = true;
+						// invalidated_ = true;
 						++cursor_2D.x;
 						audio::play(sfx::Select, 0);
 					}
 				} else if (bts.pressed.left) {
 					// scrolling
 					if (cursor_2D.x > 0) {
-						invalidated_ = true;
+						// invalidated_ = true;
 						--cursor_2D.x;
 						audio::play(sfx::Select, 0);
 					}
 				} else if (bts.pressed.up) {
 					// scrolling
 					if (cursor_2D.y > 0) {
-						invalidated_ = true;
+						// invalidated_ = true;
 						--cursor_2D.y;
 						audio::play(sfx::Select, 0);
 					}
 				} else if (bts.pressed.down) {
 					// scrolling
 					if (cursor_2D.y < MAXIMUM_COLUMNS<i32>() - 1) {
-						invalidated_ = true;
+						// invalidated_ = true;
 						++cursor_2D.y;
 						audio::play(sfx::Select, 0);
 					}
 				}
 			}
 			ctl.cursor(vec_to_index(cursor_2D));
-			if (invalidated_) {
+			// if (invalidated_) {
 				cursor_raster_ = vec_to_raster_(cursor_2D);
 				if (provision_ != controller::INVALID_SLOT) {
 					provision_raster_ = index_to_raster_(provision_);
 				}
-			}
+			// }
 		}
 	}
 }
@@ -229,8 +229,8 @@ void inventory::render(renderer_2d& renderer) const {
 			blending_type::alpha,
 			pipeline_type::blank
 		);
-		if (invalidated_) {
-			invalidated_ = false;
+		// if (invalidated_) {
+			// invalidated_ = false;
 			list.batch_blank(
 				konst::WINDOW_DIMENSIONS<r32>(),
 				color_type::TRANSLUCENT()
@@ -245,11 +245,11 @@ void inventory::render(renderer_2d& renderer) const {
 					PROVISION_COLOR
 				);
 			}
-		} else {
-			const auto count = provision_ == controller::INVALID_SLOT ?
-				display_list::QUAD * 2 :
-				display_list::QUAD * 3;
-			list.skip(count);
-		}
+		// } else {
+		// 	const auto count = provision_ == controller::INVALID_SLOT ?
+		// 		display_list::QUAD * 2 :
+		// 		display_list::QUAD * 3;
+		// 	list.skip(count);
+		// }
 	}
 }

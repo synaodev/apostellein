@@ -22,7 +22,7 @@ void overlay::fix() {
 			wgt->fix(font);
 		}
 	}
-	invalidated_ = true;
+	// invalidated_ = true;
 }
 
 void overlay::handle(buttons& bts, controller& ctl, headsup& hud) {
@@ -42,10 +42,10 @@ void overlay::handle(buttons& bts, controller& ctl, headsup& hud) {
 			widgets_.clear();
 		} else if (!wgt.active()) {
 			widgets_.pop_back();
-			if (!widgets_.empty()) {
-				auto& next = *widgets_.back();
-				next.invalidate();
-			}
+			// if (!widgets_.empty()) {
+			// 	auto& next = *widgets_.back();
+			// 	next.invalidate();
+			// }
 		}
 	} else if (!ctl.state().locked) {
 		if (bts.pressed.options) {
@@ -62,20 +62,20 @@ void overlay::render(renderer_2d& renderer) const {
 			blending_type::alpha,
 			pipeline_type::blank
 		);
-		if (invalidated_) {
-			invalidated_ = false;
+		// if (invalidated_) {
+			// invalidated_ = false;
 			list.batch_blank(
 				konst::WINDOW_DIMENSIONS<r32>(),
 				color_type::TRANSLUCENT()
 			);
-		} else {
-			list.skip(display_list::QUAD);
-		}
+		// } else {
+		// 	list.skip(display_list::QUAD);
+		// }
 	}
 }
 
 void overlay::push(widget_type type) {
-	invalidated_ = true;
+	// invalidated_ = true;
 	if (widgets_.size() >= MAXIMUM_WIDGETS) {
 		spdlog::error("Too many widgets in the menu stack!");
 		return;

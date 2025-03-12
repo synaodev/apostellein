@@ -19,11 +19,11 @@ namespace gui {
 			const rect& amount_raster,
 			const texture_2d* amount_texture
 		);
-		void invalidate() const {
-			frame_.invalidate();
-			item_.invalidate();
-			amount_.invalidate();
-		}
+		// void invalidate() const {
+		// 	frame_.invalidate();
+		// 	item_.invalidate();
+		// 	amount_.invalidate();
+		// }
 		void fix() {
 			frame_.fix();
 			item_.fix();

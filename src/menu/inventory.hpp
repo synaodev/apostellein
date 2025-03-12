@@ -13,12 +13,12 @@ struct inventory {
 public:
 	void build();
 	void clear();
-	void invalidate() const { invalidated_ = true; }
+	// void invalidate() const { invalidated_ = true; }
 	void fix() {
 		for (auto&& elm : elements_) {
 			elm.fix();
 		}
-		invalidated_ = true;
+		// invalidated_ = true;
 	}
 	void handle(
 		const buttons& bts,
@@ -31,7 +31,7 @@ public:
 	void render(renderer_2d& renderer) const;
 	bool active() const { return active_; }
 private:
-	mutable bool invalidated_ {};
+	// mutable bool invalidated_ {};
 	bool active_ {};
 	udx provision_ {};
 	rect cursor_raster_ {};

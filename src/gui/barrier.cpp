@@ -18,7 +18,7 @@ void gui::barrier::build(
 	i32 indent,
 	const texture_2d* texture
 ) {
-	invalidated_ = true;
+	// invalidated_ = true;
 	position_ = position;
 	raster_ = raster;
 	texture_ = texture;
@@ -40,12 +40,12 @@ void gui::barrier::render(renderer_2d& rdr) const {
 			blending_type::alpha,
 			pipeline_type::sprite
 		);
-		if (invalidated_) {
-			invalidated_ = false;
+		// if (invalidated_) {
+			// invalidated_ = false;
 			list.upload(vertices_);
-		} else {
-			list.skip(vertices_.size());
-		}
+		// } else {
+			// list.skip(vertices_.size());
+		// }
 	}
 }
 
@@ -85,7 +85,7 @@ void gui::barrier::set(i32 current, i32 maximum, i32 indent) {
 
 void gui::barrier::generate_quads_(udx current_units, udx maximum_units, bool resized) {
 	if (texture_) {
-		invalidated_ = true;
+		// invalidated_ = true;
 		if (resized) {
 			vertices_.resize(maximum_units * display_list::QUAD);
 		}

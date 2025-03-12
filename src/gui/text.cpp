@@ -64,7 +64,7 @@ void gui::text::build(
 	const bitmap_font* font,
 	const std::string& words
 ) {
-	invalidated_ = true;
+	// invalidated_ = true;
 	position_ = position;
 	origin_ = origin;
 	color_ = color;
@@ -75,7 +75,7 @@ void gui::text::build(
 }
 
 void gui::text::clear() {
-	invalidated_ = true;
+	// invalidated_ = true;
 	letter_ = 0;
 	buffer_.clear();
 	vertices_.clear();
@@ -88,19 +88,19 @@ void gui::text::render(renderer_2d& renderer) const {
 			blending_type::alpha,
 			pipeline_type::glyph
 		);
-		if (invalidated_) {
-			invalidated_ = false;
+		// if (invalidated_) {
+			// invalidated_ = false;
 			list.upload(vertices_, letter_ * display_list::QUAD);
-		} else {
-			list.skip(letter_ * display_list::QUAD);
-		}
+		// } else {
+			// list.skip(letter_ * display_list::QUAD);
+		// }
 	}
 }
 
 void gui::text::position(glm::vec2 value) {
 	value = glm::round(value);
 	if (position_ != value) {
-		invalidated_ = true;
+		// invalidated_ = true;
 		position_ = value;
 		this->generate_attributes_();
 	}
@@ -109,7 +109,7 @@ void gui::text::position(glm::vec2 value) {
 void gui::text::origin(glm::vec2 value) {
 	value = glm::round(value);
 	if (origin_ != value) {
-		invalidated_ = true;
+		// invalidated_ = true;
 		origin_ = value;
 		this->generate_attributes_();
 	}

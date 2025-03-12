@@ -16,12 +16,12 @@ namespace gui {
 			const animation_group* frame_file
 		);
 		void clear();
-		void invalidate() const {
-			invalidated_ = true;
-			frame_.invalidate();
-		}
+		// void invalidate() const {
+		// 	// invalidated_ = true;
+		// 	frame_.invalidate();
+		// }
 		void fix() {
-			invalidated_ = true;
+			// invalidated_ = true;
 			frame_.fix();
 		}
 		void update(i64 delta);
@@ -29,7 +29,7 @@ namespace gui {
 		void set(i32 current, i32 maximum);
 		i32 get() const { return current_; }
 	private:
-		mutable bool invalidated_ {};
+		// mutable bool invalidated_ {};
 		glm::vec2 position_ {};
 		glm::vec2 dimensions_ {};
 		rect raster_ {};

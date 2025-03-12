@@ -25,7 +25,7 @@ struct widget_interface : public not_copyable {
 	virtual ~widget_interface() = default;
 public:
 	virtual void build(const bitmap_font* font, controller& ctl, overlay& ovl) = 0;
-	virtual void invalidate() const = 0;
+	// virtual void invalidate() const = 0;
 	virtual void fix(const bitmap_font* font) = 0;
 	virtual void handle(buttons& bts, controller& ctl, overlay& ovl, headsup& hud) = 0;
 	virtual void update(i64 delta) = 0;

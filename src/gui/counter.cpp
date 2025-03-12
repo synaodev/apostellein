@@ -39,7 +39,7 @@ void gui::counter::build(
 	i32 zeroes,
 	const texture_2d* texture
 ) {
-	invalidated_ = true;
+	// invalidated_ = true;
 	backwards_ = backwards;
 	position_ = position;
 	raster_ = raster;
@@ -55,17 +55,17 @@ void gui::counter::render(renderer_2d& renderer) const {
 			blending_type::alpha,
 			pipeline_type::sprite
 		);
-		if (invalidated_) {
-			invalidated_ = false;
+		// if (invalidated_) {
+			// invalidated_ = false;
 			list.upload(vertices_, digits_.size() * display_list::QUAD);
-		} else {
-			list.skip(digits_.size() * display_list::QUAD);
-		}
+		// } else {
+			// list.skip(digits_.size() * display_list::QUAD);
+		// }
 	}
 }
 
 void gui::counter::generate_quads_() {
-	invalidated_ = true;
+	// invalidated_ = true;
 	digits_.clear();
 	if (texture_) {
 		i32 value = number_;

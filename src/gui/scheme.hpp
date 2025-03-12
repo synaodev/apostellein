@@ -15,15 +15,15 @@ namespace gui {
 			udx variation,
 			const animation_group* file
 		);
-		void invalidate() const { invalidated_ = true; }
-		void fix() { this->invalidate(); }
+		// void invalidate() const { invalidated_ = true; }
+		void fix() { /*this->invalidate();*/ }
 		void update(i64 delta);
 		void render(renderer_2d& renderer) const;
 		void position(const glm::vec2& value) {
-			if (position_ != value) {
+			// if (position_ != value) {
 				position_ = value;
-				invalidated_ = true;
-			}
+				// invalidated_ = true;
+			// }
 		}
 		void position(r32 x, r32 y) {
 			const glm::vec2 p { x, y };
@@ -31,9 +31,9 @@ namespace gui {
 		}
 		void transform(const glm::vec2& delta) {
 			position_ += delta;
-			if (delta.x != 0.0f or delta.y != 0.0f) {
-				invalidated_ = true;
-			}
+			// if (delta.x != 0.0f or delta.y != 0.0f) {
+			// 	invalidated_ = true;
+			// }
 		}
 		void transform(r32 x, r32 y) {
 			const glm::vec2 delta { x, y };
@@ -44,20 +44,20 @@ namespace gui {
 				state_ = value;
 				timer_ = 0;
 				frame_ = 0;
-				invalidated_ = true;
+				// invalidated_ = true;
 			}
 		}
 		void variation(udx value) {
-			if (variation_ != value) {
+			// if (variation_ != value) {
 				variation_ = value;
-				invalidated_ = true;
-			}
+				// invalidated_ = true;
+			// }
 		}
 		void frame(udx value) {
 			if (frame_ != value) {
 				frame_ = value;
 				timer_ = 0;
-				invalidated_ = true;
+				// invalidated_ = true;
 			}
 		}
 		const glm::vec2& position() const { return position_; }
@@ -67,7 +67,7 @@ namespace gui {
 		udx frame() const { return frame_; }
 		bool finished() const;
 	private:
-		mutable bool invalidated_ {};
+		// mutable bool invalidated_ {};
 		const animation_group* file_ {};
 		udx state_ {};
 		i64 timer_ {};

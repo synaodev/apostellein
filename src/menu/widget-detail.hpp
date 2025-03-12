@@ -8,12 +8,12 @@ struct option_widget : public widget_interface {
 	~option_widget() = default;
 public:
 	void build(const bitmap_font* font, controller& ctl, overlay& ovl) override;
-	void invalidate() const override {
-		if (flags_.ready and flags_.active) {
-			text_.invalidate();
-			arrow_.invalidate();
-		}
-	}
+	// void invalidate() const override {
+	// 	if (flags_.ready and flags_.active) {
+	// 		text_.invalidate();
+	// 		arrow_.invalidate();
+	// 	}
+	// }
 	void fix(const bitmap_font* font) override {
 		text_.fix(font);
 		arrow_.fix();
@@ -40,14 +40,14 @@ struct input_widget : public widget_interface {
 	~input_widget() = default;
 public:
 	void build(const bitmap_font* font, controller& ctl, overlay& ovl) override;
-	void invalidate() const override {
-		if (flags_.ready and flags_.active) {
-			header_.invalidate();
-			left_text_.invalidate();
-			// right_text_.invalidate();
-			arrow_.invalidate();
-		}
-	}
+	// void invalidate() const override {
+	// 	if (flags_.ready and flags_.active) {
+	// 		header_.invalidate();
+	// 		left_text_.invalidate();
+	// 		// right_text_.invalidate();
+	// 		arrow_.invalidate();
+	// 	}
+	// }
 	void fix(const bitmap_font* font) override {
 		header_.fix(font);
 		left_text_.fix(font);
@@ -67,7 +67,7 @@ public:
 			// right_text_.render(renderer);
 			if (waiting_) {
 				if (flash_) {
-					arrow_.invalidate();
+					// arrow_.invalidate();
 				} else {
 					arrow_.render(renderer);
 				}
@@ -93,12 +93,12 @@ struct video_widget : public widget_interface {
 	~video_widget() = default;
 public:
 	void build(const bitmap_font* font, controller& ctl, overlay& ovl) override;
-	void invalidate() const override {
-		if (flags_.ready and flags_.active) {
-			text_.invalidate();
-			arrow_.invalidate();
-		}
-	}
+	// void invalidate() const override {
+	// 	if (flags_.ready and flags_.active) {
+	// 		text_.invalidate();
+	// 		arrow_.invalidate();
+	// 	}
+	// }
 	void fix(const bitmap_font* font) override {
 		text_.fix(font);
 		arrow_.fix();
@@ -126,12 +126,12 @@ struct audio_widget : public widget_interface {
 	~audio_widget() = default;
 public:
 	void build(const bitmap_font* font, controller& ctl, overlay& ovl) override;
-	void invalidate() const override {
-		if (flags_.ready and flags_.active) {
-			text_.invalidate();
-			arrow_.invalidate();
-		}
-	}
+	// void invalidate() const override {
+	// 	if (flags_.ready and flags_.active) {
+	// 		text_.invalidate();
+	// 		arrow_.invalidate();
+	// 	}
+	// }
 	void fix(const bitmap_font* font) override {
 		text_.fix(font);
 		arrow_.fix();
@@ -159,12 +159,12 @@ struct language_widget : public widget_interface {
 	~language_widget() = default;
 public:
 	void build(const bitmap_font* font, controller& ctl, overlay& ovl) override;
-	void invalidate() const override {
-		if (flags_.ready and flags_.active) {
-			text_.invalidate();
-			arrow_.invalidate();
-		}
-	}
+	// void invalidate() const override {
+	// 	if (flags_.ready and flags_.active) {
+	// 		text_.invalidate();
+	// 		arrow_.invalidate();
+	// 	}
+	// }
 	void fix(const bitmap_font* font) override {
 		text_.fix(font);
 		arrow_.fix();
@@ -200,12 +200,12 @@ struct profile_widget : public widget_interface {
 	~profile_widget() = default;
 public:
 	void build(const bitmap_font* font, controller& ctl, overlay& ovl) override;
-	void invalidate() const override {
-		if (flags_.ready and flags_.active) {
-			text_.invalidate();
-			arrow_.invalidate();
-		}
-	}
+	// void invalidate() const override {
+	// 	if (flags_.ready and flags_.active) {
+	// 		text_.invalidate();
+	// 		arrow_.invalidate();
+	// 	}
+	// }
 	void fix(const bitmap_font* font) override {
 		text_.fix(font);
 		arrow_.fix();

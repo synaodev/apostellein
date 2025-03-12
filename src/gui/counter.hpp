@@ -18,28 +18,28 @@ namespace gui {
 			i32 zeroes,
 			const texture_2d* texture
 		);
-		void invalidate() const { invalidated_ = true; }
+		// void invalidate() const { invalidated_ = true; }
 		void fix() { this->generate_quads_(); }
 		void render(renderer_2d& renderer) const;
 		void set(i32 value) {
 			if (number_ != value) {
 				number_ = value;
-				invalidated_ = true;
+				// invalidated_ = true;
 				this->generate_quads_();
 			}
 		}
 		void visible(bool value) {
-			if (visible_ != value) {
+			// if (visible_ != value) {
 				visible_ = value;
-				invalidated_ = true;
-			}
+				// invalidated_ = true;
+			// }
 		}
 		i32 get() const { return number_; }
 		bool visible() const { return visible_; }
 	private:
 		static constexpr i32 MAGIC_NUMBER = -45313;
 		void generate_quads_();
-		mutable bool invalidated_ {};
+		// mutable bool invalidated_ {};
 		bool backwards_ {};
 		bool visible_ { true };
 		glm::vec2 position_ {};
