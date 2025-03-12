@@ -85,7 +85,6 @@ void tile_layer::handle(
 	glm::vec2 pos = glm::vec2(first) * konst::TILE<r32>();
 	glm::vec2 uvs {};
 	const glm::vec2 off = texture->offset();
-	const auto atlas = texture->atlas();
 	for (i32 y = first.y; y < last.y; ++y) {
 		for (i32 x = first.x; x < last.x; ++x) {
 			auto& tile = tiles_[
@@ -100,25 +99,21 @@ void tile_layer::handle(
 				vtx[0].position = pos;
 				vtx[0].index = 1;
 				vtx[0].uvs = (uvs + off) / texture_2d::MAXIMUM_DIMENSIONS;
-				vtx[0].atlas = atlas;
 				vtx[0].color = color_type::WHITE();
 
 				vtx[1].position = { pos.x, pos.y + konst::TILE<r32>() };
 				vtx[1].index = 1;
 				vtx[1].uvs = glm::vec2(uvs.x + off.x, uvs.y + off.y + konst::TILE<r32>()) / texture_2d::MAXIMUM_DIMENSIONS;
-				vtx[1].atlas = atlas;
 				vtx[1].color = color_type::WHITE();
 
 				vtx[2].position = { pos.x + konst::TILE<r32>(), pos.y };
 				vtx[2].index = 1;
 				vtx[2].uvs = glm::vec2(uvs.x + off.x + konst::TILE<r32>(), uvs.y + off.y) / texture_2d::MAXIMUM_DIMENSIONS;
-				vtx[2].atlas = atlas;
 				vtx[2].color = color_type::WHITE();
 
 				vtx[3].position = pos + konst::TILE<r32>();
 				vtx[3].index = 1;
 				vtx[3].uvs = (uvs + off + konst::TILE<r32>()) / texture_2d::MAXIMUM_DIMENSIONS;
-				vtx[3].atlas = atlas;
 				vtx[3].color = color_type::WHITE();
 
 				++indices_;

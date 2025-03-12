@@ -92,7 +92,6 @@ void gui::barrier::generate_quads_(udx current_units, udx maximum_units, bool re
 		glm::vec2 pos = position_;
 		const glm::vec2 ind { 0.0f, raster_.h * cast<r32>(indent_) };
 		const glm::vec2 off = texture_->offset();
-		const auto atlas = texture_->atlas();
 		for (udx idx = 0; idx < maximum_units; ++idx) {
 			glm::vec2 uvs = raster_.left_top();
 			if (current_units > 0 and idx <= (current_units - 1)) {
@@ -103,25 +102,21 @@ void gui::barrier::generate_quads_(udx current_units, udx maximum_units, bool re
 			vtx[0].position = pos;
 			vtx[0].index = 0;
 			vtx[0].uvs = (uvs + ind + off) / texture_2d::MAXIMUM_DIMENSIONS;
-			vtx[0].atlas = atlas;
 			vtx[0].color = color_type::WHITE();
 
 			vtx[1].position = { pos.x, pos.y + raster_.h };
 			vtx[1].index = 0;
 			vtx[1].uvs = glm::vec2(uvs.x + off.x + ind.x, uvs.y + off.y + ind.y + raster_.h) / texture_2d::MAXIMUM_DIMENSIONS;
-			vtx[1].atlas = atlas;
 			vtx[1].color = color_type::WHITE();
 
 			vtx[2].position = { pos.x + raster_.w, pos.y };
 			vtx[2].index = 0;
 			vtx[2].uvs = glm::vec2(uvs.x + off.x + ind.x + raster_.w, uvs.y + off.y + ind.y) / texture_2d::MAXIMUM_DIMENSIONS;
-			vtx[2].atlas = atlas;
 			vtx[2].color = color_type::WHITE();
 
 			vtx[3].position = pos + raster_.dimensions();
 			vtx[3].index = 0;
 			vtx[3].uvs = (uvs + off + ind + raster_.dimensions()) / texture_2d::MAXIMUM_DIMENSIONS;
-			vtx[3].atlas = atlas;
 			vtx[3].color = color_type::WHITE();
 
 			if (idx != WRAPPING_INDEX) {

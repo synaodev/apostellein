@@ -168,7 +168,6 @@ void gui::text::generate_quads_() {
 		glm::vec2 pos = position_ - origin_;
 		const glm::vec2 dim = font_->glyph_dimensions();
 		const glm::vec2 off = font_->texture_offset();
-		const auto atlas = font_->atlas();
 		char32_t previous = U'\0';
 		udx idx = 0;
 		for (auto&& c : buffer_) {
@@ -194,25 +193,21 @@ void gui::text::generate_quads_() {
 					vtx[0].position = { pos.x + g.x_offset, pos.y + g.y_offset };
 					vtx[0].index = g.channel;
 					vtx[0].uvs = glm::vec2(g.x + off.x, g.y + off.y) / texture_2d::MAXIMUM_DIMENSIONS;
-					vtx[0].atlas = atlas;
 					vtx[0].color = color_;
 
 					vtx[1].position = { pos.x + g.x_offset, pos.y + g.y_offset + g.h };
 					vtx[1].index = g.channel;
 					vtx[1].uvs = glm::vec2(g.x + off.x, g.y + g.h + off.y) / texture_2d::MAXIMUM_DIMENSIONS;
-					vtx[1].atlas = atlas;
 					vtx[1].color = color_;
 
 					vtx[2].position = { pos.x + g.x_offset + g.w, pos.y + g.y_offset };
 					vtx[2].index = g.channel;
 					vtx[2].uvs = glm::vec2(g.x + g.w + off.x, g.y + off.y) / texture_2d::MAXIMUM_DIMENSIONS;
-					vtx[2].atlas = atlas;
 					vtx[2].color = color_;
 
 					vtx[3].position = { pos.x + g.x_offset + g.w, pos.y + g.y_offset + g.h };
 					vtx[3].index = g.channel;
 					vtx[3].uvs = glm::vec2(g.x + g.w + off.x, g.y + g.h + off.y) / texture_2d::MAXIMUM_DIMENSIONS;
-					vtx[3].atlas = atlas;
 					vtx[3].color = color_;
 
 					pos.x += (g.x_advance + k);

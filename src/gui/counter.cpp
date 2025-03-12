@@ -89,12 +89,11 @@ void gui::counter::generate_quads_() {
 		}
 
 		const glm::vec2 off = texture_->offset();
-		const auto atlas = texture_->atlas();
 		glm::vec2 pos = position_;
 		udx idx = 0;
 
 		auto generator = [
-			this, &idx, &pos, &off, &atlas
+			this, &idx, &pos, &off
 		](const i32& digit) {
 			const glm::vec2 uvs {
 				this->raster_.x + cast<r32>(digit) * this->raster_.w,
@@ -105,25 +104,21 @@ void gui::counter::generate_quads_() {
 			vtx[0].position = pos;
 			vtx[0].index = 0;
 			vtx[0].uvs = (uvs + off) / texture_2d::MAXIMUM_DIMENSIONS;
-			vtx[0].atlas = atlas;
 			vtx[0].color = color_type::WHITE();
 
 			vtx[1].position = { pos.x, pos.y + this->raster_.h };
 			vtx[1].index = 0;
 			vtx[1].uvs = glm::vec2(uvs.x + off.x, uvs.y + off.y + this->raster_.h) / texture_2d::MAXIMUM_DIMENSIONS;
-			vtx[1].atlas = atlas;
 			vtx[1].color = color_type::WHITE();
 
 			vtx[2].position = { pos.x + this->raster_.w, pos.y };
 			vtx[2].index = 0;
 			vtx[2].uvs = glm::vec2(uvs.x + off.x + this->raster_.w, uvs.y + off.y) / texture_2d::MAXIMUM_DIMENSIONS;
-			vtx[2].atlas = atlas;
 			vtx[2].color = color_type::WHITE();
 
 			vtx[3].position = pos + this->raster_.dimensions();
 			vtx[3].index = 0;
 			vtx[3].uvs = (uvs + off + this->raster_.dimensions()) / texture_2d::MAXIMUM_DIMENSIONS;
-			vtx[3].atlas = atlas;
 			vtx[3].color = color_type::WHITE();
 
 			pos.x += (this->backwards_ ?

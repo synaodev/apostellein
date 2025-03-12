@@ -68,7 +68,6 @@ struct vtx_sprite : public vertex_template<vtx_sprite> {
 	glm::vec2 position {};
 	i32 index {};
 	glm::vec2 uvs {};
-	r32 atlas {};
 	color_type color { color_type::WHITE() };
 };
 

@@ -55,7 +55,6 @@ public:
 	const glm::vec2& glyph_dimensions() const { return dimensions_; }
 	glm::vec2 texture_dimensions() const;
 	glm::vec2 texture_offset() const;
-	r32 atlas() const;
 private:
 	std::map<char32_t, bitmap_glyph> glyphs_ {};
 	std::map<std::pair<char32_t, char32_t>, r32> kernings_ {};

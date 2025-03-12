@@ -35,7 +35,7 @@ namespace {
 	constexpr std::array SPRITE_TYPES {
 		cast<u32>(GL_FLOAT_VEC2),
 		cast<u32>(GL_INT),
-		cast<u32>(GL_FLOAT_VEC3),
+		cast<u32>(GL_FLOAT_VEC2),
 		cast<u32>(GL_FLOAT_VEC4)
 	};
 }
@@ -53,7 +53,7 @@ vertex_format vertex_format::from(u32 id) {
 	if (id == vtx_light::id()) {
 		result.id = vtx_light::id();
 		result.size = sizeof(vtx_light);
-		result.detail = []() {
+		result.detail = [] {
 			glCheck(glEnableVertexAttribArray(0));
 			glCheck(glVertexAttribPointer(
 				0, 2, GL_FLOAT,
@@ -64,7 +64,7 @@ vertex_format vertex_format::from(u32 id) {
 	} else if (id == vtx_blank::id()) {
 		result.id = vtx_blank::id();
 		result.size = sizeof(vtx_blank);
-		result.detail = []() {
+		result.detail = [] {
 			glCheck(glEnableVertexAttribArray(0));
 			glCheck(glEnableVertexAttribArray(1));
 			glCheck(glEnableVertexAttribArray(2));
@@ -87,7 +87,7 @@ vertex_format vertex_format::from(u32 id) {
 	} else if (id == vtx_sprite::id()) {
 		result.id = vtx_sprite::id();
 		result.size = sizeof(vtx_sprite);
-		result.detail = []() {
+		result.detail = [] {
 			glCheck(glEnableVertexAttribArray(0));
 			glCheck(glEnableVertexAttribArray(1));
 			glCheck(glEnableVertexAttribArray(2));
@@ -103,7 +103,7 @@ vertex_format vertex_format::from(u32 id) {
 				ADDRESS_OFFSET(&vtx_sprite::index)
 			));
 			glCheck(glVertexAttribPointer(
-				2, 3, GL_FLOAT,
+				2, 2, GL_FLOAT,
 				GL_FALSE, sizeof(vtx_sprite),
 				ADDRESS_OFFSET(&vtx_sprite::uvs)
 			));

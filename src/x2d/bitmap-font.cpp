@@ -211,9 +211,3 @@ glm::vec2 bitmap_font::texture_offset() const {
 	return {};
 }
 
-r32 bitmap_font::atlas() const {
-	if (texture_) {
-		return texture_->atlas();
-	}
-	return 0.0f;
-}

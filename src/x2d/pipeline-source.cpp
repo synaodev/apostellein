@@ -20,7 +20,7 @@ std::string pipeline_source::matrix_buffer() {
 }
 
 std::string pipeline_source::sampler_array() {
-	return "layout(binding = 0) uniform sampler2DArray sampler_array;";
+	return "layout(binding = 0) uniform sampler2D sampler_array;";
 }
 
 std::string pipeline_source::light_buffer() {
@@ -83,10 +83,10 @@ std::string pipeline_source::blank_pixel_code() {
 static constexpr char SOURCE_SPRITE_VERTEX[] = R"({}{}
 layout(location = 0) in vec2 position;
 layout(location = 1) in int index;
-layout(location = 2) in vec3 uvs;
+layout(location = 2) in vec2 uvs;
 layout(location = 3) in vec4 color;
 out PS {{
-	vec3 uvs;
+	vec2 uvs;
 	vec4 color;
 }} ps;
 void main() {{
@@ -105,7 +105,7 @@ std::string pipeline_source::sprite_vertex_code() {
 
 static constexpr char SOURCE_SPRITE_PIXEL[] = R"({}{}
 in PS {{
-	vec3 uvs;
+	vec2 uvs;
 	vec4 color;
 }} ps;
 layout(location = 0) out vec4 pixel;
@@ -124,11 +124,11 @@ std::string pipeline_source::sprite_pixel_code() {
 static constexpr char SOURCE_GLYPH_VERTEX[] = R"({}{}
 layout(location = 0) in vec2 position;
 layout(location = 1) in int index;
-layout(location = 2) in vec3 uvs;
+layout(location = 2) in vec2 uvs;
 layout(location = 3) in vec4 color;
 out PS {{
 	flat int index;
-	vec3 uvs;
+	vec2 uvs;
 	vec4 color;
 }} ps;
 void main() {{
@@ -149,7 +149,7 @@ std::string pipeline_source::glyph_vertex_code() {
 static constexpr char SOURCE_GLYPH_PIXEL[] = R"({}{}
 in PS {{
 	flat int index;
-	vec3 uvs;
+	vec2 uvs;
 	vec4 color;
 }} ps;
 layout(location = 0) out vec4 pixel;
